@@ -24,7 +24,7 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set_property(TARGET ${ProjectName} PROPERTY FOLDER ${OutputFolderName})
 set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT ${ProjectName})
 
-configure_file(${CodeFolder}/header.h.in src/header.h)
+configure_file(${CodeFolder}/header.h.in ../${CodeFolder}/header.h)
 
 link_directories(deps/SFML/libs)
 include_directories(deps/SFML/include)

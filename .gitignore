@@ -3,6 +3,12 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+#Project specific
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.exe
+
 # User-specific files
 *.rsuser
 *.suo
@@ -348,3 +354,21 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+/project/cmake_install.cmake
+/project/CMakeCache.txt
+/project/CMakeFiles/3.21.3/CMakeCCompiler.cmake
+/project/CMakeFiles/3.21.3/CMakeCXXCompiler.cmake
+/project/CMakeFiles/3.21.3/CMakeDetermineCompilerABI_C.bin
+/project/CMakeFiles/3.21.3/CMakeDetermineCompilerABI_CXX.bin
+/project/CMakeFiles/3.21.3/CMakeRCCompiler.cmake
+/project/CMakeFiles/3.21.3/CMakeSystem.cmake
+/project/CMakeFiles/3.21.3/CompilerIdC/CMakeCCompilerId.c
+/project/CMakeFiles/3.21.3/CompilerIdCXX/CMakeCXXCompilerId.cpp
+/project/CMakeFiles/3.21.3/VCTargetsPath.txt
+/project/CMakeFiles/cmake.check_cache
+/project/CMakeFiles/f8609f9ddb066b3b7f5436885c17050c/generate.stamp.rule
+/project/CMakeFiles/generate.stamp
+/project/CMakeFiles/generate.stamp.depend
+/project/CMakeFiles/generate.stamp.list
+/project/CMakeFiles/TargetDirectories.txt
+/code/src/header.h
