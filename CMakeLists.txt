@@ -26,7 +26,6 @@ set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT ${ProjectName})
 
 configure_file(${CodeFolder}/header.h.in src/header.h)
 
-#target_include_directories(${ProjectName} PUBLIC "${PROJECT_BINARY_DIR}")
 link_directories(deps/SFML/libs)
 include_directories(deps/SFML/include)
 
