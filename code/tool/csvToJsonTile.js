@@ -21,7 +21,7 @@ for (let index = 0; index < array.length; index++) {
 		//output.push(`${row}`)
 		//console.log(column + 1, row, "--- ", element);
 		let element2 = element.split("");
-		output.push(`${row},${column+1}:${element2[0]},${element2[1]}`);
+		output.push(`${row},${column+1},${element2[0]},${element2[1]}`);
 		//console.log(`${column+1},${row}`)
 	}
 }
