@@ -11,8 +11,15 @@ file(MAKE_DIRECTORY ${OutputFolderName})
 
 add_executable(${ProjectName} 
 				${CodeFolder}/main.cpp
-				${CodeFolder}/header.h.in)
-
+				${CodeFolder}/header.h.in
+				${CodeFolder}/collider.hpp
+				${CodeFolder}/player.hpp
+				${CodeFolder}/scene_manager.hpp
+				${CodeFolder}/overworld.hpp
+				${CodeFolder}/battleworld.hpp
+				${CodeFolder}/object.hpp
+				${CodeFolder}/tile_manager.hpp)
+				
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/${OutputFolderName})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/${OutputFolderName})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/${OutputFolderName})

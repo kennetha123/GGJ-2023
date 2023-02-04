@@ -1,10 +1,19 @@
 #include <iostream>
 #include "header.h"
-#include <SFML/Graphics.hpp>
+#include "scene_manager.hpp"
+#include "overworld.hpp"
+#include "tile_manager.hpp"
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(800, 600), "Hello");
+	sf::RenderWindow window(sf::VideoMode(800, 600), "Hunters");
+	sf::Clock clock;
+	scene_manager mScene_manager;
+	overworld* ow = new overworld();
+	tile_manager tm;
+
+	mScene_manager.pushScene(ow);
+	tm.generate_tiles();
 
 	while (window.isOpen())
 	{
@@ -18,7 +27,14 @@ int main()
 			}
 		}
 
+		sf::Time dt = clock.restart();
+		mScene_manager.update(dt);
+
 		window.clear();
+		
+		mScene_manager.render(window);
+		tm.render(window);
+
 		window.display();
 	}
 
