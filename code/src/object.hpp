@@ -4,16 +4,12 @@
 class object
 {
 public:
-	void load_image(const std::string& image_path)
+	void set_texture(sf::Texture& texture)
 	{
-		if (!texture.loadFromFile(image_path))
-		{
-			printf_s("Failed to load file!");
-		}
-
 		sprite.setTexture(texture);
 		sprite.setOrigin(-400, -300);
 		sprite.setTextureRect(sf::IntRect(0, 0, 32, 32));
+
 	}
 
 	void render(sf::RenderWindow& window)
@@ -22,5 +18,4 @@ public:
 	}
 
 	sf::Sprite sprite;
-	sf::Texture texture;
 };

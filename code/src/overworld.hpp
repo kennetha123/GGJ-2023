@@ -6,14 +6,14 @@ class overworld : public scene
 {
 public:
 	overworld() : 
-		main_character("../resources/test_player.png")
+		main_character("../resources/Actor_sangoku01.png")
 	{
 	
 	}
 
-	void update(sf::Time dt)
+	void update(float dt)
 	{
-		main_character.movement();
+		main_character.movement(dt);
 	}
 
 	void render(sf::RenderWindow& window)

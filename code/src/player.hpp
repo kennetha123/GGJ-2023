@@ -6,7 +6,12 @@ class player : public object
 public:
 	player(const std::string& image_path) 
 	{
-		load_image(image_path);
+		if (!player_texture.loadFromFile(image_path))
+		{
+			printf_s("Failed to load file!");
+		}
+
+		set_texture(player_texture);
 	}
 
 	~player()
@@ -14,7 +19,7 @@ public:
 
 	}
 
-	void movement()
+	void movement(float dt)
 	{
 		sf::Vector2f dest;
 		
@@ -38,25 +43,25 @@ public:
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 		{
-			sprite.move(-0.1f, 0.0f);
-			sprite.setTextureRect(sf::IntRect(0, 64, 32, 32));
+			sprite.move(-0.1f * dt * speed, 0.0f);
+			sprite.setTextureRect(sf::IntRect(0, 48, x, y));
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 		{
-			sprite.move(0.0f, -0.1f);
-			sprite.setTextureRect(sf::IntRect(0, 32, 32, 32));
+			sprite.move(0.0f, -0.1f * dt * speed);
+			sprite.setTextureRect(sf::IntRect(0, 144, x, y));
 
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 		{
-			sprite.move(0.0f, 0.1f);
-			sprite.setTextureRect(sf::IntRect(0, 0, 32, 32));
+			sprite.move(0.0f, 0.1f * dt * speed);
+			sprite.setTextureRect(sf::IntRect(0, 0, x, y));
 
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 		{
-			sprite.move(0.1f, 0.0f);
-			sprite.setTextureRect(sf::IntRect(0, 96, 32, 32));
+			sprite.move(0.1f * dt * speed, 0.0f);
+			sprite.setTextureRect(sf::IntRect(0, 96, x, y));
 		}
 	}
 
@@ -66,5 +71,7 @@ public:
 	}
 
 private:
-	
+	sf::Texture player_texture;
+	uint32_t x = 48, y = 48;
+	float speed = 1000.0f;
 };

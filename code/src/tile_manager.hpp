@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <memory>
 #include "object.hpp"
 
 struct tile : public object
@@ -25,11 +26,38 @@ public:
 
 class tile_manager
 {
+	std::map<std::string, sf::Texture> tile_textures;
 	std::vector<tile> tiles;
 public:
 	tile_manager()
 	{
 		tiles.reserve(1024);
+	}
+
+	/// <summary>
+	/// load image and store to image reference.
+	/// </summary>
+	/// <param name="image_path">specify image file path.</param>
+	/// <returns>is on database.</returns>
+	bool image_loader(const std::string& image_path)
+	{
+		if (!tile_textures.empty())
+		{
+			auto path_stored = tile_textures.find(image_path);
+			if (path_stored == tile_textures.end())
+			{
+				return true;
+			}
+		}
+
+		sf::Texture texture;
+		if (!texture.loadFromFile(image_path))
+		{
+			printf_s("Failed to load file!");
+		}
+
+		tile_textures[image_path] = texture;
+		return false;
 	}
 
 	void tile_parser(std::vector<tile>& result, const std::string& file_path)
@@ -45,7 +73,7 @@ public:
 			std::istreambuf_iterator<char>());
 
 		// use heap because will be destroy coz vector
-		tile* t = new tile();
+		std::unique_ptr<tile> tile_ptr = std::make_unique<tile>();
 
 		int curr_pos = 0;
 		int last_pos = content.length();
@@ -68,15 +96,20 @@ public:
 				char delimiter = ',';
 				std::istringstream iss(tile_info);
 
-				iss >> x >> delimiter >> y >> delimiter >> t->tile_file >> delimiter >> t->tile_idx;
-				std::string file = "../resources/" + t->tile_file + ".png";
-				std::cout << "file name : " << t->tile_file << std::endl;
+				iss >> x >> delimiter >> y >> delimiter >> tile_ptr->tile_idx >> delimiter >> tile_ptr->tile_file;
+				std::string file = "../resources/" + tile_ptr->tile_file + ".png";
 
-				t->load_image(file);
-				t->sprite.setTextureRect(sf::IntRect(((t->tile_idx - 1) % 8 * 32), ((t->tile_idx - 1) / 8 * 32), 32, 32));
-				t->set_world_pos(x, y);
+				if (!image_loader(file))
+				{
+					//std::cout << "file name : " << tile_ptr->tile_file << std::endl;
+				}
+				tile_ptr->set_texture(tile_textures[file]);
+				tile_ptr->sprite.setTextureRect(
+					sf::IntRect(((tile_ptr->tile_idx - 1) % 8 * 32), 
+						((tile_ptr->tile_idx - 1) / 8 * 32), 32, 32));
+				tile_ptr->set_world_pos(x, y);
 
-				result.push_back(*t);
+				result.push_back(*tile_ptr);
 
 				// move start to the next tile information
 				start = content.find_first_of("\"", after_end);
@@ -93,7 +126,7 @@ public:
 
 	void generate_tiles()
 	{
-		tile_parser(tiles, "../resources/test_tile_data.txt");
+		tile_parser(tiles, "../resources/test_parser.txt");
 
 	}
 

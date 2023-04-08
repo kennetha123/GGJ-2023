@@ -4,7 +4,7 @@
 class scene
 {
 public:
-    virtual void update(sf::Time dt) = 0;
+    virtual void update(float dt) = 0;
     virtual void render(sf::RenderWindow& window) = 0;
 };
 
@@ -13,7 +13,7 @@ class scene_manager
 public:
     class scene_manager() {}
 
-    void update(sf::Time dt)
+    void update(float dt)
     {
         if (m_scenes.empty())
         {
