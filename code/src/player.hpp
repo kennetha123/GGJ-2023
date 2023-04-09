@@ -12,12 +12,11 @@ public:
 		}
 
 		set_texture(player_texture);
-	}
-
-	~player()
-	{
+		sprite.setTextureRect(sf::IntRect(0, 0, sprite_width, sprite_height));
 
 	}
+
+	~player() = default;
 
 	void movement(float dt)
 	{
@@ -25,43 +24,25 @@ public:
 		
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 		{
-
-			//// Get the current time
-			//auto now = std::chrono::high_resolution_clock::now();
-			//auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - start);
-			//int milliseconds = duration.count();
-
-			//// Calculate the position based on the time
-			//float x = sprite.getPosition().x;
-			//x = (-10 * milliseconds) / 1000.0f;
-			//if (x < -10) x = -10;
-			//sprite.setPosition(x, sprite.getPosition().y);
-		}
-
-	//	printf_s("Renderer : %f\n", sprite.getPosition().x);
-	//	printf_s("dest : %f\n", dest.x);
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-		{
 			sprite.move(-0.1f * dt * speed, 0.0f);
-			sprite.setTextureRect(sf::IntRect(0, 48, x, y));
+			sprite.setTextureRect(sf::IntRect(0, 48, sprite_width, sprite_height));
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 		{
 			sprite.move(0.0f, -0.1f * dt * speed);
-			sprite.setTextureRect(sf::IntRect(0, 144, x, y));
+			sprite.setTextureRect(sf::IntRect(0, 144, sprite_width, sprite_height));
 
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 		{
 			sprite.move(0.0f, 0.1f * dt * speed);
-			sprite.setTextureRect(sf::IntRect(0, 0, x, y));
+			sprite.setTextureRect(sf::IntRect(0, 0, sprite_width, sprite_height));
 
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 		{
 			sprite.move(0.1f * dt * speed, 0.0f);
-			sprite.setTextureRect(sf::IntRect(0, 96, x, y));
+			sprite.setTextureRect(sf::IntRect(0, 96, sprite_width, sprite_height));
 		}
 	}
 
@@ -72,6 +53,6 @@ public:
 
 private:
 	sf::Texture player_texture;
-	uint32_t x = 48, y = 48;
+	uint32_t sprite_width = 48, sprite_height = 48;
 	float speed = 1000.0f;
 };

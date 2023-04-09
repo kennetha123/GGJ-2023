@@ -4,6 +4,7 @@ set(OutputFolderName project)
 set(ProjectName 2DRPG)
 set(ProjectFolder project/src)
 set(CodeFolder code/src)
+set(DependencyFolder deps)
 
 project(${ProjectName} VERSION 1.1)
 
@@ -18,7 +19,11 @@ add_executable(${ProjectName}
 				${CodeFolder}/overworld.hpp
 				${CodeFolder}/battleworld.hpp
 				${CodeFolder}/object.hpp
-				${CodeFolder}/tile_manager.hpp)
+				${CodeFolder}/tile_manager.hpp
+				${DependencyFolder}/inih/cpp/INIReader.cpp
+				${DependencyFolder}/inih/cpp/INIReader.h
+				${DependencyFolder}/inih/ini.c
+				${DependencyFolder}/inih/ini.h)
 				
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/${OutputFolderName})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/${OutputFolderName})

@@ -12,8 +12,8 @@ int main()
 	std::unique_ptr<overworld> ow = std::make_unique<overworld>();
 	tile_manager tm;
 
-	mScene_manager.pushScene(ow.get());
 	tm.generate_tiles();
+	mScene_manager.pushScene(ow.get());
 
 	while (window.isOpen())
 	{
