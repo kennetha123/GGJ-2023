@@ -20,6 +20,7 @@ add_executable(${ProjectName}
 				${CodeFolder}/battleworld.hpp
 				${CodeFolder}/object.hpp
 				${CodeFolder}/tile_manager.hpp
+				${CodeFolder}/system/ecs/entity.hpp
 				${DependencyFolder}/inih/cpp/INIReader.cpp
 				${DependencyFolder}/inih/cpp/INIReader.h
 				${DependencyFolder}/inih/ini.c
