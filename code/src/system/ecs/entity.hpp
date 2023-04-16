@@ -50,6 +50,11 @@ public:
 		sprite.setTextureRect(sf::IntRect(rect_left, rect_top, rect_width, rect_height));
 	}
 
+	void set_texture_rect(const sf::IntRect& rect)
+	{
+		sprite.setTextureRect(rect);
+	}
+
 	const sf::Sprite& get_sprite() const
 	{
 		return sprite;

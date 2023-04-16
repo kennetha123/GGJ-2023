@@ -15,39 +15,39 @@ public:
 
     void update(float dt)
     {
-        if (m_scenes.empty())
+        if (scenes_.empty())
         {
             return;
         }
 
-        m_scenes.back()->update(dt);
+        scenes_.back()->update(dt);
     }
 
     void render(sf::RenderWindow& window)
     {
-        if (m_scenes.empty())
+        if (scenes_.empty())
         {
             return;
         }
 
-        m_scenes.back()->render(window);
+        scenes_.back()->render(window);
     }
 
     void pushScene(scene* scene)
     {
-        m_scenes.push_back(scene);
+        scenes_.push_back(scene);
     }
 
     void popScene()
     {
-        if (m_scenes.empty())
+        if (scenes_.empty())
         {
             return;
         }
 
-        m_scenes.pop_back();
+        scenes_.pop_back();
     }
 
 private:
-    std::vector<scene*> m_scenes;
+    std::vector<scene*> scenes_;
 };
