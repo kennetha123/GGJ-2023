@@ -1,0 +1,3 @@
+[submodule "deps/json"]
+	path = deps/json
+	url = https://github.com/kennetha123/json.git

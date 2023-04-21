@@ -1,7 +1,6 @@
 #pragma once
 #include "object.hpp"
 #include "system/ecs/entity.hpp"
-#include "animation.hpp"
 
 class player : public entity
 {
@@ -21,7 +20,7 @@ public:
 		player_transform = get_component<transform_component>();
 
 		player_sprite->set_texture_rect(0, 0, sprite_width, sprite_height);
-		player_transform->set_position(100.0f, 10.0f);
+		player_transform->set_position(0.0f, 0.0f);
 
 		std::vector<std::vector<sf::IntRect>> all_frames = {
 			{ // Down
@@ -51,41 +50,72 @@ public:
 		};
 
 		// Create the animated sprite objects
-		player_animation = std::make_unique<animation>(player_sprite, all_frames, 0.25f);
+		player_animation = std::make_unique<animation_component>(player_sprite, all_frames, 0.25f);
 	}
 
 	~player() = default;
 
 	void movement(float dt)
 	{
-		sf::Vector2f dest;
+		if (is_moving)
+		{
+			elapsed_time += dt;
+			float move_fraction = elapsed_time / move_duration;
 
-		int row = -1;
+			if (move_fraction >= 1.0f)
+			{
+				is_moving = false;
+				move_fraction = 1.0f;
+			}
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-		{
-			player_transform->move(-0.1f * dt * speed, 0.0f);
-			row = 1;
-		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-		{
-			player_transform->move(0.0f, -0.1f * dt * speed);
-			row = 3;
-		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-		{
-			player_transform->move(0.0f, 0.1f * dt * speed);
-			row = 0;
-		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-		{
-			player_transform->move(0.1f * dt * speed, 0.0f);
-			row = 2;
-		}
+			player_transform->set_position(initial_position + sf::Vector2f(move_fraction * move_direction.x, move_fraction * move_direction.y));
 
-		if (row != -1)
+
+			int row = -1;
+			if (move_direction.y > 0) row = 0;
+			else if (move_direction.x < 0) row = 1;
+			else if (move_direction.x > 0) row = 2;
+			else if (move_direction.y < 0) row = 3;
+
+			if (row != -1)
+			{
+				player_animation->update(dt, row);
+			}
+		}
+		else
 		{
-			player_animation->update(dt, row);
+			sf::Vector2f dest;
+
+			int row = -1;
+
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+			{
+				dest = sf::Vector2f(-grid_size, 0.0f);
+				row = 1;
+			}
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+			{
+				dest = sf::Vector2f(0.0f, -grid_size);
+				row = 3;
+			}
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+			{
+				dest = sf::Vector2f(0.0f, grid_size);
+				row = 0;
+			}
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+			{
+				dest = sf::Vector2f(grid_size, 0.0f);
+				row = 2;
+			}
+
+			if (row != -1)
+			{
+				is_moving = true;
+				move_direction = dest;
+				initial_position = player_transform->get_position();
+				elapsed_time = 0;
+			}
 		}
 	}
 
@@ -97,11 +127,16 @@ public:
 private:
 	std::shared_ptr<sprite_component> player_sprite;
 	std::shared_ptr<transform_component> player_transform;
+	std::unique_ptr<animation_component> player_animation;
+
 	sf::Texture player_texture;
 	int sprite_width = 48, sprite_height = 48;
 	float speed = 1000.0f;
 
-	float elapsed_time = 0;
-
-	std::unique_ptr<animation> player_animation;
+	bool is_moving = false;
+	sf::Vector2f initial_position;
+	sf::Vector2f move_direction;
+	float elapsed_time;
+	float grid_size = 32.0f;
+	float move_duration = 0.2f;
 };

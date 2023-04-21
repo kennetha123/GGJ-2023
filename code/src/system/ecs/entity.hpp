@@ -1,12 +1,13 @@
 #pragma once
 #include <unordered_map>
 #include <memory>
-#include <SFML/Graphics.hpp>
-
 #include <typeindex>
+
+#include <SFML/Graphics.hpp>
 
 class transform_component;
 class sprite_component;
+class animation_component;
 
 class component
 {
@@ -88,6 +89,16 @@ public:
 		}
 	}
 
+	void set_position(sf::Vector2f vec)
+	{
+		auto sprite_comp = parent_.get_component<sprite_component>();
+		if (sprite_comp)
+		{
+			sprite_comp->set_position(vec.x, vec.y);
+		}
+
+	}
+
 	void move(float offset_x, float offset_y)
 	{
 		auto sprite_comp = parent_.get_component<sprite_component>();
@@ -96,7 +107,50 @@ public:
 			sprite_comp->move(offset_x, offset_y);
 		}
 	}
+
+	const sf::Vector2f get_position() const
+	{
+		auto sprite_comp = parent_.get_component<sprite_component>();
+		if (sprite_comp)
+		{
+			return sprite_comp->sprite.getPosition();
+		}
+		return sf::Vector2f(0.0f, 0.0f);
+	}
 private:
 	entity& parent_;
 };
 
+class animation_component : public component
+{
+public:
+	animation_component(std::shared_ptr<sprite_component> sprite_comp, const std::vector<std::vector<sf::IntRect>>& frames, float frame_time) :
+		sprite_comp_(sprite_comp), frames_(frames), frame_time_(frame_time)
+	{
+
+	}
+
+	void update(float delta_time, int row)
+	{
+		if (row >= frames_.size())
+		{
+			return;
+		}
+
+		elapsed_time += delta_time;
+
+		if (elapsed_time >= frame_time_)
+		{
+			elapsed_time = 0;
+			current_frame = (current_frame + 1) % frames_[row].size();
+			sprite_comp_->set_texture_rect(frames_[row][current_frame]);
+		}
+	}
+
+private:
+	std::shared_ptr<sprite_component> sprite_comp_;
+	std::vector<std::vector<sf::IntRect>> frames_;
+	float frame_time_;
+	float elapsed_time = 0;
+	int current_frame = 0;
+};
