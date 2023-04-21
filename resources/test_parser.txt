@@ -1,5 +1,0 @@
-"0,0,1,tileset",
-"32,0,2,tileset",
-"-32,0,3,tileset",
-"-32,32,9,tileset",
-"-32,64,217,tileset"

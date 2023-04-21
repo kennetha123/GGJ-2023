@@ -4,15 +4,31 @@
 #include "overworld.hpp"
 #include "tile_manager.hpp"
 #include <memory>
+
+#include <iostream>
+#include <cstdio>
+#include <string>
+
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Hunters");
 	sf::Clock clock;
+	sf::Text fpsText;
+	sf::Font font;
+	font.loadFromFile("../resources/font/arial.ttf");
+	fpsText.setFont(font);
+	fpsText.setCharacterSize(24);
+	fpsText.setFillColor(sf::Color::White);
+	fpsText.setPosition(0, 0);
+
+	int frameCount = 0;
+	float fpsTimer = 0;
+
 	scene_manager mScene_manager;
 	std::unique_ptr<overworld> ow = std::make_unique<overworld>();
 	tile_manager tm;
 
-	tm.generate_tiles();
+	tm.tile_parser("../resources/maps/untitled.txt", "world.png");
 	mScene_manager.pushScene(ow.get());
 
 	while (window.isOpen())
@@ -27,11 +43,22 @@ int main()
 			}
 		}
 
+
 		sf::Time dt = clock.restart();
 		mScene_manager.update(dt.asSeconds());
 
+		// Update the FPS counter
+		fpsTimer += dt.asSeconds();
+		frameCount++;
+		if (fpsTimer >= 1.0f)
+		{
+			int fps = static_cast<int>(frameCount / fpsTimer);
+			fpsText.setString("FPS: " + std::to_string(fps));
+			frameCount = 0;
+			fpsTimer = 0;
+		}
 		window.clear();
-		
+		window.draw(fpsText);
 		// draw tile first
 		tm.render(window);
 		// draw scene object

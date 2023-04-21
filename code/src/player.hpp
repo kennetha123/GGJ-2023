@@ -50,7 +50,7 @@ public:
 		};
 
 		// Create the animated sprite objects
-		player_animation = std::make_unique<animation_component>(player_sprite, all_frames, 0.25f);
+		player_animation = std::make_unique<animation_component>(player_sprite, all_frames, 0.1f);
 	}
 
 	~player() = default;
