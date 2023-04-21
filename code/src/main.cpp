@@ -28,7 +28,7 @@ int main()
 	std::unique_ptr<overworld> ow = std::make_unique<overworld>();
 	tile_manager tm;
 
-	tm.tile_parser("../resources/maps/untitled.txt", "world.png");
+	tm.tile_parser("../resources/maps/test2.txt", "world.png");
 	mScene_manager.pushScene(ow.get());
 
 	while (window.isOpen())
@@ -58,11 +58,11 @@ int main()
 			fpsTimer = 0;
 		}
 		window.clear();
-		window.draw(fpsText);
 		// draw tile first
-		tm.render(window);
+		tm.render(window, ow.get()->main_character.get_component<transform_component>()->get_position(), 200.0f);
 		// draw scene object
 		mScene_manager.render(window);
+		window.draw(fpsText);
 
 		window.display();
 	}

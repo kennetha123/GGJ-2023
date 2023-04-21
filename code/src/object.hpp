@@ -7,7 +7,6 @@ public:
 	void set_texture(sf::Texture& texture)
 	{
 		sprite.setTexture(texture);
-		sprite.setOrigin(-400, -300);
 		sprite.setTextureRect(sf::IntRect(0, 0, 32, 32));
 
 	}

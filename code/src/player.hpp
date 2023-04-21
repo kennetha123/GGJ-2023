@@ -124,6 +124,10 @@ public:
 		window.draw(player_sprite->get_sprite());
 	}
 
+	sf::Vector2f get_pos()
+	{
+		return player_transform->get_position();
+	}
 private:
 	std::shared_ptr<sprite_component> player_sprite;
 	std::shared_ptr<transform_component> player_transform;

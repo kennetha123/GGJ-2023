@@ -21,6 +21,6 @@ public:
 		main_character.render(window);
 	}
 
-private:
+
 	player main_character;
 };

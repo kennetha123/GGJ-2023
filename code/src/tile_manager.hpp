@@ -6,7 +6,6 @@
 #include <fstream>
 #include <memory>
 #include <map>
-#include <future>
 #include "../../json/json.hpp"
 #include "object.hpp"
 
@@ -39,8 +38,15 @@ public:
             return;
         }
 
-        nlohmann::json json_data;
-        input_file >> json_data;
+        nlohmann::json::parser_callback_t ignore_comments_and_exceptions = [](int depth, nlohmann::json::parse_event_t event, nlohmann::json& parsed) {
+            // Ignore comments
+            if (event == nlohmann::json::parse_event_t::key && parsed.dump() == "#") {
+                return false;
+            }
+            return true;
+        };
+
+        nlohmann::json json_data = nlohmann::json::parse(input_file, ignore_comments_and_exceptions);
 
         const auto& layers = json_data["layers"];
         for (const auto& layer : layers) {
@@ -61,7 +67,7 @@ public:
 
                             std::string file = "../resources/" + tile_ptr->tile_file;
                             load_tile_image(file);
-                            tile_ptr->set_texture(tile_textures[file]);
+                            tile_ptr->set_texture(*(tile_textures[file]));
 
                             size_t idx = (tile_ptr->tile_idx - 1) % rect_tile_x;
                             size_t idy = (tile_ptr->tile_idx - 1) / rect_tile_y;
@@ -73,14 +79,25 @@ public:
                 }
             }
         }
+
+        std::cout << "tiles 0 : " << tiles[0].get_world_pos().x << " " << tiles[0].get_world_pos().y << std::endl;
     }
 
-    void render(sf::RenderWindow& window) {
+    void render(sf::RenderWindow& window, const sf::Vector2f& player_position, float render_distance) {
         for (size_t i = 0; i < tiles.size(); ++i) {
-            window.draw(tiles[i].sprite);
+            if (is_near_player(tiles[i].sprite.getPosition(), player_position, render_distance)) {
+                window.draw(tiles[i].sprite);
+            }
         }
     }
 
+private:
+    bool is_near_player(const sf::Vector2f& tile_position, const sf::Vector2f& player_position, float render_distance) {
+        float dx = tile_position.x - player_position.x;
+        float dy = tile_position.y - player_position.y;
+        float distance_squared = dx * dx + dy * dy;
+        return distance_squared <= render_distance * render_distance;
+    }
 private:
     void load_tile_image(const std::string& image_path) {
         if (!tile_textures.empty()) {
@@ -90,15 +107,15 @@ private:
             }
         }
 
-        sf::Texture texture;
-        if (!texture.loadFromFile(image_path)) {
+        auto texture = std::make_shared<sf::Texture>();
+        if (!texture->loadFromFile(image_path)) {
             printf("Failed to load file!");
         }
-
-        tile_textures[image_path] = std::move(texture);
-    }
-private:
-    std::map<std::string, sf::Texture> tile_textures;
+        else {
+            tile_textures[image_path] = texture;
+        }
+    }private:
+    std::map<std::string, std::shared_ptr<sf::Texture>> tile_textures;
     std::vector<tile> tiles;
     size_t rect_tile_x = 8;
     size_t rect_tile_y = 8;
