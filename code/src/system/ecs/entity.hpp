@@ -2,7 +2,7 @@
 #include <unordered_map>
 #include <memory>
 #include <typeindex>
-
+#include <cassert>
 #include <SFML/Graphics.hpp>
 
 class transform_component;
@@ -46,6 +46,11 @@ class sprite_component : public component
 public:
 	sprite_component(const sf::Texture& texture) : sprite(texture) {}
 
+	sprite_component()
+	{
+		std::cout << "you haven't set texture. Make sure you set it later." << std::endl;
+	}
+
 	void set_texture_rect(int rect_left, int rect_top, int rect_width, int rect_height)
 	{
 		sprite.setTextureRect(sf::IntRect(rect_left, rect_top, rect_width, rect_height));
@@ -79,56 +84,48 @@ private:
 class transform_component : public component
 {
 public:
-	transform_component(entity& parent) : parent_(parent) {}
+	/// <summary>
+	/// The constructor is required for make sure the sprite component
+	/// is exist and cannot be modified directly through the sprite component.
+	/// These are limitation coming from SFML that use inheritance so when implementing
+	/// ECS it's not possible to divide the transform component and sprite easily.
+	/// </summary>
+	/// <param name="parent">entity class that already added sprite component.</param>
+	transform_component(entity& parent) : parent_(parent) 
+	{
+		sprite_comp = parent_.get_component<sprite_component>();
+		assert(sprite_comp && "sprite component is not exist in entity object!");
+	}
+
 	void set_position(float x, float y)
 	{
-		auto sprite_comp = parent_.get_component<sprite_component>();
-		if (sprite_comp)
-		{
-			sprite_comp->set_position(x, y);
-		}
+		sprite_comp->set_position(x, y);
 	}
 
 	void set_position(sf::Vector2f vec)
 	{
-		auto sprite_comp = parent_.get_component<sprite_component>();
-		if (sprite_comp)
-		{
-			sprite_comp->set_position(vec.x, vec.y);
-		}
-
+		sprite_comp->set_position(vec.x, vec.y);
 	}
 
 	void move(float offset_x, float offset_y)
 	{
-		auto sprite_comp = parent_.get_component<sprite_component>();
-		if (sprite_comp)
-		{
-			sprite_comp->move(offset_x, offset_y);
-		}
+		sprite_comp->move(offset_x, offset_y);
 	}
 
 	const sf::Vector2f get_position() const
 	{
-		auto sprite_comp = parent_.get_component<sprite_component>();
-		if (sprite_comp)
-		{
-			return sprite_comp->sprite.getPosition();
-		}
-		return sf::Vector2f(0.0f, 0.0f);
+		return sprite_comp->sprite.getPosition();
 	}
 private:
 	entity& parent_;
+	std::shared_ptr<sprite_component> sprite_comp;
 };
 
 class animation_component : public component
 {
 public:
 	animation_component(std::shared_ptr<sprite_component> sprite_comp, const std::vector<std::vector<sf::IntRect>>& frames, float frame_time) :
-		sprite_comp_(sprite_comp), frames_(frames), frame_time_(frame_time)
-	{
-
-	}
+		sprite_comp_(sprite_comp), frames_(frames), frame_time_(frame_time) { }
 
 	void update(float delta_time, int row)
 	{
