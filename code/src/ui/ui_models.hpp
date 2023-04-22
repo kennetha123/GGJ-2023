@@ -1,45 +1,110 @@
 #pragma once
+
 #include <SFML/Graphics.hpp>
+
 #include <string>
 #include <sstream>
 
 namespace ui
 {
-	class fps_model
+	namespace model
 	{
-	public:
-		void set_fps(float fps) { this->fps = fps; }
+		class model
+		{
+		public:
+			virtual ~model() = default;
+		};
 
-		float get_fps() const { return fps; }
+		class fps_model : public model
+		{
+		public:
+			void set_fps(float fps)
+			{
+				this->fps = fps;
+			}
 
-	private:
-		float fps;
-	};
+			float get_fps() const
+			{
+				return fps;
+			}
 
-	class fps_view
+		private:
+			float fps = 0;
+		};
+	}
+
+	namespace view
 	{
-	public:
-		fps_view(const sf::Font& font)
+		class view
 		{
-			fps_text.setFont(font);
-			fps_text.setCharacterSize(32);
-			fps_text.setFillColor(sf::Color::White);
-			fps_text.setPosition(10, 10);
-		}
+		public:
+			virtual void update(const model::model& model_) = 0;
+			virtual void draw(sf::RenderWindow& window) = 0;
+		};
 
-		void update(float fps)
+		class fps_view : public view
 		{
-			std::stringstream ss;
-			ss << "FPS : " << static_cast<int>(fps);
-			fps_text.setString(ss.str());
-		}
+		public:
+			fps_view(const sf::Font& font)
+			{
+				fps_text.setFont(font);
+				fps_text.setCharacterSize(32);
+				fps_text.setFillColor(sf::Color::White);
+				fps_text.setPosition(10, 10);
+			}
 
-		sf::Text get_text() 
+			void update(const model::model& model_) override
+			{
+				const model::fps_model& fps_model = dynamic_cast<const model::fps_model&>(model_);
+
+				std::stringstream ss;
+				ss << "FPS : " << static_cast<int>(fps_model.get_fps());
+				fps_text.setString(ss.str());
+			}
+
+			void draw(sf::RenderWindow& window) override
+			{
+				window.draw(fps_text);
+			}
+
+		private:
+			sf::Text fps_text;
+		};
+	}
+
+	namespace controller
+	{
+		class fps_controller
 		{
-			return fps_text;
-		}
+		public:
+			fps_controller(const sf::Font& font) : fps_view_(font) {}
 
-	private:
-		sf::Text fps_text;
-	};
+			void update(float dt)
+			{
+				fps_timer += dt;
+				frame_count++;
+
+				if (fps_timer >= 1.0f)
+				{
+					int fps = static_cast<int>(frame_count / fps_timer);
+					fps_model_.set_fps(fps);
+					fps_view_.update(fps_model_);
+					frame_count = 0;
+					fps_timer = 0;
+				}
+			}
+
+			void draw(sf::RenderWindow& window)
+			{
+				fps_view_.draw(window);
+			}
+
+		private:
+			view::fps_view fps_view_;
+			model::fps_model fps_model_;
+
+			int frame_count = 0;
+			float fps_timer = 0;
+		};
+	}
 }

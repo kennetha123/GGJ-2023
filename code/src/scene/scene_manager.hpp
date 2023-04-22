@@ -11,7 +11,7 @@ public:
 class scene_manager
 {
 public:
-    class scene_manager() {}
+    scene_manager() {}
 
     void update(float dt)
     {
@@ -33,7 +33,7 @@ public:
         scenes_.back()->render(window);
     }
 
-    void pushScene(scene* scene)
+    void pushScene(std::shared_ptr<scene> scene)
     {
         scenes_.push_back(scene);
     }
@@ -49,5 +49,5 @@ public:
     }
 
 private:
-    std::vector<scene*> scenes_;
+    std::vector<std::shared_ptr<scene>> scenes_;
 };

@@ -13,13 +13,16 @@ int main()
 	 
 	tile_manager tm;
 	scene_manager scene_manager_;
-	std::unique_ptr<overworld> ow = std::make_unique<overworld>();
+	std::shared_ptr<overworld> ow = std::make_shared<overworld>();
 
 	font.loadFromFile("../resources/font/arial.ttf");
-	ui::ui_manager ui_mgr(font);
+	ui::ui_manager ui_mgr;
+	std::shared_ptr<ui::controller::fps_controller> fps_view = std::make_shared<ui::controller::fps_controller>(font);
 
 	tm.tile_parser("../resources/maps/test.txt", "world.png");
-	scene_manager_.pushScene(ow.get());
+
+	scene_manager_.pushScene(std::dynamic_pointer_cast<scene>(ow));
+	ui_mgr.push(fps_view);
 
 	while (window.isOpen())
 	{
@@ -36,7 +39,7 @@ int main()
 
 		sf::Time dt = clock.restart();
 		scene_manager_.update(dt.asSeconds());
-		ui_mgr.update_fps(dt.asSeconds());
+		ui_mgr.update(dt.asSeconds());
 
 		window.clear();
 
@@ -47,7 +50,7 @@ int main()
 		scene_manager_.render(window);
 
 		// draw ui
-		window.draw(ui_mgr.get_fps_view().get_text());
+		ui_mgr.draw(window);
 
 		window.display();
 	}

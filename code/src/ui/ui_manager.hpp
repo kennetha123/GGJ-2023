@@ -1,39 +1,73 @@
 #pragma once
 #include "ui_models.hpp"
+#include <stack>
 
 namespace ui
 {
 	class ui_manager
 	{
-	public:
-		ui_manager(const sf::Font& font) : fps_view_(font)
-		{
-			fps_model_ = std::make_unique<fps_model>();
-		}
+    public:
+        void push(std::shared_ptr<controller::fps_controller> view)
+        {
+            stack_.push(view);
+        }
 
-		void update_fps(float dt)
-		{
-			fps_timer += dt;
-			frame_count++;
+        void pop()
+        {
+            if (!stack_.empty())
+            {
+                stack_.pop();
+            }
+        }
 
-			if (fps_timer >= 1.0f)
-			{
-				int fps = static_cast<int>(frame_count / fps_timer);
-				fps_model_->set_fps(fps);
-				fps_view_.update(100);
-				frame_count = 0;
-				fps_timer = 0;
-			}
+        void remove(const std::shared_ptr<controller::fps_controller>& target_view)
+        {
+            std::stack<std::shared_ptr<controller::fps_controller>> temp_stack;
 
-		}
+            while (!stack_.empty())
+            {
+                auto top_view = stack_.top();
+                stack_.pop();
 
-		fps_view get_fps_view() { return fps_view_; }
+                if (top_view != target_view)
+                {
+                    temp_stack.push(top_view);
+                }
+            }
+
+            while (!temp_stack.empty())
+            {
+                stack_.push(temp_stack.top());
+                temp_stack.pop();
+            }
+        }
+
+        int size() const
+        {
+            return stack_.size();
+        }
+
+        void update(float dt)
+        {
+            if (!stack_.empty())
+            {
+                stack_.top()->update(dt);
+            }
+        }
+
+        void draw(sf::RenderWindow& window)
+        {
+            std::stack<std::shared_ptr<controller::fps_controller>> temp_stack = stack_;
+
+            while (!temp_stack.empty())
+            {
+                temp_stack.top()->draw(window);
+                temp_stack.pop();
+            }
+        }
 
 	private:
-		std::unique_ptr<fps_model> fps_model_;
-		fps_view fps_view_;
+        std::stack<std::shared_ptr<controller::fps_controller>> stack_;
 
-		int frame_count = 0;
-		float fps_timer = 0;
 	};
 }
