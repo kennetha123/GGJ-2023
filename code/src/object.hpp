@@ -11,7 +11,7 @@ public:
 
 	}
 
-	void render(sf::RenderWindow& window)
+	void draw(sf::RenderWindow& window)
 	{
 		window.draw(sprite);
 	}

@@ -8,7 +8,7 @@ class scene
 {
 public:
     virtual void update(float dt) = 0;
-    virtual void render(sf::RenderWindow& window) = 0;
+    virtual void draw(sf::RenderWindow& window) = 0;
 };
 
 class scene_manager
@@ -24,11 +24,11 @@ public:
         }
     }
 
-    void render(sf::RenderWindow& window)
+    void draw(sf::RenderWindow& window)
     {
         if (!scenes_.empty())
         {
-            scenes_.back()->render(window);
+            scenes_.back()->draw(window);
         }
     }
 

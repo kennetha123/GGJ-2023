@@ -76,7 +76,7 @@ void draw_game_objects(sf::RenderWindow& window, scene_manager& scene_manager_, 
 {
 
     // draw scene object
-    scene_manager_.render(window);
+    scene_manager_.draw(window);
 
     // draw ui
     ui_mgr.draw(window);

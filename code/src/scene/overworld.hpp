@@ -12,7 +12,7 @@ public:
 		main_character("../resources/Actor_sangoku01.png"),
 		camera(sf::FloatRect(0, 0, 800, 600))
 	{
-		tm.tile_parser("../resources/maps/world.txt", "world.png");
+		tm.tile_parser("../resources/maps/test1.txt", "world.png");
 	}
 
 	void update(float dt)
@@ -21,13 +21,13 @@ public:
 		main_character.movement(dt);
 	}
 
-	void render(sf::RenderWindow& window)
+	void draw(sf::RenderWindow& window)
 	{
 		window.setView(camera);
-		// draw tile first
-		tm.render(window, main_character.transform->get_position());
-
-		main_character.render(window);
+		
+		tm.draw(window, main_character.transform->get_position(), 0);
+		main_character.draw(window);
+		tm.draw(window, main_character.transform->get_position(), 1);
 	}
 
 private:
