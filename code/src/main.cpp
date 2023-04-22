@@ -1,35 +1,25 @@
-#include <iostream>
 #include "header.h"
-#include "scene_manager.hpp"
-#include "overworld.hpp"
+#include "scene/scene_manager.hpp"
+#include "scene/overworld.hpp"
 #include "tile_manager.hpp"
-#include <memory>
-
-#include <iostream>
-#include <cstdio>
-#include <string>
+#include "ui/ui_manager.hpp"
 
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Hunters");
+
 	sf::Clock clock;
-	sf::Text fpsText;
 	sf::Font font;
-	font.loadFromFile("../resources/font/arial.ttf");
-	fpsText.setFont(font);
-	fpsText.setCharacterSize(24);
-	fpsText.setFillColor(sf::Color::White);
-	fpsText.setPosition(0, 0);
-
-	int frameCount = 0;
-	float fpsTimer = 0;
-
-	scene_manager mScene_manager;
-	std::unique_ptr<overworld> ow = std::make_unique<overworld>();
+	 
 	tile_manager tm;
+	scene_manager scene_manager_;
+	std::unique_ptr<overworld> ow = std::make_unique<overworld>();
 
-	tm.tile_parser("../resources/maps/test2.txt", "world.png");
-	mScene_manager.pushScene(ow.get());
+	font.loadFromFile("../resources/font/arial.ttf");
+	ui::ui_manager ui_mgr(font);
+
+	tm.tile_parser("../resources/maps/test.txt", "world.png");
+	scene_manager_.pushScene(ow.get());
 
 	while (window.isOpen())
 	{
@@ -45,24 +35,19 @@ int main()
 
 
 		sf::Time dt = clock.restart();
-		mScene_manager.update(dt.asSeconds());
+		scene_manager_.update(dt.asSeconds());
+		ui_mgr.update_fps(dt.asSeconds());
 
-		// Update the FPS counter
-		fpsTimer += dt.asSeconds();
-		frameCount++;
-		if (fpsTimer >= 1.0f)
-		{
-			int fps = static_cast<int>(frameCount / fpsTimer);
-			fpsText.setString("FPS: " + std::to_string(fps));
-			frameCount = 0;
-			fpsTimer = 0;
-		}
 		window.clear();
+
 		// draw tile first
-		tm.render(window, ow.get()->main_character.get_component<transform_component>()->get_position(), 200.0f);
+		tm.render(window, ow.get()->main_character.get_component<transform_component>()->get_position(), 500.0f);
+
 		// draw scene object
-		mScene_manager.render(window);
-		window.draw(fpsText);
+		scene_manager_.render(window);
+
+		// draw ui
+		window.draw(ui_mgr.get_fps_view().get_text());
 
 		window.display();
 	}

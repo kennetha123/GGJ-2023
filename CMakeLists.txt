@@ -15,11 +15,13 @@ add_executable(${ProjectName}
 				${CodeFolder}/header.h.in
 				${CodeFolder}/collider.hpp
 				${CodeFolder}/player.hpp
-				${CodeFolder}/scene_manager.hpp
-				${CodeFolder}/overworld.hpp
-				${CodeFolder}/battleworld.hpp
+				${CodeFolder}/scene/scene_manager.hpp
+				${CodeFolder}/scene/overworld.hpp
+				${CodeFolder}/scene/battleworld.hpp
 				${CodeFolder}/object.hpp
 				${CodeFolder}/tile_manager.hpp
+				${CodeFolder}/ui/ui_manager.hpp
+				${CodeFolder}/ui/ui_models.hpp
 				${CodeFolder}/system/ecs/entity.hpp
 				${DependencyFolder}/json/json.hpp
 				${DependencyFolder}/inih/cpp/INIReader.cpp

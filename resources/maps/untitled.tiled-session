@@ -24,10 +24,10 @@
     },
     "last.exportedFilePath": "D:/Personal/Projects/GGJ-2023/resources/maps",
     "last.imagePath": "D:/Personal/Projects/GGJ-2023/resources",
-    "map.height": 400,
+    "map.height": 800,
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
     "map.lastUsedFormat": "tmx",
-    "map.width": 400,
+    "map.width": 800,
     "openFiles": [
         "world.tsx",
         "world1.tmx"
