@@ -21,9 +21,11 @@ public:
 	entity() {}
 
 	template<typename component_type, typename... component_args>
-	void add_component(component_args&&... component_args_)
+	std::shared_ptr<component_type> add_component(component_args&&... component_args_)
 	{
-		components[std::type_index(typeid(component_type))] = std::make_shared<component_type>(std::forward<component_args>(component_args_)...);
+		auto component = std::make_shared<component_type>(std::forward<component_args>(component_args_)...);
+		components[std::type_index(typeid(component_type))] = component;
+		return component;
 	}
 
 	template<typename component_type>
@@ -46,11 +48,6 @@ class sprite_component : public component
 public:
 	sprite_component(const sf::Texture& texture) : sprite(texture) {}
 
-	sprite_component()
-	{
-		std::cout << "you haven't set texture. Make sure you set it later." << std::endl;
-	}
-
 	void set_texture_rect(int rect_left, int rect_top, int rect_width, int rect_height)
 	{
 		sprite.setTextureRect(sf::IntRect(rect_left, rect_top, rect_width, rect_height));
@@ -59,6 +56,11 @@ public:
 	void set_texture_rect(const sf::IntRect& rect)
 	{
 		sprite.setTextureRect(rect);
+	}
+
+	void set_texture(sf::Texture& texture)
+	{
+		sprite.setTexture(texture);
 	}
 
 	const sf::Sprite& get_sprite() const

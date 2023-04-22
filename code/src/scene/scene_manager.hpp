@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <iostream>
 #include <vector>
 #include <memory>
 
@@ -31,12 +32,18 @@ public:
         }
     }
 
-    void pushScene(std::shared_ptr<scene> scene)
+    void push_scene(std::shared_ptr<scene> scene)
     {
+        if (!scenes_.empty())
+        {
+            std::cout << "scene overlaped! is this intended?" << std::endl;
+        }
+
         scenes_.push_back(scene);
+
     }
 
-    void popScene()
+    void pop_scene()
     {
         if (!scenes_.empty())
         {

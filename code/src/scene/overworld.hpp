@@ -8,7 +8,7 @@ public:
 	overworld() : 
 		main_character("../resources/Actor_sangoku01.png")
 	{
-	
+		tm.tile_parser("../resources/maps/world.txt", "world.png");
 	}
 
 	void update(float dt)
@@ -18,9 +18,13 @@ public:
 
 	void render(sf::RenderWindow& window)
 	{
+		// draw tile first
+		tm.render(window, main_character.transform->get_position());
+
 		main_character.render(window);
 	}
 
-
+private:
 	player main_character;
+	tile_manager tm;
 };

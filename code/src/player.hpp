@@ -12,15 +12,11 @@ public:
 			printf_s("Failed to load file!");
 		}
 
-		add_component<sprite_component>(player_texture);
-		add_component<transform_component>(*this);
-		transform_component& trans = *get_component<transform_component>();
+		sprite = add_component<sprite_component>(player_texture);
+		transform = add_component<transform_component>(*this);
 
-		player_sprite = get_component<sprite_component>();
-		player_transform = get_component<transform_component>();
-
-		player_sprite->set_texture_rect(0, 0, sprite_width, sprite_height);
-		player_transform->set_position(0.0f, 0.0f);
+		sprite->set_texture_rect(0, 0, sprite_width, sprite_height);
+		transform->set_position(0.0f, 0.0f);
 
 		std::vector<std::vector<sf::IntRect>> all_frames = {
 			{ // Down
@@ -50,7 +46,7 @@ public:
 		};
 
 		// Create the animated sprite objects
-		player_animation = std::make_unique<animation_component>(player_sprite, all_frames, 0.1f);
+		player_animation = std::make_unique<animation_component>(sprite, all_frames, 0.1f);
 	}
 
 	~player() = default;
@@ -68,7 +64,7 @@ public:
 				move_fraction = 1.0f;
 			}
 
-			player_transform->set_position(initial_position + sf::Vector2f(move_fraction * move_direction.x, move_fraction * move_direction.y));
+			transform->set_position(initial_position + sf::Vector2f(move_fraction * move_direction.x, move_fraction * move_direction.y));
 
 
 			int row = -1;
@@ -113,7 +109,7 @@ public:
 			{
 				is_moving = true;
 				move_direction = dest;
-				initial_position = player_transform->get_position();
+				initial_position = transform->get_position();
 				elapsed_time = 0;
 			}
 		}
@@ -121,18 +117,14 @@ public:
 
 	void render(sf::RenderWindow& window)
 	{
-		window.draw(player_sprite->get_sprite());
+		window.draw(sprite->get_sprite());
 	}
 
-	sf::Vector2f get_pos()
-	{
-		return player_transform->get_position();
-	}
-private:
-	std::shared_ptr<sprite_component> player_sprite;
-	std::shared_ptr<transform_component> player_transform;
+	std::shared_ptr<sprite_component> sprite;
+	std::shared_ptr<transform_component> transform;
 	std::unique_ptr<animation_component> player_animation;
 
+private:
 	sf::Texture player_texture;
 	int sprite_width = 48, sprite_height = 48;
 	float speed = 1000.0f;
