@@ -3,6 +3,8 @@
 #include "scene/overworld.hpp"
 #include "tile_manager.hpp"
 #include "ui/ui_manager.hpp"
+#include <SFML/Audio.hpp>
+using namespace ui::controller;
 
 void handle_window_events(sf::RenderWindow& window, sf::Event& ev);
 void update_scene_and_ui(scene_manager& scene_manager_, ui::ui_manager& ui_mgr, sf::Time dt);
@@ -14,13 +16,25 @@ int main()
     sf::Clock clock;
     sf::Font font;
 
+    // Load the background music
+    sf::Music bgm;
+    if (!bgm.openFromFile("../resources/Audio/Big Day Out.ogg"))
+    {
+        // Handle music loading error
+        return -1;
+    }
+
+    // Configure the background music and play it
+    bgm.setLoop(true); // Set the music to loop
+    bgm.setVolume(50); // Set the volume (0 to 100)
+    bgm.play();        // Start playing the music
+
     scene_manager scene_manager_;
     std::shared_ptr<overworld> ow = std::make_shared<overworld>();
 
     font.loadFromFile("../resources/font/arial.ttf");
     ui::ui_manager ui_mgr;
-    std::shared_ptr<ui::controller::fps_controller> fps_view = std::make_shared<ui::controller::fps_controller>(font);
-
+    std::shared_ptr<fps_controller> fps_view = std::make_shared<fps_controller>(font);
 
     scene_manager_.push_scene(std::dynamic_pointer_cast<scene>(ow));
     ui_mgr.push(fps_view);

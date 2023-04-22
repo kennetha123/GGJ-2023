@@ -48,12 +48,15 @@ include_directories(deps/SFML/include)
 find_library(SFML_SYSTEM NAMES sfml-system-d.lib PATHS "deps/SFML/lib")
 find_library(SFML_WINDOW NAMES sfml-window-d.lib PATHS "deps/SFML/lib")
 find_library(SFML_GRAPHICS NAMES sfml-graphics-d.lib PATHS "deps/SFML/lib")
-target_link_libraries(${ProjectName} ${SFML_SYSTEM} ${SFML_WINDOW} ${SFML_GRAPHICS})
+find_library(SFML_AUDIO NAMES sfml-audio-d.lib PATHS "deps/SFML/lib")
+target_link_libraries(${ProjectName} ${SFML_SYSTEM} ${SFML_WINDOW} ${SFML_GRAPHICS} ${SFML_AUDIO})
 
 set(SFML_DLL_FILES 
     sfml-graphics-d-2.dll 
     sfml-system-d-2.dll 
-    sfml-window-d-2.dll)
+    sfml-window-d-2.dll
+	sfml-audio-d-2.dll
+	openal32.dll)
 
 foreach(SFML_DLL_FILE ${SFML_DLL_FILES})
     add_custom_command(TARGET ${ProjectName} POST_BUILD

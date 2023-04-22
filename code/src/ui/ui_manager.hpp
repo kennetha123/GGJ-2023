@@ -7,6 +7,11 @@ namespace ui
 	class ui_manager
 	{
     public:
+        ui_manager() : ui_camera(sf::FloatRect(0, 0, 800, 600))
+        {
+
+        }
+
         void push(std::shared_ptr<controller::fps_controller> view)
         {
             stack_.push(view);
@@ -57,6 +62,8 @@ namespace ui
 
         void draw(sf::RenderWindow& window)
         {
+            window.setView(ui_camera);
+
             std::stack<std::shared_ptr<controller::fps_controller>> temp_stack = stack_;
 
             while (!temp_stack.empty())
@@ -68,6 +75,6 @@ namespace ui
 
 	private:
         std::stack<std::shared_ptr<controller::fps_controller>> stack_;
-
+        sf::View ui_camera;
 	};
 }
