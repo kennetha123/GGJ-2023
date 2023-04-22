@@ -74,12 +74,19 @@ namespace ui
 
 	namespace controller
 	{
-		class fps_controller
+		class base_controller
+		{
+		public:
+			virtual void update(float dt) = 0;
+			virtual void draw(sf::RenderWindow& window) = 0;
+		};
+
+		class fps_controller : public base_controller
 		{
 		public:
 			fps_controller(const sf::Font& font) : fps_view_(font) {}
 
-			void update(float dt)
+			void update(float dt) override
 			{
 				fps_timer += dt;
 				frame_count++;
@@ -94,7 +101,7 @@ namespace ui
 				}
 			}
 
-			void draw(sf::RenderWindow& window)
+			void draw(sf::RenderWindow& window) override
 			{
 				fps_view_.draw(window);
 			}

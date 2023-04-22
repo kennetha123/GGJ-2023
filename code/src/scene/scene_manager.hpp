@@ -1,5 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <vector>
+#include <memory>
 
 class scene
 {
@@ -15,22 +17,18 @@ public:
 
     void update(float dt)
     {
-        if (scenes_.empty())
+        if (!scenes_.empty())
         {
-            return;
+            scenes_.back()->update(dt);
         }
-
-        scenes_.back()->update(dt);
     }
 
     void render(sf::RenderWindow& window)
     {
-        if (scenes_.empty())
+        if (!scenes_.empty())
         {
-            return;
+            scenes_.back()->render(window);
         }
-
-        scenes_.back()->render(window);
     }
 
     void pushScene(std::shared_ptr<scene> scene)
@@ -40,12 +38,10 @@ public:
 
     void popScene()
     {
-        if (scenes_.empty())
+        if (!scenes_.empty())
         {
-            return;
+            scenes_.pop_back();
         }
-
-        scenes_.pop_back();
     }
 
 private:
