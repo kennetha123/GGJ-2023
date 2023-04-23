@@ -12,7 +12,7 @@ namespace ui
 
         }
 
-        void push(std::shared_ptr<controller::fps_controller> view)
+        void push(std::shared_ptr<controller::base_controller> view)
         {
             stack_.push(view);
         }
@@ -25,9 +25,9 @@ namespace ui
             }
         }
 
-        void remove(const std::shared_ptr<controller::fps_controller>& target_view)
+        void remove(const std::shared_ptr<controller::base_controller>& target_view)
         {
-            std::stack<std::shared_ptr<controller::fps_controller>> temp_stack;
+            std::stack<std::shared_ptr<controller::base_controller>> temp_stack;
 
             while (!stack_.empty())
             {
@@ -64,7 +64,7 @@ namespace ui
         {
             window.setView(ui_camera);
 
-            std::stack<std::shared_ptr<controller::fps_controller>> temp_stack = stack_;
+            std::stack<std::shared_ptr<controller::base_controller>> temp_stack = stack_;
 
             while (!temp_stack.empty())
             {
@@ -74,7 +74,7 @@ namespace ui
         }
 
 	private:
-        std::stack<std::shared_ptr<controller::fps_controller>> stack_;
+        std::stack<std::shared_ptr<controller::base_controller>> stack_;
         sf::View ui_camera;
 	};
 }

@@ -31,6 +31,10 @@ namespace ui
 		private:
 			float fps = 0;
 		};
+
+		class main_menu_model : public model
+		{
+		};
 	}
 
 	namespace view
@@ -69,6 +73,47 @@ namespace ui
 
 		private:
 			sf::Text fps_text;
+		};
+
+		class main_menu_view : public view
+		{
+		public:
+			main_menu_view(const sf::Font& font)
+			{
+				set_menu_option(newGameText, font, "New Game", 50, 100);
+				set_menu_option(loadGameText, font, "Load Game", 50, 150);
+				set_menu_option(quitText, font, "Quit", 50, 200);
+				set_menu_option(optionsText, font, "Options", 800 - 200, 10);
+			}
+
+			virtual void update(const model::model& model_) override
+			{
+
+			}
+
+			virtual void draw(sf::RenderWindow& window) override
+			{
+				window.draw(newGameText);
+				window.draw(loadGameText);
+				window.draw(quitText);
+				window.draw(optionsText);
+			}
+
+		private:
+			void set_menu_option(sf::Text& text, const sf::Font& font, const std::string& str, float x, float y)
+			{
+				text.setFont(font);
+				text.setString(str);
+				text.setCharacterSize(30);
+				text.setFillColor(sf::Color::White);
+				text.setPosition(x, y);
+			}
+
+		private:
+			sf::Text newGameText;
+			sf::Text loadGameText;
+			sf::Text quitText;
+			sf::Text optionsText;
 		};
 	}
 
@@ -112,6 +157,30 @@ namespace ui
 
 			int frame_count = 0;
 			float fps_timer = 0;
+		};
+
+		class main_menu_controller : public base_controller
+		{
+		public:
+			main_menu_controller(const sf::Font& font) : 
+				mm_view_(font)
+			{
+
+			}
+
+			virtual void update(float dt) override
+			{
+
+			}
+
+			virtual void draw(sf::RenderWindow& window) override
+			{
+				mm_view_.draw(window);
+			}
+		private:
+			view::main_menu_view mm_view_;
+			model::main_menu_model mm_model_;
+
 		};
 	}
 }

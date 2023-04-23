@@ -4,24 +4,25 @@
 #include "scene_manager.hpp"
 #include "tile_manager.hpp"
 #include "player.hpp"
+#include "../ui/ui_manager.hpp"
 
 class overworld : public scene
 {
 public:
-	overworld() : 
+	overworld(ui::ui_manager& ui_mgr) : 
 		main_character("../resources/Actor_sangoku01.png"),
 		camera(sf::FloatRect(0, 0, 800, 600))
 	{
 		tm.tile_parser("../resources/maps/test1.txt", "world.png");
 	}
 
-	void update(float dt)
+	virtual void update(float dt) override
 	{
 		camera.setCenter(main_character.transform->get_position());
 		main_character.movement(dt);
 	}
 
-	void draw(sf::RenderWindow& window)
+	virtual void draw(sf::RenderWindow& window) override
 	{
 		window.setView(camera);
 		
@@ -33,7 +34,6 @@ public:
 private:
 	player main_character;
 	tile_manager tm;
-
 	sf::View camera;
 
 };

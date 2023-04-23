@@ -18,7 +18,7 @@ add_executable(${ProjectName}
 				${CodeFolder}/scene/scene_manager.hpp
 				${CodeFolder}/scene/overworld.hpp
 				${CodeFolder}/scene/battleworld.hpp
-				${CodeFolder}/object.hpp
+				${CodeFolder}/scene/main_menu.hpp
 				${CodeFolder}/tile_manager.hpp
 				${CodeFolder}/ui/ui_manager.hpp
 				${CodeFolder}/ui/ui_models.hpp

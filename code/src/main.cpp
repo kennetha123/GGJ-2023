@@ -1,6 +1,7 @@
 #include "header.h"
 #include "scene/scene_manager.hpp"
 #include "scene/overworld.hpp"
+#include "scene/main_menu.hpp"
 #include "tile_manager.hpp"
 #include "ui/ui_manager.hpp"
 #include <SFML/Audio.hpp>
@@ -30,14 +31,16 @@ int main()
     bgm.play();        // Start playing the music
 
     scene_manager scene_manager_;
-    std::shared_ptr<overworld> ow = std::make_shared<overworld>();
+    ui::ui_manager ui_mgr;
+
+    std::shared_ptr<overworld> ow = std::make_shared<overworld>(ui_mgr);
+    std::shared_ptr<main_menu> mm = std::make_shared<main_menu>(ui_mgr);
 
     font.loadFromFile("../resources/font/arial.ttf");
-    ui::ui_manager ui_mgr;
-    std::shared_ptr<fps_controller> fps_view = std::make_shared<fps_controller>(font);
+    std::shared_ptr<fps_controller> fps_ctrl = std::make_shared<fps_controller>(font);
 
-    scene_manager_.push_scene(std::dynamic_pointer_cast<scene>(ow));
-    ui_mgr.push(fps_view);
+    scene_manager_.push_scene(std::dynamic_pointer_cast<scene>(mm));
+    ui_mgr.push(fps_ctrl);
 
     while (window.isOpen())
     {
