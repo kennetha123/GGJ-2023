@@ -2,6 +2,7 @@
 #include "../system/ecs/entity.hpp"
 #include "../ui/ui_manager.hpp"
 #include "../ui/ui_models.hpp"
+#include "../ui/button.hpp"
 
 using namespace ui::controller;
 
@@ -35,6 +36,11 @@ public:
 	{
 		window.draw(bg_sprite);
 		main_menu_ctrl->draw(window);
+	}
+
+	Button& main_menu::get_settings_button()
+	{
+		return main_menu_ctrl->mm_view_.settings_button;
 	}
 
 private:

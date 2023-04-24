@@ -51,6 +51,19 @@ public:
         }
     }
 
+    std::shared_ptr<scene> scene_manager::current_scene() const
+    {
+        if (!scenes_.empty())
+        {
+            return scenes_.back();
+        }
+        else
+        {
+            return nullptr;
+        }
+    }
+
+
 private:
     std::vector<std::shared_ptr<scene>> scenes_;
 };

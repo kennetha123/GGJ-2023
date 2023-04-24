@@ -22,7 +22,10 @@ add_executable(${ProjectName}
 				${CodeFolder}/tile_manager.hpp
 				${CodeFolder}/ui/ui_manager.hpp
 				${CodeFolder}/ui/ui_models.hpp
+				${CodeFolder}/ui/button.hpp
 				${CodeFolder}/system/ecs/entity.hpp
+				${CodeFolder}/system/observer.hpp
+				${CodeFolder}/system/input_handler.hpp
 				${DependencyFolder}/json/json.hpp
 				${DependencyFolder}/inih/cpp/INIReader.cpp
 				${DependencyFolder}/inih/cpp/INIReader.h

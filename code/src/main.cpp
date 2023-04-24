@@ -1,13 +1,15 @@
 #include "header.h"
+#include <SFML/Audio.hpp>
+
 #include "scene/scene_manager.hpp"
 #include "scene/overworld.hpp"
 #include "scene/main_menu.hpp"
 #include "tile_manager.hpp"
 #include "ui/ui_manager.hpp"
-#include <SFML/Audio.hpp>
+#include "system/input_handler.hpp"
+
 using namespace ui::controller;
 
-void handle_window_events(sf::RenderWindow& window, sf::Event& ev);
 void update_scene_and_ui(scene_manager& scene_manager_, ui::ui_manager& ui_mgr, sf::Time dt);
 void draw_game_objects(sf::RenderWindow& window, scene_manager& scene_manager_, ui::ui_manager& ui_mgr);
 
@@ -32,6 +34,7 @@ int main()
 
     scene_manager scene_manager_;
     ui::ui_manager ui_mgr;
+    input_handler event_handler(scene_manager_);
 
     std::shared_ptr<overworld> ow = std::make_shared<overworld>(ui_mgr);
     std::shared_ptr<main_menu> mm = std::make_shared<main_menu>(ui_mgr);
@@ -44,8 +47,7 @@ int main()
 
     while (window.isOpen())
     {
-        sf::Event ev;
-        handle_window_events(window, ev);
+        event_handler.handle_events(window);
 
         sf::Time dt = clock.restart();
         update_scene_and_ui(scene_manager_, ui_mgr, dt);
@@ -55,17 +57,6 @@ int main()
         draw_game_objects(window, scene_manager_, ui_mgr);
 
         window.display();
-    }
-}
-
-void handle_window_events(sf::RenderWindow& window, sf::Event& ev)
-{
-    while (window.pollEvent(ev))
-    {
-        if (ev.type == sf::Event::Closed)
-        {
-            window.close();
-        }
     }
 }
 

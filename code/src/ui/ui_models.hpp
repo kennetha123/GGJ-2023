@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-
+#include "button.hpp"
 #include <string>
 #include <sstream>
 
@@ -78,7 +78,8 @@ namespace ui
 		class main_menu_view : public view
 		{
 		public:
-			main_menu_view(const sf::Font& font)
+			main_menu_view(const sf::Font& font) :
+				settings_button(font, "Settings", 50, 250)
 			{
 				set_menu_option(newGameText, font, "New Game", 50, 100);
 				set_menu_option(loadGameText, font, "Load Game", 50, 150);
@@ -97,6 +98,8 @@ namespace ui
 				window.draw(loadGameText);
 				window.draw(quitText);
 				window.draw(optionsText);
+
+				window.draw(settings_button);
 			}
 
 		private:
@@ -109,11 +112,15 @@ namespace ui
 				text.setPosition(x, y);
 			}
 
+		public:
+			Button settings_button;
+
 		private:
 			sf::Text newGameText;
 			sf::Text loadGameText;
 			sf::Text quitText;
 			sf::Text optionsText;
+
 		};
 	}
 
@@ -177,8 +184,9 @@ namespace ui
 			{
 				mm_view_.draw(window);
 			}
-		private:
 			view::main_menu_view mm_view_;
+
+		private:
 			model::main_menu_model mm_model_;
 
 		};
