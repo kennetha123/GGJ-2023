@@ -13,12 +13,12 @@ public:
 		main_character("../resources/Actor_sangoku01.png"),
 		camera(sf::FloatRect(0, 0, 800, 600))
 	{
-		tm.tile_parser("../resources/maps/test1.txt", "world.png");
+		tm.tile_parser("../resources/maps/test.txt", "world.png");
 	}
 
 	virtual void update(float dt) override
 	{
-		camera.setCenter(main_character.transform->get_position());
+		camera.setCenter(main_character.sprite.getPosition());
 		main_character.movement(dt);
 	}
 
@@ -26,9 +26,9 @@ public:
 	{
 		window.setView(camera);
 		
-		tm.draw(window, main_character.transform->get_position(), 0);
+		tm.draw(window, main_character.sprite.getPosition(), 0);
 		main_character.draw(window);
-		tm.draw(window, main_character.transform->get_position(), 1);
+		tm.draw(window, main_character.sprite.getPosition(), 1);
 	}
 
 private:

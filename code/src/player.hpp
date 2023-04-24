@@ -12,11 +12,9 @@ public:
 			printf_s("Failed to load file!");
 		}
 
-		sprite = add_component<sprite_component>(player_texture);
-		transform = add_component<transform_component>(*this);
-
-		sprite->set_texture_rect(0, 0, sprite_width, sprite_height);
-		transform->set_position(0.0f, 0.0f);
+		sprite.setTexture(player_texture);
+		sprite.setTextureRect(sf::IntRect(0, 0, sprite_width, sprite_height));
+		sprite.setPosition(0.0f, 0.0f);
 
 		std::vector<std::vector<sf::IntRect>> all_frames = {
 			{ // Down
@@ -64,7 +62,7 @@ public:
 				move_fraction = 1.0f;
 			}
 
-			transform->set_position(initial_position + sf::Vector2f(move_fraction * move_direction.x, move_fraction * move_direction.y));
+			sprite.setPosition(initial_position + sf::Vector2f(move_fraction * move_direction.x, move_fraction * move_direction.y));
 
 
 			int row = -1;
@@ -109,7 +107,7 @@ public:
 			{
 				is_moving = true;
 				move_direction = dest;
-				initial_position = transform->get_position();
+				initial_position = sprite.getPosition();
 				elapsed_time = 0;
 			}
 		}
@@ -117,11 +115,10 @@ public:
 
 	void draw(sf::RenderWindow& window)
 	{
-		window.draw(sprite->get_sprite());
+		window.draw(sprite);
 	}
 
-	std::shared_ptr<sprite_component> sprite;
-	std::shared_ptr<transform_component> transform;
+	sf::Sprite sprite;
 	std::unique_ptr<animation_component> player_animation;
 
 private:

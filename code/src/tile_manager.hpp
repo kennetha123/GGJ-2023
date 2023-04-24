@@ -14,12 +14,10 @@ struct tile : public entity {
 public:
     tile(const sf::Texture& texture)
     {
-        sprite = add_component<sprite_component>(texture);
-        transform = add_component<transform_component>(*this);
+        sprite.setTexture(texture);
     }
 
-    std::shared_ptr<sprite_component> sprite;
-    std::shared_ptr<transform_component> transform;
+    sf::Sprite sprite;
 
     std::string tile_file = "";
     uint32_t tile_idx = 0;
@@ -80,14 +78,14 @@ public:
 
                             tile_ptr.tile_idx = tile_idx;
                             tile_ptr.tile_file = image_file_name;
-                            tile_ptr.transform->set_position(x * pixel_size, y * pixel_size);
+                            tile_ptr.sprite.setPosition(x * pixel_size, y * pixel_size);
 
                             // Store the layer index in the tile
                             tile_ptr.layer_index = layer_index;
 
                             size_t idx = (tile_ptr.tile_idx - 1) % rect_tile_x;
                             size_t idy = (tile_ptr.tile_idx - 1) / rect_tile_y;
-                            tile_ptr.sprite->set_texture_rect(sf::IntRect((idx * pixel_size), (idy * pixel_size), pixel_size, pixel_size));
+                            tile_ptr.sprite.setTextureRect(sf::IntRect((idx * pixel_size), (idy * pixel_size), pixel_size, pixel_size));
 
                             tiles.push_back(tile_ptr);
                         }
@@ -104,9 +102,9 @@ public:
     {
         for (const auto& tile : tiles)
         {
-            if (tile.layer_index == layer && is_near_player(tile.transform->get_position(), player_position, render_distance))
+            if (tile.layer_index == layer && is_near_player(tile.sprite.getPosition(), player_position, render_distance))
             {
-                window.draw(tile.sprite->get_sprite());
+                window.draw(tile.sprite);
             }
         }
     }
