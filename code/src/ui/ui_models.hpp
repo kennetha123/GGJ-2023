@@ -79,12 +79,12 @@ namespace ui
 		{
 		public:
 			main_menu_view(const sf::Font& font) :
-				settings_button(font, "Settings", 50, 250)
+				new_game_button(font, "New Game", 100, 100),
+				load_game_button(font, "Load Game", 100, 150),
+				settings_button(font, "Settings", 100, 200),
+				quit_button(font, "Quit", 100, 250)
+
 			{
-				set_menu_option(newGameText, font, "New Game", 50, 100);
-				set_menu_option(loadGameText, font, "Load Game", 50, 150);
-				set_menu_option(quitText, font, "Quit", 50, 200);
-				set_menu_option(optionsText, font, "Options", 800 - 200, 10);
 			}
 
 			virtual void update(const model::model& model_) override
@@ -94,12 +94,10 @@ namespace ui
 
 			virtual void draw(sf::RenderWindow& window) override
 			{
-				window.draw(newGameText);
-				window.draw(loadGameText);
-				window.draw(quitText);
-				window.draw(optionsText);
-
+				window.draw(new_game_button);
+				window.draw(load_game_button);
 				window.draw(settings_button);
+				window.draw(quit_button);
 			}
 
 		private:
@@ -113,14 +111,10 @@ namespace ui
 			}
 
 		public:
+			Button new_game_button;
+			Button load_game_button;
 			Button settings_button;
-
-		private:
-			sf::Text newGameText;
-			sf::Text loadGameText;
-			sf::Text quitText;
-			sf::Text optionsText;
-
+			Button quit_button;
 		};
 	}
 
@@ -169,15 +163,21 @@ namespace ui
 		class main_menu_controller : public base_controller
 		{
 		public:
-			main_menu_controller(const sf::Font& font) : 
+			main_menu_controller(const sf::Font& font) :
 				mm_view_(font)
 			{
-				get_settings_button().addObserver(this, &main_menu_controller::on_settings_clicked);
+				mm_view_.new_game_button.addObserver(this, &main_menu_controller::on_new_game_clicked);
+				mm_view_.load_game_button.addObserver(this, &main_menu_controller::on_load_game_clicked);
+				mm_view_.settings_button.addObserver(this, &main_menu_controller::on_settings_clicked);
+				mm_view_.quit_button.addObserver(this, &main_menu_controller::on_quit_clicked);
 			}
 
 			~main_menu_controller()
 			{
-				get_settings_button().removeObserver(this, &main_menu_controller::on_settings_clicked);
+				mm_view_.new_game_button.removeObserver(this, &main_menu_controller::on_new_game_clicked);
+				mm_view_.load_game_button.removeObserver(this, &main_menu_controller::on_load_game_clicked);
+				mm_view_.settings_button.removeObserver(this, &main_menu_controller::on_settings_clicked);
+				mm_view_.quit_button.removeObserver(this, &main_menu_controller::on_quit_clicked);
 			}
 
 			virtual void update(float dt) override
@@ -190,19 +190,34 @@ namespace ui
 				mm_view_.draw(window);
 			}
 
+			void on_new_game_clicked()
+			{
+				std::cout << "On New Game Clicked" << std::endl;
+
+			}
+
+			void on_load_game_clicked()
+			{
+				std::cout << "On Load Game Clicked" << std::endl;
+			}
+
+
 			void on_settings_clicked()
 			{
 				std::cout << "On Settings Clicked" << std::endl;
 			}
 
-			Button& get_settings_button()
+			void on_quit_clicked()
 			{
-				return mm_view_.settings_button;
+				std::cout << "On Quit Clicked" << std::endl;
+
 			}
+
+
+			view::main_menu_view mm_view_;
 
 		private:
 			model::main_menu_model mm_model_;
-			view::main_menu_view mm_view_;
 
 		};
 	}

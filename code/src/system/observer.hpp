@@ -17,7 +17,7 @@ public:
     using InstanceType = T;
     using MemberFunctionType = void (T::*)();
 
-    BoundObserverFunc(T* instance, MemberFunctionType memberFunction)
+    BoundObserverFunc(InstanceType* instance, MemberFunctionType memberFunction)
         : instance(instance), memberFunction(memberFunction) {}
 
     void operator()() const override
@@ -28,7 +28,7 @@ public:
         }
     }
 
-    T* instance;
+    InstanceType* instance;
     MemberFunctionType memberFunction;
 };
 

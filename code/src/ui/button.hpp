@@ -4,7 +4,7 @@
 #include <iostream>
 #include "../system/observer.hpp"
 
-class Button : public sf::Drawable, public sf::Transformable, public Subject
+class Button : public sf::Drawable, public Subject
 {
 public:
     Button(const sf::Font& font, const std::string& text, float x, float y)
@@ -13,22 +13,22 @@ public:
         button_text.setString(text);
         button_text.setCharacterSize(30);
         button_text.setFillColor(sf::Color::White);
+
+        sf::FloatRect text_bounds = button_text.getLocalBounds();
+        button_text.setOrigin(text_bounds.width / 2.0f, text_bounds.height / 2.0f);
         button_text.setPosition(x, y);
 
-        sf::FloatRect bounds = button_text.getGlobalBounds();
-        button_area = sf::FloatRect(bounds.left, bounds.top, bounds.width, bounds.height);
-
-        float width_diff = (bounds.width * 2.0f - bounds.width) / 2.0f;
-        float height_diff = (bounds.height * 1.5f - bounds.height) / 2.0f;
-
+        // Adjust position so that the rectangle is centered on the text
         rectangleImage.setFillColor(sf::Color::Blue);
-        rectangleImage.setSize(sf::Vector2f(bounds.width * 2.0f, bounds.height * 1.5f));
-        rectangleImage.setPosition(x - width_diff, y - height_diff);
+        rectangleImage.setSize(sf::Vector2f(text_bounds.width * 2.0f, text_bounds.height * 1.5f));
+        rectangleImage.setOrigin(rectangleImage.getSize() / 2.0f);
+        rectangleImage.setPosition(x, y);
+        global_bounds = rectangleImage.getGlobalBounds();
     }
 
     bool checkClick(const sf::Vector2f& mouse_position)
     {
-        if (button_area.contains(mouse_position))
+        if (global_bounds.contains(mouse_position))
         {
             notify();
             return true;
@@ -39,13 +39,12 @@ public:
 
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override
     {
-        states.transform *= getTransform();
         target.draw(rectangleImage, states);
         target.draw(button_text, states);
     }
 
 private:
     sf::Text button_text;
-    sf::FloatRect button_area;
     sf::RectangleShape rectangleImage;
+    sf::FloatRect global_bounds;
 };

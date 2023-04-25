@@ -26,7 +26,10 @@ public:
 		bg_sprite.setTexture(bg_texture);
 
 		// Register all button
-		ui_mgr.register_button(main_menu_ui->get_settings_button());
+		ui_mgr.register_button(main_menu_ui->mm_view_.new_game_button);
+		ui_mgr.register_button(main_menu_ui->mm_view_.load_game_button);
+		ui_mgr.register_button(main_menu_ui->mm_view_.settings_button);
+		ui_mgr.register_button(main_menu_ui->mm_view_.quit_button);
 	}
 
 	virtual void update(float dt) override
