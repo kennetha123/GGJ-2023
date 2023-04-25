@@ -73,7 +73,20 @@ namespace ui
             }
         }
 
+        void on_button_click(const sf::Vector2f& mouse_position)
+        {
+            for (auto button : buttons_registered)
+            {
+                button->checkClick(mouse_position);
+            }
+        }
+
+        void register_button(Button& button)
+        {
+            buttons_registered.push_back(&button);
+        }
 	private:
+        std::vector<Button*> buttons_registered;
         std::stack<std::shared_ptr<controller::base_controller>> stack_;
         sf::View ui_camera;
 	};

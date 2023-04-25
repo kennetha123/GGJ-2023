@@ -1,36 +1,68 @@
-#pragma once
-
+#include <functional>
+#include <memory>
 #include <vector>
+#include <algorithm>
 
-class Observer
+class ObserverFunc
 {
 public:
-    virtual ~Observer() = default;
-    virtual void onNotify() = 0;
+    virtual ~ObserverFunc() = default;
+    virtual void operator()() const = 0;
+};
+
+template <typename T>
+class BoundObserverFunc : public ObserverFunc
+{
+public:
+    using InstanceType = T;
+    using MemberFunctionType = void (T::*)();
+
+    BoundObserverFunc(T* instance, MemberFunctionType memberFunction)
+        : instance(instance), memberFunction(memberFunction) {}
+
+    void operator()() const override
+    {
+        if (instance)
+        {
+            (instance->*memberFunction)();
+        }
+    }
+
+    T* instance;
+    MemberFunctionType memberFunction;
 };
 
 class Subject
 {
 public:
-    void addObserver(Observer* observer)
+    template<typename T>
+    void addObserver(T* instance, void (T::* function)())
     {
-        observers.push_back(observer);
+        auto boundObserver = std::make_shared<BoundObserverFunc<T>>(instance, function);
+        observers.push_back(boundObserver);
     }
 
-    void removeObserver(Observer* observer)
+    template <typename T>
+    void removeObserver(T* instance, void (T::* memberFunction)())
     {
-        observers.erase(std::remove(observers.begin(), observers.end(), observer), observers.end());
+        observers.erase(std::remove_if(observers.begin(), observers.end(),
+            [&](const std::shared_ptr<ObserverFunc>& target) {
+                auto targetBoundObserver = std::dynamic_pointer_cast<BoundObserverFunc<T>>(target);
+        if (targetBoundObserver && targetBoundObserver->instance == instance && targetBoundObserver->memberFunction == memberFunction) {
+            return true;
+        }
+        return false;
+            }), observers.end());
     }
 
-protected:
     void notify()
     {
-        for (auto& observer : observers)
+        for (const auto& observer : observers)
         {
-            observer->onNotify();
+            (*observer)();
         }
     }
 
 private:
-    std::vector<Observer*> observers;
+    std::vector<std::shared_ptr<ObserverFunc>> observers;
 };

@@ -33,28 +33,30 @@ int main()
     bgm.play();        // Start playing the music
 
     scene_manager scene_manager_;
-    ui::ui_manager ui_mgr;
-    input_handler event_handler(scene_manager_);
+    ui::ui_manager ui_manager_;
+    input_handler event_handler(ui_manager_);
 
-    std::shared_ptr<overworld> ow = std::make_shared<overworld>(ui_mgr);
-    std::shared_ptr<main_menu> mm = std::make_shared<main_menu>(ui_mgr);
+//    std::shared_ptr<overworld> ow = std::make_shared<overworld>(ui_mgr);
+    std::shared_ptr<main_menu> mm = std::make_shared<main_menu>(ui_manager_);
 
     font.loadFromFile("../resources/font/arial.ttf");
     std::shared_ptr<fps_controller> fps_ctrl = std::make_shared<fps_controller>(font);
 
     scene_manager_.push_scene(std::dynamic_pointer_cast<scene>(mm));
-    ui_mgr.push(fps_ctrl);
+    ui_manager_.push(fps_ctrl);
+
+    sf::Event ev;
 
     while (window.isOpen())
     {
-        event_handler.handle_events(window);
+        event_handler.handle_events(window, ev);
 
         sf::Time dt = clock.restart();
-        update_scene_and_ui(scene_manager_, ui_mgr, dt);
+        update_scene_and_ui(scene_manager_, ui_manager_, dt);
 
         window.clear();
 
-        draw_game_objects(window, scene_manager_, ui_mgr);
+        draw_game_objects(window, scene_manager_, ui_manager_);
 
         window.display();
     }

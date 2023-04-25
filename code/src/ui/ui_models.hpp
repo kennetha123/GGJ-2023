@@ -172,7 +172,12 @@ namespace ui
 			main_menu_controller(const sf::Font& font) : 
 				mm_view_(font)
 			{
+				get_settings_button().addObserver(this, &main_menu_controller::on_settings_clicked);
+			}
 
+			~main_menu_controller()
+			{
+				get_settings_button().removeObserver(this, &main_menu_controller::on_settings_clicked);
 			}
 
 			virtual void update(float dt) override
@@ -184,10 +189,20 @@ namespace ui
 			{
 				mm_view_.draw(window);
 			}
-			view::main_menu_view mm_view_;
+
+			void on_settings_clicked()
+			{
+				std::cout << "On Settings Clicked" << std::endl;
+			}
+
+			Button& get_settings_button()
+			{
+				return mm_view_.settings_button;
+			}
 
 		private:
 			model::main_menu_model mm_model_;
+			view::main_menu_view mm_view_;
 
 		};
 	}

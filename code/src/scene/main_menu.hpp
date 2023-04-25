@@ -10,23 +10,25 @@ class main_menu : public scene
 {
 
 public:
-	main_menu(ui::ui_manager ui_mgr)
+	main_menu(ui::ui_manager& ui_mgr)
 	{
 		font.loadFromFile("../resources/font/arial.ttf");
 
-		 main_menu_ctrl = std::make_shared<main_menu_controller>(font);
+		main_menu_ui = std::make_shared<main_menu_controller>(font);
 
-		 ui_mgr.push(main_menu_ctrl);
+		ui_mgr.push(main_menu_ui);
 
-		 if (!bg_texture.loadFromFile("../resources/title.jpg"))
-		 {
-			 std::cout << "Error load texture main menu background!" << std::endl;
-		 }
+		if (!bg_texture.loadFromFile("../resources/title.jpg"))
+		{
+			std::cout << "Error load texture main menu background!" << std::endl;
+		}
 
-		 bg_sprite.setTexture(bg_texture);
+		bg_sprite.setTexture(bg_texture);
+
+		// Register all button
+		ui_mgr.register_button(main_menu_ui->get_settings_button());
 	}
 
-	// Inherited via scene
 	virtual void update(float dt) override
 	{
 
@@ -35,16 +37,13 @@ public:
 	virtual void draw(sf::RenderWindow& window) override
 	{
 		window.draw(bg_sprite);
-		main_menu_ctrl->draw(window);
+		main_menu_ui->draw(window);
 	}
 
-	Button& main_menu::get_settings_button()
-	{
-		return main_menu_ctrl->mm_view_.settings_button;
-	}
+public:
+	std::shared_ptr<main_menu_controller> main_menu_ui;
 
 private:
-	std::shared_ptr<main_menu_controller> main_menu_ctrl;
 
 	sf::Sprite bg_sprite;
 	sf::Texture bg_texture;
