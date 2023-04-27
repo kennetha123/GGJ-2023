@@ -32,17 +32,16 @@ int main()
     bgm.setVolume(50); // Set the volume (0 to 100)
     bgm.play();        // Start playing the music
 
-    scene_manager scene_manager_;
-    ui::ui_manager ui_manager_;
+    scene_manager& scene_manager_ = scene_manager::instance();
+    ui::ui_manager& ui_manager_ = ui::ui_manager::instance();
     input_handler event_handler(ui_manager_);
 
-//    std::shared_ptr<overworld> ow = std::make_shared<overworld>(ui_mgr);
-    std::shared_ptr<main_menu> mm = std::make_shared<main_menu>(ui_manager_);
+    std::shared_ptr<main_menu> main_menu_ = std::make_shared<main_menu>();
 
     font.loadFromFile("../resources/font/arial.ttf");
     std::shared_ptr<fps_controller> fps_ctrl = std::make_shared<fps_controller>(font);
 
-    scene_manager_.push_scene(std::dynamic_pointer_cast<scene>(mm));
+    scene_manager_.load_scene(std::dynamic_pointer_cast<scene>(main_menu_));
     ui_manager_.push(fps_ctrl);
 
     sf::Event ev;

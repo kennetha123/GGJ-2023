@@ -7,11 +7,22 @@ namespace ui
 	class ui_manager
 	{
     public:
+        static ui_manager& instance()
+        {
+            static ui_manager instance;
+            return instance;
+        }
+
+    private:
         ui_manager() : ui_camera(sf::FloatRect(0, 0, 800, 600))
         {
 
         }
 
+        ui_manager(const ui_manager&) = delete;
+        void operator=(const ui_manager&) = delete;
+
+    public:
         void push(std::shared_ptr<controller::base_controller> view)
         {
             stack_.push(view);
@@ -81,12 +92,12 @@ namespace ui
             }
         }
 
-        void register_button(Button& button)
+        void register_button(button& button)
         {
             buttons_registered.push_back(&button);
         }
 	private:
-        std::vector<Button*> buttons_registered;
+        std::vector<button*> buttons_registered;
         std::stack<std::shared_ptr<controller::base_controller>> stack_;
         sf::View ui_camera;
 	};

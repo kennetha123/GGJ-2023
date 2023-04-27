@@ -111,10 +111,10 @@ namespace ui
 			}
 
 		public:
-			Button new_game_button;
-			Button load_game_button;
-			Button settings_button;
-			Button quit_button;
+			button new_game_button;
+			button load_game_button;
+			button settings_button;
+			button quit_button;
 		};
 	}
 
@@ -166,18 +166,10 @@ namespace ui
 			main_menu_controller(const sf::Font& font) :
 				mm_view_(font)
 			{
-				mm_view_.new_game_button.addObserver(this, &main_menu_controller::on_new_game_clicked);
-				mm_view_.load_game_button.addObserver(this, &main_menu_controller::on_load_game_clicked);
-				mm_view_.settings_button.addObserver(this, &main_menu_controller::on_settings_clicked);
-				mm_view_.quit_button.addObserver(this, &main_menu_controller::on_quit_clicked);
 			}
 
 			~main_menu_controller()
 			{
-				mm_view_.new_game_button.removeObserver(this, &main_menu_controller::on_new_game_clicked);
-				mm_view_.load_game_button.removeObserver(this, &main_menu_controller::on_load_game_clicked);
-				mm_view_.settings_button.removeObserver(this, &main_menu_controller::on_settings_clicked);
-				mm_view_.quit_button.removeObserver(this, &main_menu_controller::on_quit_clicked);
 			}
 
 			virtual void update(float dt) override
@@ -189,30 +181,6 @@ namespace ui
 			{
 				mm_view_.draw(window);
 			}
-
-			void on_new_game_clicked()
-			{
-				std::cout << "On New Game Clicked" << std::endl;
-
-			}
-
-			void on_load_game_clicked()
-			{
-				std::cout << "On Load Game Clicked" << std::endl;
-			}
-
-
-			void on_settings_clicked()
-			{
-				std::cout << "On Settings Clicked" << std::endl;
-			}
-
-			void on_quit_clicked()
-			{
-				std::cout << "On Quit Clicked" << std::endl;
-
-			}
-
 
 			view::main_menu_view mm_view_;
 

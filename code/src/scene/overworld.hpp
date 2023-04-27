@@ -13,7 +13,7 @@ public:
 		main_character("../resources/Actor_sangoku01.png"),
 		camera(sf::FloatRect(0, 0, 800, 600))
 	{
-		tm.tile_parser("../resources/maps/test.txt", "world.png");
+		tm.tile_parser("../resources/maps/test1.txt", "world.png");
 	}
 
 	virtual void update(float dt) override

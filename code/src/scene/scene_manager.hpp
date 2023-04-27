@@ -14,8 +14,19 @@ public:
 class scene_manager
 {
 public:
+    static scene_manager& instance()
+    {
+        static scene_manager instance;
+        return instance;
+    }
+
+private:
     scene_manager() {}
 
+    scene_manager(const scene_manager&) = delete;
+    void operator=(const scene_manager&) = delete;
+
+public:
     void update(float dt)
     {
         if (!scenes_.empty())
@@ -32,26 +43,32 @@ public:
         }
     }
 
-    void push_scene(std::shared_ptr<scene> scene)
+    void push_scene(std::shared_ptr<scene> new_scene)
     {
         if (!scenes_.empty())
         {
             std::cout << "scene overlaped! is this intended?" << std::endl;
         }
 
-        scenes_.push_back(scene);
-
+        scenes_.push_back(new_scene);
     }
 
     void pop_scene()
     {
         if (!scenes_.empty())
         {
+            scenes_.back().reset();
             scenes_.pop_back();
         }
     }
 
-    std::shared_ptr<scene> scene_manager::current_scene() const
+    void load_scene(std::shared_ptr<scene> new_scene)
+    {
+        pop_scene();
+        push_scene(new_scene);
+    }
+
+    std::shared_ptr<scene> current_scene() const
     {
         if (!scenes_.empty())
         {
@@ -62,7 +79,6 @@ public:
             return nullptr;
         }
     }
-
 
 private:
     std::vector<std::shared_ptr<scene>> scenes_;
