@@ -79,11 +79,10 @@ public:
 
                             tile_ptr.tile_idx = tile_idx;
                             tile_ptr.tile_file = image_file_name;
-                            //TODO: later think about better way to do it.
-                            if (tile_idx > 10)
+                            if (layer_index == 0 && tile_idx > 0)
                             {
                                 tile_ptr.is_collidable = true;
-                            }
+                            }                            
                             tile_ptr.sprite.setPosition(x * pixel_size, y * pixel_size);
 
                             // Store the layer index in the tile
@@ -100,15 +99,24 @@ public:
 
                 // Increment layer_index after processing the current layer
                 ++layer_index;
+                std::cout << layer_index << std::endl;
             }
         }
+
     }
 
+    /// <summary>
+    /// draw tiles. Please make sure not drawing first layer as it
+    /// designated for collision only.
+    /// </summary>
+    /// <param name="window">RenderWindow to get draw function.</param>
+    /// <param name="player_position">to check player position for performance.</param>
+    /// <param name="layer">specify the draw layer.</param>
     void draw(sf::RenderWindow& window, const sf::Vector2f& player_position, int layer)
     {
         for (const auto& tile : tiles)
         {
-            if (tile.layer_index == layer && is_near_player(tile.sprite.getPosition(), player_position, render_distance))
+            if (tile.layer_index == layer && tile.layer_index > 0 && is_near_player(tile.sprite.getPosition(), player_position, render_distance))
             {
                 window.draw(tile.sprite);
             }

@@ -28,9 +28,9 @@ public:
 	{
 		window.setView(camera);
 		
-		tile_manager_->draw(window, main_character.sprite.getPosition(), 0);
-		main_character.draw(window);
 		tile_manager_->draw(window, main_character.sprite.getPosition(), 1);
+		main_character.draw(window);
+		tile_manager_->draw(window, main_character.sprite.getPosition(), 2);
 	}
 
 private:
