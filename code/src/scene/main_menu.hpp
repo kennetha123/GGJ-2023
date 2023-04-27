@@ -3,7 +3,7 @@
 #include "../ui/ui_manager.hpp"
 #include "../ui/ui_models.hpp"
 #include "../ui/button.hpp"
-
+#include "../audio/audio_manager.hpp"
 using namespace ui::controller;
 
 
@@ -15,6 +15,7 @@ public:
 	{
 		ui::ui_manager& ui_manager = ui::ui_manager::instance();
 		scene_manager& scene_manager_ = scene_manager::instance();
+		audio_manager& audio_manager_ = audio_manager::instance();
 
 		font.loadFromFile("../resources/font/arial.ttf");
 
@@ -29,12 +30,16 @@ public:
 
 		bg_sprite.setTexture(bg_texture);
 
+		audio_manager_.add_bgm("main_bgm", "../resources/Audio/Big Day Out.ogg");
+		audio_manager_.play_bgm("main_bgm", true, 50.f);
+
 		// Register all button
 		ui_manager.register_button(main_menu_ui->mm_view_.new_game_button);
 		ui_manager.register_button(main_menu_ui->mm_view_.load_game_button);
 		ui_manager.register_button(main_menu_ui->mm_view_.settings_button);
 		ui_manager.register_button(main_menu_ui->mm_view_.quit_button);
 
+		// set button callback
 		main_menu_ui->mm_view_.new_game_button.set_on_click_callback([this, &ui_manager, &scene_manager_]
 			{
 				overworld_ = std::make_shared<overworld>(ui_manager);

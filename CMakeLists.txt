@@ -26,6 +26,7 @@ add_executable(${ProjectName}
 				${CodeFolder}/system/ecs/entity.hpp
 				${CodeFolder}/system/observer.hpp
 				${CodeFolder}/system/input_handler.hpp
+				${CodeFolder}/audio/audio_manager.hpp
 				${DependencyFolder}/json/json.hpp
 				${DependencyFolder}/inih/cpp/INIReader.cpp
 				${DependencyFolder}/inih/cpp/INIReader.h

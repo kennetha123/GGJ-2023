@@ -8,8 +8,7 @@ class main_menu;
 class input_handler
 {
 public:
-    input_handler(ui::ui_manager& ui_mgr) :
-        ui_manager_(ui_mgr)
+    input_handler()
     {
     }
 
@@ -25,11 +24,8 @@ public:
             {
                 sf::Vector2f mouse_position = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
-                ui_manager_.on_button_click(mouse_position);
+                ui::ui_manager::instance().on_button_click(mouse_position);
             }
         }
     }
-
-private:
-    ui::ui_manager& ui_manager_;
 };

@@ -10,8 +10,8 @@
 
 using namespace ui::controller;
 
-void update_scene_and_ui(scene_manager& scene_manager_, ui::ui_manager& ui_mgr, sf::Time dt);
-void draw_game_objects(sf::RenderWindow& window, scene_manager& scene_manager_, ui::ui_manager& ui_mgr);
+void update_scene_and_ui(sf::Time dt);
+void draw_game_objects(sf::RenderWindow& window);
 
 int main()
 {
@@ -19,22 +19,10 @@ int main()
     sf::Clock clock;
     sf::Font font;
 
-    // Load the background music
-    sf::Music bgm;
-    if (!bgm.openFromFile("../resources/Audio/Big Day Out.ogg"))
-    {
-        // Handle music loading error
-        return -1;
-    }
-
-    // Configure the background music and play it
-    bgm.setLoop(true); // Set the music to loop
-    bgm.setVolume(50); // Set the volume (0 to 100)
-    bgm.play();        // Start playing the music
-
     scene_manager& scene_manager_ = scene_manager::instance();
     ui::ui_manager& ui_manager_ = ui::ui_manager::instance();
-    input_handler event_handler(ui_manager_);
+
+    input_handler event_handler;
 
     std::shared_ptr<main_menu> main_menu_ = std::make_shared<main_menu>();
 
@@ -51,28 +39,24 @@ int main()
         event_handler.handle_events(window, ev);
 
         sf::Time dt = clock.restart();
-        update_scene_and_ui(scene_manager_, ui_manager_, dt);
+        update_scene_and_ui(dt);
 
         window.clear();
 
-        draw_game_objects(window, scene_manager_, ui_manager_);
+        draw_game_objects(window);
 
         window.display();
     }
 }
 
-void update_scene_and_ui(scene_manager& scene_manager_, ui::ui_manager& ui_mgr, sf::Time dt)
+void update_scene_and_ui(sf::Time dt)
 {
-    scene_manager_.update(dt.asSeconds());
-    ui_mgr.update(dt.asSeconds());
+    ui::ui_manager::instance().update(dt.asSeconds());
+    scene_manager::instance().update(dt.asSeconds());
 }
 
-void draw_game_objects(sf::RenderWindow& window, scene_manager& scene_manager_, ui::ui_manager& ui_mgr)
+void draw_game_objects(sf::RenderWindow& window)
 {
-
-    // draw scene object
-    scene_manager_.draw(window);
-
-    // draw ui
-    ui_mgr.draw(window);
+    scene_manager::instance().draw(window);
+    ui::ui_manager::instance().draw(window);
 }
