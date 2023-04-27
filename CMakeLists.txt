@@ -13,7 +13,6 @@ file(MAKE_DIRECTORY ${OutputFolderName})
 add_executable(${ProjectName} 
 				${CodeFolder}/main.cpp
 				${CodeFolder}/header.h.in
-				${CodeFolder}/collider.hpp
 				${CodeFolder}/player.hpp
 				${CodeFolder}/scene/scene_manager.hpp
 				${CodeFolder}/scene/overworld.hpp

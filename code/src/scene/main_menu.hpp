@@ -42,7 +42,7 @@ public:
 		// set button callback
 		main_menu_ui->mm_view_.new_game_button.set_on_click_callback([this, &ui_manager, &scene_manager_]
 			{
-				overworld_ = std::make_shared<overworld>(ui_manager);
+				overworld_ = std::make_shared<overworld>();
 				scene_manager_.load_scene(std::dynamic_pointer_cast<scene>(overworld_));
 				ui_manager.remove(main_menu_ui);
 			});

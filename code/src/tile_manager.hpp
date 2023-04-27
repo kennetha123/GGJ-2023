@@ -22,6 +22,7 @@ public:
     std::string tile_file = "";
     uint32_t tile_idx = 0;
     int layer_index = 0;
+    bool is_collidable = false;
 };
 
 class tile_manager {
@@ -78,6 +79,11 @@ public:
 
                             tile_ptr.tile_idx = tile_idx;
                             tile_ptr.tile_file = image_file_name;
+                            //TODO: later think about better way to do it.
+                            if (tile_idx > 10)
+                            {
+                                tile_ptr.is_collidable = true;
+                            }
                             tile_ptr.sprite.setPosition(x * pixel_size, y * pixel_size);
 
                             // Store the layer index in the tile
@@ -109,6 +115,25 @@ public:
         }
     }
 
+    bool check_collision(const sf::Vector2f& new_position)
+    {
+        for (const auto& tile : tiles)
+        {
+            if (tile.is_collidable)
+            {
+                sf::FloatRect tile_bounds = tile.sprite.getGlobalBounds();
+                sf::FloatRect new_position_bounds(new_position.x, new_position.y, pixel_size, pixel_size);
+
+                if (tile_bounds.intersects(new_position_bounds))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
 private:
     /// <summary>
     /// check if player near tiles, so it can optimize the draw function when it is
@@ -125,7 +150,7 @@ private:
         float distance_squared = dx * dx + dy * dy;
         return distance_squared <= render_distance * render_distance;
     }
-private:
+
     /// <summary>
     /// load tile images and store it inside tile_textures.
     /// this function need to be called before using any tile_textures.
@@ -152,7 +177,6 @@ private:
             tile_textures[image_path] = texture;
         }
     }
-
 private:
     std::map<std::string, std::shared_ptr<sf::Texture>> tile_textures;
     std::vector<tile> tiles;
