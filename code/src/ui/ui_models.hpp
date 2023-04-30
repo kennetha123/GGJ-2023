@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "button.hpp"
+#include "../system/input_handler.hpp"
 #include <string>
 #include <sstream>
 
@@ -180,6 +181,22 @@ namespace ui
 			virtual void draw(sf::RenderWindow& window) override
 			{
 				mm_view_.draw(window);
+			}
+
+			void on_click(input_handler& input_handler_)
+			{
+				button& new_game = mm_view_.new_game_button;
+				button& load_game = mm_view_.load_game_button;
+				button& settings = mm_view_.settings_button;
+				button& quit = mm_view_.quit_button;
+
+				input_handler_.set_right_click([&](sf::Event& ev, const sf::Vector2f& mouse_position) {
+
+					new_game.check_click(mouse_position);
+					load_game.check_click(mouse_position);
+					settings.check_click(mouse_position);
+					quit.check_click(mouse_position);
+					});
 			}
 
 			view::main_menu_view mm_view_;

@@ -1,14 +1,20 @@
 #pragma once
-#include <SFML/Graphics.hpp>
 #include <iostream>
 #include <vector>
 #include <memory>
 
+class game_context;
+
 class scene
 {
 public:
+    scene(game_context& game_ctx) : context(game_ctx) {}
+
     virtual void update(float dt) = 0;
     virtual void draw(sf::RenderWindow& window) = 0;
+
+protected:
+    game_context& context;
 };
 
 class scene_manager

@@ -1,15 +1,15 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
 #include "scene_manager.hpp"
 #include "tile_manager.hpp"
-#include "player.hpp"
+#include "character/player.hpp"
 #include "../ui/ui_manager.hpp"
 
 class overworld : public scene
 {
 public:
-	overworld() :
+	overworld(game_context& game_context_) :
+		scene(game_context_),
 		main_character("../resources/Actor_sangoku01.png"),
 		camera(sf::FloatRect(0, 0, 800, 600))
 	{

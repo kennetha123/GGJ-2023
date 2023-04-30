@@ -26,7 +26,7 @@ public:
         global_bounds = button_image.getGlobalBounds();
     }
 
-    bool checkClick(const sf::Vector2f& mouse_position)
+    bool check_click(const sf::Vector2f& mouse_position)
     {
         if (global_bounds.contains(mouse_position))
         {

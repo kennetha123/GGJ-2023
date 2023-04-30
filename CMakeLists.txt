@@ -12,8 +12,10 @@ file(MAKE_DIRECTORY ${OutputFolderName})
 
 add_executable(${ProjectName} 
 				${CodeFolder}/main.cpp
+				${CodeFolder}/game_context.hpp
 				${CodeFolder}/header.h.in
-				${CodeFolder}/player.hpp
+				${CodeFolder}/character/player.hpp
+				${CodeFolder}/character/attributes.hpp
 				${CodeFolder}/scene/scene_manager.hpp
 				${CodeFolder}/scene/overworld.hpp
 				${CodeFolder}/scene/battleworld.hpp
@@ -25,6 +27,8 @@ add_executable(${ProjectName}
 				${CodeFolder}/system/ecs/entity.hpp
 				${CodeFolder}/system/observer.hpp
 				${CodeFolder}/system/input_handler.hpp
+				${CodeFolder}/system/event_handler.hpp
+				${CodeFolder}/system/game_event_handler.hpp
 				${CodeFolder}/audio/audio_manager.hpp
 				${DependencyFolder}/json/json.hpp
 				${DependencyFolder}/inih/cpp/INIReader.cpp

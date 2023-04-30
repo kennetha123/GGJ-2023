@@ -3,6 +3,7 @@
 #include "system/ecs/entity.hpp"
 #include <SFML/Graphics.hpp>
 #include "tile_manager.hpp"
+#include "attributes.hpp"
 #include <memory>
 
 class player : public entity

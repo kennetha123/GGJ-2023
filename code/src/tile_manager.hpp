@@ -42,17 +42,7 @@ public:
             return;
         }
 
-        nlohmann::json::parser_callback_t ignore_comments_and_exceptions = [](int depth, nlohmann::json::parse_event_t event, nlohmann::json& parsed) 
-        {
-            // Ignore comments
-            if (event == nlohmann::json::parse_event_t::key && parsed.dump() == "#") 
-            {
-                return false;
-            }
-            return true;
-        };
-
-        nlohmann::json json_data = nlohmann::json::parse(input_file, ignore_comments_and_exceptions);
+        nlohmann::json json_data = nlohmann::json::parse(input_file);
 
         const auto& layers = json_data["layers"];
         for (const auto& layer : layers) 
@@ -96,10 +86,7 @@ public:
                         }
                     }
                 }
-
-                // Increment layer_index after processing the current layer
                 ++layer_index;
-                std::cout << layer_index << std::endl;
             }
         }
 

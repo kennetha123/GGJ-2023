@@ -103,14 +103,6 @@ namespace ui
         }
     }
 
-    void ui_manager::on_button_click(const sf::Vector2f& mouse_position)
-    {
-        for (auto button : buttons_registered_)
-        {
-            button->checkClick(mouse_position);
-        }
-    }
-
     void ui_manager::register_button(button& button)
     {
         buttons_registered_.push_back(&button);

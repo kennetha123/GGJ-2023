@@ -1,12 +1,7 @@
 #include "header.h"
-#include <SFML/Audio.hpp>
 
-#include "scene/scene_manager.hpp"
-#include "scene/overworld.hpp"
 #include "scene/main_menu.hpp"
-#include "tile_manager.hpp"
-#include "ui/ui_manager.hpp"
-#include "system/input_handler.hpp"
+#include "game_context.hpp"
 
 using namespace ui::controller;
 
@@ -16,15 +11,19 @@ void draw_game_objects(sf::RenderWindow& window);
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(800, 600), "Shatterpoint : Chaos Unbound");
-    sf::Clock clock;
-    sf::Font font;
 
     scene_manager& scene_manager_ = scene_manager::instance();
     ui::ui_manager& ui_manager_ = ui::ui_manager::instance();
+    audio_manager& audio_manager_ = audio_manager::instance();
+    input_handler input_handler_;
+    game_event_handler event_handler_(window);
 
-    input_handler event_handler;
+    sf::Clock clock;
+    sf::Font font;
 
-    std::shared_ptr<main_menu> main_menu_ = std::make_shared<main_menu>();
+    game_context game_context_(ui_manager_, scene_manager_, audio_manager_, input_handler_, event_handler_);
+
+    std::shared_ptr<main_menu> main_menu_ = std::make_shared<main_menu>(game_context_);
 
     font.loadFromFile("../resources/font/arial.ttf");
     std::shared_ptr<fps_controller> fps_ctrl = std::make_shared<fps_controller>(font);
@@ -36,7 +35,7 @@ int main()
 
     while (window.isOpen())
     {
-        event_handler.handle_events(window, ev);
+        input_handler_.handle_events(window, ev);
 
         sf::Time dt = clock.restart();
         update_scene_and_ui(dt);

@@ -1,27 +1,24 @@
-#include "scene_manager.hpp"
+#include "game_context.hpp"
 #include "../system/ecs/entity.hpp"
-#include "../ui/ui_manager.hpp"
 #include "../ui/ui_models.hpp"
 #include "../ui/button.hpp"
-#include "../audio/audio_manager.hpp"
-using namespace ui::controller;
+#include "overworld.hpp"
 
+using namespace ui::controller;
 
 class main_menu : public scene
 {
 
 public:
-	main_menu()
+	main_menu(game_context& game_ctx) : 
+		scene(game_ctx)
 	{
-		ui::ui_manager& ui_manager = ui::ui_manager::instance();
-		scene_manager& scene_manager_ = scene_manager::instance();
-		audio_manager& audio_manager_ = audio_manager::instance();
 
 		font.loadFromFile("../resources/font/arial.ttf");
 
 		main_menu_ui = std::make_shared<main_menu_controller>(font);
 
-		ui_manager.push(main_menu_ui);
+		context.ui_manager_.push(main_menu_ui);
 
 		if (!bg_texture.loadFromFile("../resources/title.jpg"))
 		{
@@ -30,30 +27,11 @@ public:
 
 		bg_sprite.setTexture(bg_texture);
 
-		audio_manager_.add_bgm("main_bgm", "../resources/Audio/Big Day Out.ogg");
-		audio_manager_.play_bgm("main_bgm", true, 50.f);
+		context.audio_manager_.add_bgm("main_bgm", "../resources/Audio/Big Day Out.ogg");
+		context.audio_manager_.play_bgm("main_bgm", true, 50.f);
 
-		// Register all button
-		ui_manager.register_button(main_menu_ui->mm_view_.new_game_button);
-		ui_manager.register_button(main_menu_ui->mm_view_.load_game_button);
-		ui_manager.register_button(main_menu_ui->mm_view_.settings_button);
-		ui_manager.register_button(main_menu_ui->mm_view_.quit_button);
+		button_setup();
 
-		// set button callback
-		main_menu_ui->mm_view_.new_game_button.set_on_click_callback([this, &ui_manager, &scene_manager_]
-			{
-				overworld_ = std::make_shared<overworld>();
-				scene_manager_.load_scene(std::dynamic_pointer_cast<scene>(overworld_));
-				ui_manager.remove(main_menu_ui);
-			});
-		main_menu_ui->mm_view_.load_game_button.set_on_click_callback([this] {
-			std::cout << "Custom On new game Clicked" << std::endl;
-			});
-		main_menu_ui->mm_view_.settings_button.set_on_click_callback([this] {
-			std::cout << "Custom On Settings Clicked" << std::endl;
-			});
-		main_menu_ui->mm_view_.quit_button.set_on_click_callback([this] {
-			});
 	}
 
 	~main_menu()
@@ -64,14 +42,36 @@ public:
 
 	virtual void update(float dt) override
 	{
-
+		main_menu_ui->on_click(context.input_handler_);
 	}
 
 	virtual void draw(sf::RenderWindow& window) override
 	{
-		window_ = &window;
 		window.draw(bg_sprite);
 		main_menu_ui->draw(window);
+	}
+
+	void button_setup()
+	{
+		main_menu_ui->mm_view_.new_game_button.set_on_click_callback([this]
+			{
+				overworld_ = std::make_shared<overworld>(context);
+				context.scene_manager_.load_scene(std::dynamic_pointer_cast<scene>(overworld_));
+				context.ui_manager_.remove(main_menu_ui);
+			});
+
+		main_menu_ui->mm_view_.load_game_button.set_on_click_callback([this] {
+				std::cout << "Custom On Load Game Clicked" << std::endl;
+			});
+		
+		main_menu_ui->mm_view_.settings_button.set_on_click_callback([this] {
+				std::cout << "Custom On Settings Clicked" << std::endl;
+			});
+		
+		main_menu_ui->mm_view_.quit_button.set_on_click_callback([this] {
+			context.event_handler_.quit_game();
+			});
+
 	}
 
 public:
@@ -79,7 +79,6 @@ public:
 
 private:
 	std::shared_ptr<overworld> overworld_;
-	sf::RenderWindow* window_;
 	sf::Sprite bg_sprite;
 	sf::Texture bg_texture;
 	sf::Font font;
