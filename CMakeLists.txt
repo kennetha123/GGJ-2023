@@ -25,6 +25,8 @@ add_executable(${ProjectName}
 				${CodeFolder}/ui/ui_models.hpp
 				${CodeFolder}/ui/button.hpp
 				${CodeFolder}/system/ecs/entity.hpp
+				${CodeFolder}/system/ecs/components.cpp
+				${CodeFolder}/system/ecs/components.h
 				${CodeFolder}/system/observer.hpp
 				${CodeFolder}/system/input_handler.hpp
 				${CodeFolder}/system/event_handler.hpp

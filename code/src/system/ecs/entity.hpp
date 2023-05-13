@@ -3,9 +3,6 @@
 #include <memory>
 #include <typeindex>
 #include <cassert>
-#include <SFML/Graphics.hpp>
-
-class animation_component;
 
 class component
 {
@@ -39,35 +36,4 @@ public:
 
 private:
 	std::unordered_map<std::type_index, std::shared_ptr<component>> components;
-};
-
-class animation_component : public component
-{
-public:
-	animation_component(sf::Sprite& sprite, const std::vector<std::vector<sf::IntRect>>& frames, float frame_time) :
-		sprite_(sprite), frames_(frames), frame_time_(frame_time) { }
-
-	void update(float delta_time, int row)
-	{
-		if (row >= frames_.size())
-		{
-			return;
-		}
-
-		elapsed_time += delta_time;
-
-		if (elapsed_time >= frame_time_)
-		{
-			elapsed_time = 0;
-			current_frame = (current_frame + 1) % frames_[row].size();
-			sprite_.setTextureRect(frames_[row][current_frame]);
-		}
-	}
-
-private:
-	sf::Sprite& sprite_;
-	std::vector<std::vector<sf::IntRect>> frames_;
-	float frame_time_;
-	float elapsed_time = 0;
-	int current_frame = 0;
 };

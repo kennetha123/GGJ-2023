@@ -32,6 +32,7 @@ public:
 
 		button_setup();
 
+		main_menu_ui->on_click(context.input_handler_);
 	}
 
 	~main_menu()
@@ -42,7 +43,6 @@ public:
 
 	virtual void update(float dt) override
 	{
-		main_menu_ui->on_click(context.input_handler_);
 	}
 
 	virtual void draw(sf::RenderWindow& window) override

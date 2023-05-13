@@ -21,7 +21,7 @@ public:
 	virtual void update(float dt) override
 	{
 		camera.setCenter(main_character.sprite.getPosition());
-		main_character.movement(dt);
+		main_character.update(dt);
 	}
 
 	virtual void draw(sf::RenderWindow& window) override

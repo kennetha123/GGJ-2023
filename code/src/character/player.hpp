@@ -1,8 +1,5 @@
 #pragma once
-#include "object.hpp"
-#include "system/ecs/entity.hpp"
-#include <SFML/Graphics.hpp>
-#include "tile_manager.hpp"
+#include "../system/ecs/components.h"
 #include "attributes.hpp"
 #include <memory>
 
@@ -12,26 +9,17 @@ public:
     player(const std::string& image_path);
     ~player() = default;
 
-    void movement(float dt);
+    void update(float dt);
     void draw(sf::RenderWindow& window);
-    void set_tilemap(std::shared_ptr<tile_manager> tile_mgr);
+    void set_tile_manager(std::shared_ptr<tile_manager> tile_mgr);
 
     sf::Sprite sprite;
     std::unique_ptr<animation_component> player_animation;
+    std::unique_ptr<movement_component> player_movement;
 
 private:
     sf::Texture player_texture;
     int sprite_width = 48, sprite_height = 48;
-    std::shared_ptr<tile_manager> tile_manager_;
-    bool is_moving = false;
-    sf::Vector2f initial_position;
-    sf::Vector2f move_direction;
-    float elapsed_time;
-    float grid_size = 32.0f;
-    float move_duration = 0.2f;
-
-    void handle_animation(float dt, int row);
-    void handle_movement(float dt);
 };
 
 player::player(const std::string& image_path)
@@ -72,14 +60,14 @@ player::player(const std::string& image_path)
         }
     };
 
-    // Create the animated sprite objects
     player_animation = std::make_unique<animation_component>(sprite, all_frames, 0.1f);
+    player_movement = std::make_unique<movement_component>(sprite);
 }
 
-void player::movement(float dt)
+void player::update(float dt)
 {
-    handle_animation(dt, -1);
-    handle_movement(dt);
+    player_animation->handle_animation(dt, -1);
+    player_movement->handle_movement(dt);
 }
 
 void player::draw(sf::RenderWindow& window)
@@ -87,79 +75,7 @@ void player::draw(sf::RenderWindow& window)
     window.draw(sprite);
 }
 
-void player::set_tilemap(std::shared_ptr<tile_manager> tile_mgr)
+void player::set_tile_manager(std::shared_ptr<tile_manager> tile_mgr)
 {
-    tile_manager_ = tile_mgr;
-}
-
-void player::handle_animation(float dt, int row)
-{
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-    {
-        row = 1;
-    }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-    {
-        row = 3;
-    }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-    {
-        row = 0;
-    }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-    {
-        row = 2;
-    }
-
-    if (row != -1)
-    {
-        player_animation->update(dt, row);
-    }
-}
-
-void player::handle_movement(float dt)
-{
-    if (is_moving)
-    {
-        elapsed_time += dt;
-        float move_fraction = elapsed_time / move_duration;
-
-        if (move_fraction >= 1.0f)
-        {
-            is_moving = false;
-            move_fraction = 1.0f;
-        }
-
-        sprite.setPosition(initial_position + sf::Vector2f(move_fraction * move_direction.x, move_fraction * move_direction.y));
-    }
-
-    if (!is_moving)
-    {
-        sf::Vector2f dest;
-
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-        {
-            dest = sf::Vector2f(-grid_size, 0.0f);
-        }
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-        {
-            dest = sf::Vector2f(0.0f, -grid_size);
-        }
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-        {
-            dest = sf::Vector2f(0.0f, grid_size);
-        }
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-        {
-            dest = sf::Vector2f(grid_size, 0.0f);
-        }
-
-        if (!tile_manager_->check_collision(sprite.getPosition() + dest))
-        {
-            is_moving = true;
-            move_direction = dest;
-            initial_position = sprite.getPosition();
-            elapsed_time = 0;
-        }
-    }
+    player_movement->set_tile_manager(tile_mgr);
 }

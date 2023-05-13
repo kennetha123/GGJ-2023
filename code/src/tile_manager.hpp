@@ -10,19 +10,31 @@
 #include "object.hpp"
 #include "system/ecs/entity.hpp"
 
+class tile_type {
+public:
+    tile_type(const std::string& image_file_name, uint32_t tile_idx, bool is_collidable)
+        : image_file_name(image_file_name), tile_idx_(tile_idx), is_collidable_(is_collidable) {}
+
+    const std::string& get_image_file_name() const { return image_file_name; }
+    uint32_t get_tile_idx() const { return tile_idx_; }
+    bool is_collidable() const { return is_collidable_; }
+
+private:
+    std::string image_file_name;
+    uint32_t tile_idx_;
+    bool is_collidable_;
+};
 struct tile : public entity {
 public:
-    tile(const sf::Texture& texture)
+    tile(const std::shared_ptr<tile_type>& tile_type, const sf::Texture& texture)
+        : tile_type(tile_type)
     {
         sprite.setTexture(texture);
     }
 
     sf::Sprite sprite;
-
-    std::string tile_file = "";
-    uint32_t tile_idx = 0;
+    std::shared_ptr<tile_type> tile_type;
     int layer_index = 0;
-    bool is_collidable = false;
 };
 
 class tile_manager {
@@ -64,22 +76,19 @@ public:
                             std::string file = "../resources/" + image_file_name;
                             load_tile_image(file);
 
-                            const auto& texture = *(tile_textures[file]);
-                            tile tile_ptr(texture);
+                            bool is_collidable = (layer_index == 0 && tile_idx > 0);
+                            std::shared_ptr<tile_type> tile_type_ = std::make_shared<tile_type>(image_file_name, tile_idx, is_collidable);
 
-                            tile_ptr.tile_idx = tile_idx;
-                            tile_ptr.tile_file = image_file_name;
-                            if (layer_index == 0 && tile_idx > 0)
-                            {
-                                tile_ptr.is_collidable = true;
-                            }                            
+                            const auto& texture = *(tile_textures[file]);
+                            tile tile_ptr(tile_type_, texture);
+
                             tile_ptr.sprite.setPosition(x * pixel_size, y * pixel_size);
 
                             // Store the layer index in the tile
                             tile_ptr.layer_index = layer_index;
 
-                            size_t idx = (tile_ptr.tile_idx - 1) % rect_tile_x;
-                            size_t idy = (tile_ptr.tile_idx - 1) / rect_tile_y;
+                            size_t idx = (tile_ptr.tile_type->get_tile_idx() - 1) % rect_tile_x;
+                            size_t idy = (tile_ptr.tile_type->get_tile_idx() - 1) / rect_tile_y;
                             tile_ptr.sprite.setTextureRect(sf::IntRect((idx * pixel_size), (idy * pixel_size), pixel_size, pixel_size));
 
                             tiles.push_back(tile_ptr);
@@ -114,7 +123,7 @@ public:
     {
         for (const auto& tile : tiles)
         {
-            if (tile.is_collidable)
+            if (tile.tile_type->is_collidable())
             {
                 sf::FloatRect tile_bounds = tile.sprite.getGlobalBounds();
                 sf::FloatRect new_position_bounds(new_position.x, new_position.y, pixel_size, pixel_size);

@@ -191,7 +191,6 @@ namespace ui
 				button& quit = mm_view_.quit_button;
 
 				input_handler_.set_right_click([&](sf::Event& ev, const sf::Vector2f& mouse_position) {
-
 					new_game.check_click(mouse_position);
 					load_game.check_click(mouse_position);
 					settings.check_click(mouse_position);
