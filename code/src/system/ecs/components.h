@@ -1,7 +1,7 @@
 #pragma once
 #include "entity.hpp"
 #include <SFML/Graphics.hpp>
-#include "../../tile_manager.hpp"
+#include "../../system/tile_manager.h"
 class animation_component;
 
 class animation_component : public component

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "scene_manager.hpp"
-#include "tile_manager.hpp"
+#include "system/tile_manager.h"
 #include "character/player.hpp"
 #include "../ui/ui_manager.hpp"
 
@@ -15,7 +15,7 @@ public:
 	{
 		tile_manager_ = std::make_shared<tile_manager>();
 		tile_manager_->tile_parser("../resources/maps/test1.txt", "world.png");
-		main_character.set_tilemap(tile_manager_);
+		main_character.set_tile_manager(tile_manager_);
 	}
 
 	virtual void update(float dt) override
