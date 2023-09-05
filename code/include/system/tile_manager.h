@@ -7,8 +7,8 @@
 #include <memory>
 #include <map>
 #include "../../json/json.hpp"
-#include "../object.hpp"
-#include "ecs/entity.hpp"
+#include "system/object.h"
+#include "system/entity.h"
 
 class tile_type {
 public:

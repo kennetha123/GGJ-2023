@@ -1,4 +1,4 @@
-#include "components.h"
+#include "system/components.h"
 
 void animation_component::update(float delta_time, int row)
 {

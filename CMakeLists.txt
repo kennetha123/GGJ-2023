@@ -2,36 +2,17 @@ cmake_minimum_required(VERSION 3.17)
 
 set(OutputFolderName project)
 set(ProjectName 2DRPG)
-set(ProjectFolder project/src)
-set(CodeFolder code/src)
+set(IncludeFolder code/include)
 set(DependencyFolder deps)
 
 project(${ProjectName} VERSION 1.1)
 
 file(MAKE_DIRECTORY ${OutputFolderName})
 
+add_subdirectory(code)
+
 add_executable(${ProjectName} 
-				${CodeFolder}/main.cpp
-				${CodeFolder}/game_context.hpp
-				${CodeFolder}/header.h.in
-				${CodeFolder}/character/player.hpp
-				${CodeFolder}/character/attributes.hpp
-				${CodeFolder}/scene/scene_manager.hpp
-				${CodeFolder}/scene/overworld.hpp
-				${CodeFolder}/scene/battleworld.hpp
-				${CodeFolder}/scene/main_menu.hpp
-				${CodeFolder}/tile_manager.hpp
-				${CodeFolder}/ui/ui_manager.hpp
-				${CodeFolder}/ui/ui_models.hpp
-				${CodeFolder}/ui/button.hpp
-				${CodeFolder}/system/ecs/entity.hpp
-				${CodeFolder}/system/ecs/components.cpp
-				${CodeFolder}/system/ecs/components.h
-				${CodeFolder}/system/observer.hpp
-				${CodeFolder}/system/input_handler.hpp
-				${CodeFolder}/system/event_handler.hpp
-				${CodeFolder}/system/game_event_handler.hpp
-				${CodeFolder}/audio/audio_manager.hpp
+				${GAME_CODE}
 				${DependencyFolder}/json/json.hpp
 				${DependencyFolder}/inih/cpp/INIReader.cpp
 				${DependencyFolder}/inih/cpp/INIReader.h
@@ -49,17 +30,21 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set_property(TARGET ${ProjectName} PROPERTY FOLDER ${OutputFolderName})
 set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT ${ProjectName})
 
-configure_file(${CodeFolder}/header.h.in ../${CodeFolder}/header.h)
+configure_file(${IncludeFolder}/header.h.in ../${IncludeFolder}/header.h)
 
 link_directories(deps/SFML/libs)
-include_directories(deps/SFML/include)
+include_directories(deps/SFML/include
+					code/include
+					)
 
+#SET LINKING LIBRARY
 find_library(SFML_SYSTEM NAMES sfml-system-d.lib PATHS "deps/SFML/lib")
 find_library(SFML_WINDOW NAMES sfml-window-d.lib PATHS "deps/SFML/lib")
 find_library(SFML_GRAPHICS NAMES sfml-graphics-d.lib PATHS "deps/SFML/lib")
 find_library(SFML_AUDIO NAMES sfml-audio-d.lib PATHS "deps/SFML/lib")
 target_link_libraries(${ProjectName} ${SFML_SYSTEM} ${SFML_WINDOW} ${SFML_GRAPHICS} ${SFML_AUDIO})
 
+#COPY DLL
 set(SFML_DLL_FILES 
     sfml-graphics-d-2.dll 
     sfml-system-d-2.dll 

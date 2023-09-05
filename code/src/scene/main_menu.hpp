@@ -1,5 +1,5 @@
 #include "game_context.hpp"
-#include "../system/ecs/entity.hpp"
+#include "system/entity.h"
 #include "../ui/ui_models.hpp"
 #include "../ui/button.hpp"
 #include "overworld.hpp"

@@ -2,7 +2,7 @@
 
 #include "scene_manager.hpp"
 #include "system/tile_manager.h"
-#include "character/player.hpp"
+#include "character/player.h"
 #include "../ui/ui_manager.hpp"
 
 class overworld : public scene
