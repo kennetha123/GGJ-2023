@@ -1,0 +1,62 @@
+{ "compressionlevel":-1,
+ "height":4,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[21, 21, 152, 152, 0,
+            578, 17, 152, 0, 0,
+            322, 322, 0, 0, 0,
+            322, 322, 0, 0, 0],
+         "height":4,
+         "id":1,
+         "name":"Tile Layer 1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":5,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[338, 0, 0, 0, 129,
+            0, 386, 0, 0, 129,
+            0, 0, 0, 0, 129,
+            0, 0, 0, 0, 129],
+         "height":4,
+         "id":3,
+         "name":"Tile Layer 2",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":5,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":4,
+ "nextobjectid":1,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.10.2",
+ "tileheight":48,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"prologue.tsx"
+        }, 
+        {
+         "firstgid":129,
+         "source":"Dungeon_A1.tsx"
+        }, 
+        {
+         "firstgid":321,
+         "source":"Outside_B.tsx"
+        }, 
+        {
+         "firstgid":577,
+         "source":"Outside_A2.tsx"
+        }],
+ "tilewidth":48,
+ "type":"map",
+ "version":"1.10",
+ "width":5
+}

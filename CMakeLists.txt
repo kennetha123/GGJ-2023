@@ -13,11 +13,12 @@ add_subdirectory(code)
 
 add_executable(${ProjectName} 
 				${GAME_CODE}
-				${DependencyFolder}/json/json.hpp
 				${DependencyFolder}/inih/cpp/INIReader.cpp
 				${DependencyFolder}/inih/cpp/INIReader.h
 				${DependencyFolder}/inih/ini.c
-				${DependencyFolder}/inih/ini.h)
+				${DependencyFolder}/inih/ini.h
+				${DependencyFolder}/tinyxml2/tinyxml2.cpp
+				${DependencyFolder}/tiled2sfml/tiled2sfml.hpp)
 				
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/${OutputFolderName})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/${OutputFolderName})
@@ -34,6 +35,8 @@ configure_file(${IncludeFolder}/header.h.in ../${IncludeFolder}/header.h)
 
 link_directories(deps/SFML/libs)
 include_directories(deps/SFML/include
+					deps/tinyxml2
+					deps/json
 					code/include
 					)
 

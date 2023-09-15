@@ -1,57 +1,92 @@
 #include "system/tile_manager.h"
 
-void tile_manager::tile_parser(const std::string& json_file_path, const std::string& image_file_name) 
+void tile_manager::tile_parser(const std::string& json_file_path) 
 {
-    std::ifstream input_file(json_file_path);
-
-    if (!input_file.is_open()) 
+    std::string prepath = "../resources/maps/";
+    Tiled2SFML tile_manager;
+    tilemapData map_data = tile_manager.tilemapParse(json_file_path);
+    
+    // register texture
+    for (size_t i = 0; i < map_data.tilesets.size(); i++)
     {
-        std::cerr << "Failed to open file " << json_file_path << std::endl;
-        return;
+        tileset_data.push_back(tile_manager.tilesetParse(prepath + map_data.tilesets[i].source));
+        register_tile_texture(prepath + tileset_data[i].img_source_path, tileset_data[i].tileset_name);
     }
-
-    nlohmann::json json_data = nlohmann::json::parse(input_file);
-
-    const auto& layers = json_data["layers"];
-    for (const auto& layer : layers) 
+    
+    for (size_t layer_idx = 0; layer_idx < map_data.layers.size(); layer_idx++)
     {
-        if (layer["type"] == "tilelayer") 
+        // iterate through all data from each layer
+        for (size_t data_idx = 0; data_idx < map_data.layers[layer_idx].data.size(); data_idx++)
         {
-            const auto& data = layer["data"];
-            int width = layer["width"];
-            int height = layer["height"];
+            tile_v2 t;
+           
+            int data = map_data.layers[layer_idx].data[data_idx];
+            int tileset_idx = 0;
 
-            for (int y = 0; y < height; ++y) 
+            int i = 0;
+            int temp_data = 0;
+
+            t.layer_index = layer_idx;
+            // always +1 because Tiled gid start from 1.
+            // TODO: bad implementation
+            while (true)
             {
-                for (int x = 0; x < width; ++x) 
+                if (i <= map_data.tilesets.size() - 1)
                 {
-                    uint32_t tile_idx = data[y * width + x];
-                    if (tile_idx > 0) 
+                    if (data > map_data.tilesets[i].first_gid - 1)
                     {
-
-                        std::string file = "../resources/" + image_file_name;
-                        load_tile_image(file);
-
-                        bool is_collidable = (layer_index == 0 && tile_idx > 0);
-                        std::shared_ptr<tile_type> tile_type_ = std::make_shared<tile_type>(image_file_name, tile_idx, is_collidable);
-
-                        const auto& texture = *(tile_textures[file]);
-                        tile tile_ptr(tile_type_, texture);
-
-                        tile_ptr.sprite.setPosition(x * pixel_size, y * pixel_size);
-
-                        // Store the layer index in the tile
-                        tile_ptr.layer_index = layer_index;
-
-                        size_t idx = (tile_ptr.tile_type->get_tile_idx() - 1) % rect_tile_x;
-                        size_t idy = (tile_ptr.tile_type->get_tile_idx() - 1) / rect_tile_y;
-                        tile_ptr.sprite.setTextureRect(sf::IntRect((idx * pixel_size), (idy * pixel_size), pixel_size, pixel_size));
-
-                        tiles.push_back(tile_ptr);
+                        tileset_idx = i;
+                        temp_data = data - map_data.tilesets[i].first_gid;
+                        i++;
+                    }
+                    else
+                    {
+                        break;
                     }
                 }
+                else
+                {
+                    break;
+                }
             }
-            ++layer_index;
+            data = temp_data;
+
+            sf::Texture& tx = load_tile_texture(tileset_data[tileset_idx].tileset_name);
+
+            t.sprite.setTexture(tx);
+            int x_rect = (data % tileset_data[tileset_idx].column) * tileset_data[tileset_idx].tile_width;
+            int y_rect = (data / tileset_data[tileset_idx].column) * tileset_data[tileset_idx].tile_height;
+
+            t.sprite.setTextureRect(
+                sf::IntRect(x_rect, y_rect,
+                    map_data.tile_width,
+                    map_data.tile_height));
+
+            int x = (data_idx * map_data.tile_width) % (map_data.tile_width * map_data.tilemap_width);
+            int y = ((data_idx * map_data.tile_height) / (map_data.tile_width * map_data.tilemap_width)) * map_data.tile_height;
+            t.sprite.setPosition(sf::Vector2f(x, y));
+            if (data == 0)
+            {
+                t.sprite.setColor(sf::Color::Transparent);
+            }
+            tiles.push_back(t);
+
+            //int data = map_data.layers[layer_idx].data[data_idx];
+
+            //t.sprite.setTexture(*tx);
+            //t.sprite.setTextureRect(sf::IntRect(48, 48, 48, 48));
+            //t.sprite.setPosition(sf::Vector2f(0.0f, 0.0f));
+            //t.sprite.setTextureRect(
+            //    sf::IntRect(
+            //    (data * tileset_data[tileset_idx].tile_width) % tileset_data[tileset_idx].img_source_width,
+            //        (data % (tileset_data[tileset_idx].img_source_height / tileset_data[tileset_idx].tile_height)) * tileset_data[tileset_idx].tile_height,
+            //        map_data.tile_width,
+            //        map_data.tile_height));
+
+            //t.sprite.setPosition(sf::Vector2f((width_idx * map_data.tile_width) % map_data.tilemap_width,
+            //    height_idx * map_data.tile_height % map_data.tilemap_height));
+
+            //tiles.push_back(t);
         }
     }
 }
@@ -60,9 +95,9 @@ void tile_manager::draw(sf::RenderWindow& window, const sf::Vector2f& player_pos
 {
     for (const auto& tile : tiles)
     {
-        if (tile.layer_index == layer && tile.layer_index > 0 && is_near_player(tile.sprite.getPosition(), player_position, render_distance))
+       // if (tile.layer_index == layer)// && is_near_player(tile.sprite.getPosition(), player_position, render_distance))
         {
-            window.draw(tile.sprite);
+            window.draw(tile.sprite, sf::BlendAlpha);
         }
     }
 }
@@ -71,7 +106,7 @@ bool tile_manager::check_collision(const sf::Vector2f& new_position)
 {
     for (const auto& tile : tiles)
     {
-        if (tile.tile_type->is_collidable())
+ //       if (tile.tile_type->is_collidable())
         {
             sf::FloatRect tile_bounds = tile.sprite.getGlobalBounds();
             sf::FloatRect new_position_bounds(new_position.x, new_position.y, pixel_size, pixel_size);
@@ -94,11 +129,11 @@ bool tile_manager::is_near_player(const sf::Vector2f& tile_position, const sf::V
     return distance_squared <= render_distance * render_distance;
 }
 
-void tile_manager::load_tile_image(const std::string& image_path)
+void tile_manager::register_tile_texture(const std::string& image_path, const std::string& texture_name)
 {
     if (!tile_textures.empty())
     {
-        auto path_stored = tile_textures.find(image_path);
+        auto path_stored = tile_textures.find(texture_name);
         if (path_stored != tile_textures.end())
         {
             return;
@@ -112,6 +147,16 @@ void tile_manager::load_tile_image(const std::string& image_path)
     }
     else
     {
-        tile_textures[image_path] = texture;
+        tile_textures[texture_name] = texture;
     }
+}
+
+sf::Texture& tile_manager::load_tile_texture(const std::string& texture_name)
+{
+    auto it = tile_textures.find(texture_name);
+    if (it == tile_textures.end()) 
+    {
+        throw std::runtime_error("Texture not found: " + texture_name);
+    }
+    return *(it->second);
 }

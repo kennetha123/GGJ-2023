@@ -14,7 +14,7 @@ public:
 		camera(sf::FloatRect(0, 0, 800, 600))
 	{
 		tile_manager_ = std::make_shared<tile_manager>();
-		tile_manager_->tile_parser("../resources/maps/test1.txt", "world.png");
+		tile_manager_->tile_parser("../resources/maps/prologue.json");
 		main_character.set_tile_manager(tile_manager_);
 	}
 
@@ -27,15 +27,12 @@ public:
 	virtual void draw(sf::RenderWindow& window) override
 	{
 		window.setView(camera);
-		
-		tile_manager_->draw(window, main_character.sprite.getPosition(), 1);
+		tile_manager_->draw(window, main_character.sprite.getPosition(), 0);
 		main_character.draw(window);
-		tile_manager_->draw(window, main_character.sprite.getPosition(), 2);
 	}
 
 private:
 	player main_character;
 	std::shared_ptr<tile_manager> tile_manager_;
 	sf::View camera;
-
 };

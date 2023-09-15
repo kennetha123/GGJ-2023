@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "ui/ui_manager.hpp"
-#include "audio/audio_manager.hpp"
+#include "audio/audio_manager.h"
 #include "system/input_handler.hpp"
 #include "system/game_event_handler.hpp"
 

@@ -40,7 +40,7 @@ int main()
         sf::Time dt = clock.restart();
         update_scene_and_ui(dt);
 
-        window.clear();
+        window.clear(sf::Color::White);
 
         draw_game_objects(window);
 

@@ -16,7 +16,7 @@ set(GAME_CODE
 	${CMAKE_CURRENT_SOURCE_DIR}/src/system/input_handler.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/system/event_handler.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/system/game_event_handler.hpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/audio/audio_manager.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/audio/audio_manager.cpp
 	PARENT_SCOPE
 )
 

@@ -9,6 +9,7 @@
 #include "../../json/json.hpp"
 #include "system/object.h"
 #include "system/entity.h"
+#include "../tiled2sfml/tiled2sfml.hpp"
 
 class tile_type {
 public:
@@ -25,6 +26,12 @@ public:
     const std::string& get_image_file_name() const { return image_file_name; }
     uint32_t get_tile_idx() const { return tile_idx_; }
     bool is_collidable() const { return is_collidable_; }
+};
+
+struct tile_v2
+{
+    sf::Sprite sprite;
+    int layer_index;
 };
 
 struct tile : public entity {
@@ -46,8 +53,7 @@ public:
     /// used for parsing tiles into game tile.
     /// </summary>
     /// <param name="json_file_path">file path of json with extensions.</param>
-    /// <param name="image_file_name">file name for image with file extension.</param>
-    void tile_parser(const std::string& json_file_path, const std::string& image_file_name);
+    void tile_parser(const std::string& json_file_path);
 
     /// <summary>
     /// draw tiles. Please make sure not drawing first layer as it
@@ -76,11 +82,13 @@ private:
     /// this function need to be called before using any tile_textures.
     /// </summary>
     /// <param name="image_path"></param>
-void load_tile_image(const std::string& image_path);
-
+void register_tile_texture(const std::string& image_path, const std::string& texture_name);
+sf::Texture& load_tile_texture(const std::string& texture_name);
 private:
     std::map<std::string, std::shared_ptr<sf::Texture>> tile_textures;
-    std::vector<tile> tiles;
+    std::vector<tilesetData> tileset_data;
+   // std::vector<tilemap> tilemaps;
+    std::vector<tile_v2> tiles;
     int layer_index = 0;
 
     size_t rect_tile_x = 8;
