@@ -59,34 +59,55 @@ void movement_component::handle_movement(float dt)
 
 		sprite_.setPosition(initial_position + sf::Vector2f(move_fraction * move_direction.x, move_fraction * move_direction.y));
 	}
-
-	if (!is_moving)
+	else
 	{
 		sf::Vector2f dest;
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 		{
 			dest = sf::Vector2f(-grid_size, 0.0f);
+			if (!tile_manager_->check_collision(sprite_.getPosition() + dest))
+			{
+				is_moving = true;
+				move_direction = dest;
+				initial_position = sprite_.getPosition();
+				elapsed_time = 0;
+			}
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 		{
 			dest = sf::Vector2f(0.0f, -grid_size);
+			if (!tile_manager_->check_collision(sprite_.getPosition() + dest))
+			{
+				is_moving = true;
+				move_direction = dest;
+				initial_position = sprite_.getPosition();
+				elapsed_time = 0;
+			}
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 		{
 			dest = sf::Vector2f(0.0f, grid_size);
+			if (!tile_manager_->check_collision(sprite_.getPosition() + dest))
+			{
+				is_moving = true;
+				move_direction = dest;
+				initial_position = sprite_.getPosition();
+				elapsed_time = 0;
+			}
+
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 		{
 			dest = sf::Vector2f(grid_size, 0.0f);
-		}
+			if (!tile_manager_->check_collision(sprite_.getPosition() + dest))
+			{
+				is_moving = true;
+				move_direction = dest;
+				initial_position = sprite_.getPosition();
+				elapsed_time = 0;
+			}
 
-		if (!tile_manager_->check_collision(sprite_.getPosition() + dest))
-		{
-			is_moving = true;
-			move_direction = dest;
-			initial_position = sprite_.getPosition();
-			elapsed_time = 0;
 		}
 	}
 }

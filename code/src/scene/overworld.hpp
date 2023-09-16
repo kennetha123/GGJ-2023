@@ -27,8 +27,9 @@ public:
 	virtual void draw(sf::RenderWindow& window) override
 	{
 		window.setView(camera);
-		tile_manager_->draw(window, main_character.sprite.getPosition(), 0);
-		main_character.draw(window);
+		tile_manager_->draw(window, main_character.sprite.getPosition(), 3, [&]() {
+			main_character.draw(window);
+			});
 	}
 
 private:

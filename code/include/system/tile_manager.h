@@ -28,23 +28,21 @@ public:
     bool is_collidable() const { return is_collidable_; }
 };
 
-struct tile_v2
+/*
+* The reason why data and image separated, is because how tiled works,
+* when you have multiple layers for example 30x20 grid and 5 layers,
+* the true tile is 600, but the image that need to be rendered is 5x600
+* which is 3k image, while we only need 600 tile data.
+*/
+struct TileData
 {
-    sf::Sprite sprite;
-    int layer_index;
+    bool has_collision = false;
 };
 
-struct tile : public entity {
-public:
-    tile::tile(const std::shared_ptr<tile_type>& tile_type, const sf::Texture& texture)
-        : tile_type(tile_type)
-    {
-        sprite.setTexture(texture);
-    }
-
-    sf::Sprite sprite;
-    std::shared_ptr<tile_type> tile_type;
+struct TileImage
+{
     int layer_index = 0;
+    sf::Sprite sprite;
 };
 
 class tile_manager {
@@ -62,10 +60,11 @@ public:
     /// <param name="window">RenderWindow to get draw function.</param>
     /// <param name="player_position">to check player position for performance.</param>
     /// <param name="layer">specify the draw layer.</param>
-    void draw(sf::RenderWindow& window, const sf::Vector2f& player_position, int layer);
+    void draw(sf::RenderWindow& window, const sf::Vector2f& player_position, int player_layer, std::function<void()> draw_player_func);
 
     bool check_collision(const sf::Vector2f& new_position);
-
+    uint32_t position_to_index(sf::Vector2f pos);
+    sf::Vector2f index_to_position(int index);
 private:
     /// <summary>
     /// check if player near tiles, so it can optimize the draw function when it is
@@ -84,15 +83,19 @@ private:
     /// <param name="image_path"></param>
 void register_tile_texture(const std::string& image_path, const std::string& texture_name);
 sf::Texture& load_tile_texture(const std::string& texture_name);
+
+void setCollisionLayer(std::vector<int>&& layers);
 private:
     std::map<std::string, std::shared_ptr<sf::Texture>> tile_textures;
     std::vector<tilesetData> tileset_data;
-   // std::vector<tilemap> tilemaps;
-    std::vector<tile_v2> tiles;
+    tilemapData tilemap_data;
+    std::vector<TileData> tile_data;
+    std::vector<TileImage> tile_sprite;
     int layer_index = 0;
 
     size_t rect_tile_x = 8;
     size_t rect_tile_y = 8;
     size_t pixel_size = 32;
     float render_distance = 550.0f;
+    std::vector<int> collision_layer;
 };

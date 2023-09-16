@@ -36,6 +36,6 @@ private:
 	sf::Vector2f initial_position;
 	sf::Vector2f move_direction;
 	float elapsed_time = 0;
-	float grid_size = 32.0f;
-	float move_duration = 0.2f;
+	float grid_size = 48.0f;
+	float move_duration = 0.3f;
 };

@@ -12,7 +12,7 @@ player::player(const std::string& image_path)
 
     sprite.setTexture(player_texture);
     sprite.setTextureRect(sf::IntRect(0, 0, sprite_width, sprite_height));
-    sprite.setPosition(0.0f, 0.0f);
+    sprite.setPosition(480.0, 480.0f);
 
     std::vector<std::vector<sf::IntRect>> all_frames = {
         { // Down
