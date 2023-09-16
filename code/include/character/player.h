@@ -10,7 +10,7 @@ public:
 
     void update(float dt);
     void draw(sf::RenderWindow& window);
-    void set_tile_manager(std::shared_ptr<tile_manager> tile_mgr);
+    void set_tile_manager(std::shared_ptr<TileManager> tile_mgr);
 
     sf::Sprite sprite;
     std::unique_ptr<animation_component> player_animation;

@@ -56,7 +56,7 @@ void player::draw(sf::RenderWindow& window)
     window.draw(sprite);
 }
 
-void player::set_tile_manager(std::shared_ptr<tile_manager> tile_mgr)
+void player::set_tile_manager(std::shared_ptr<TileManager> tile_mgr)
 {
     player_movement->set_tile_manager(tile_mgr);
 }

@@ -66,7 +66,7 @@ void movement_component::handle_movement(float dt)
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 		{
 			dest = sf::Vector2f(-grid_size, 0.0f);
-			if (!tile_manager_->check_collision(sprite_.getPosition() + dest))
+			if (!tile_manager_->checkCollision(sprite_.getPosition() + dest))
 			{
 				is_moving = true;
 				move_direction = dest;
@@ -77,7 +77,7 @@ void movement_component::handle_movement(float dt)
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 		{
 			dest = sf::Vector2f(0.0f, -grid_size);
-			if (!tile_manager_->check_collision(sprite_.getPosition() + dest))
+			if (!tile_manager_->checkCollision(sprite_.getPosition() + dest))
 			{
 				is_moving = true;
 				move_direction = dest;
@@ -88,8 +88,8 @@ void movement_component::handle_movement(float dt)
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 		{
 			dest = sf::Vector2f(0.0f, grid_size);
-			if (!tile_manager_->check_collision(sprite_.getPosition() + dest))
-			{
+			if (!tile_manager_->checkCollision(sprite_.getPosition() + dest))
+			{	
 				is_moving = true;
 				move_direction = dest;
 				initial_position = sprite_.getPosition();
@@ -100,7 +100,7 @@ void movement_component::handle_movement(float dt)
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 		{
 			dest = sf::Vector2f(grid_size, 0.0f);
-			if (!tile_manager_->check_collision(sprite_.getPosition() + dest))
+			if (!tile_manager_->checkCollision(sprite_.getPosition() + dest))
 			{
 				is_moving = true;
 				move_direction = dest;
@@ -112,7 +112,7 @@ void movement_component::handle_movement(float dt)
 	}
 }
 
-void movement_component::set_tile_manager(std::shared_ptr<tile_manager> tile_mgr)
+void movement_component::set_tile_manager(std::shared_ptr<TileManager> tile_mgr)
 {
 	tile_manager_ = tile_mgr;
 }

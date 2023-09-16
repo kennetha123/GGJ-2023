@@ -13,8 +13,9 @@ public:
 		main_character("../resources/Actor_sangoku01.png"),
 		camera(sf::FloatRect(0, 0, 800, 600))
 	{
-		tile_manager_ = std::make_shared<tile_manager>();
-		tile_manager_->tile_parser("../resources/maps/prologue.json");
+		tile_manager_ = std::make_shared<TileManager>();
+		tile_manager_->setCollisionLayer({ 1, 4 });
+		tile_manager_->tileParser("../resources/maps/prologue.json");
 		main_character.set_tile_manager(tile_manager_);
 	}
 
@@ -34,6 +35,6 @@ public:
 
 private:
 	player main_character;
-	std::shared_ptr<tile_manager> tile_manager_;
+	std::shared_ptr<TileManager> tile_manager_;
 	sf::View camera;
 };

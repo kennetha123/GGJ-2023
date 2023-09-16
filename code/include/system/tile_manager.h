@@ -45,13 +45,13 @@ struct TileImage
     sf::Sprite sprite;
 };
 
-class tile_manager {
+class TileManager {
 public:
     /// <summary>
     /// used for parsing tiles into game tile.
     /// </summary>
     /// <param name="json_file_path">file path of json with extensions.</param>
-    void tile_parser(const std::string& json_file_path);
+    void tileParser(const std::string& json_file_path);
 
     /// <summary>
     /// draw tiles. Please make sure not drawing first layer as it
@@ -60,42 +60,28 @@ public:
     /// <param name="window">RenderWindow to get draw function.</param>
     /// <param name="player_position">to check player position for performance.</param>
     /// <param name="layer">specify the draw layer.</param>
+    /// <param name="draw_player_func">function call for the +
     void draw(sf::RenderWindow& window, const sf::Vector2f& player_position, int player_layer, std::function<void()> draw_player_func);
 
-    bool check_collision(const sf::Vector2f& new_position);
-    uint32_t position_to_index(sf::Vector2f pos);
-    sf::Vector2f index_to_position(int index);
+    bool checkCollision(const sf::Vector2f& new_position);
+    uint32_t positionToIndex(sf::Vector2f pos);
+    sf::Vector2f indexToPosition(int index);
+    void setCollisionLayer(std::vector<int>&& layers);
+
 private:
-    /// <summary>
-    /// check if player near tiles, so it can optimize the draw function when it is
-    /// too far from the view scenes.
-    /// </summary>
-    /// <param name="tile_position">tile position.</param>
-    /// <param name="player_position">player position.</param>
-    /// <param name="render_distance">how far it can draw in pixel unit.</param>
-    /// <returns></returns>
-    bool is_near_player(const sf::Vector2f& tile_position, const sf::Vector2f& player_position, float render_distance);
+    bool isNearPlayer(const sf::Vector2f& tile_position, const sf::Vector2f& player_position, float render_distance);
 
-    /// <summary>
-    /// load tile images and store it inside tile_textures.
-    /// this function need to be called before using any tile_textures.
-    /// </summary>
-    /// <param name="image_path"></param>
-void register_tile_texture(const std::string& image_path, const std::string& texture_name);
-sf::Texture& load_tile_texture(const std::string& texture_name);
+    void registerTileTexture(const std::string& image_path, const std::string& texture_name);
 
-void setCollisionLayer(std::vector<int>&& layers);
+    sf::Texture& loadTileTexture(const std::string& texture_name);
+
 private:
     std::map<std::string, std::shared_ptr<sf::Texture>> tile_textures;
     std::vector<tilesetData> tileset_data;
     tilemapData tilemap_data;
     std::vector<TileData> tile_data;
     std::vector<TileImage> tile_sprite;
-    int layer_index = 0;
 
-    size_t rect_tile_x = 8;
-    size_t rect_tile_y = 8;
-    size_t pixel_size = 32;
     float render_distance = 550.0f;
     std::vector<int> collision_layer;
 };

@@ -28,10 +28,10 @@ public:
 		sprite_(sprite) { }
 
 	void handle_movement(float dt);
-	void set_tile_manager(std::shared_ptr<tile_manager> tile_mgr);
+	void set_tile_manager(std::shared_ptr<TileManager> tile_mgr);
 private:
 	sf::Sprite& sprite_;
-	std::shared_ptr<tile_manager> tile_manager_;
+	std::shared_ptr<TileManager> tile_manager_;
 	bool is_moving = false;
 	sf::Vector2f initial_position;
 	sf::Vector2f move_direction;
