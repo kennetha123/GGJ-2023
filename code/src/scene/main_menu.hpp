@@ -55,7 +55,7 @@ public:
 	{
 		main_menu_ui->mm_view_.new_game_button.set_on_click_callback([this]
 			{
-				overworld_ = std::make_shared<overworld>(context);
+				overworld_ = std::make_shared<Overworld>(context);
 				context.scene_manager_.load_scene(std::dynamic_pointer_cast<scene>(overworld_));
 				context.ui_manager_.remove(main_menu_ui);
 			});
@@ -78,7 +78,7 @@ public:
 	std::shared_ptr<main_menu_controller> main_menu_ui;
 
 private:
-	std::shared_ptr<overworld> overworld_;
+	std::shared_ptr<Overworld> overworld_;
 	sf::Sprite bg_sprite;
 	sf::Texture bg_texture;
 	sf::Font font;

@@ -1,40 +1,69 @@
 #pragma once
 
 #include "scene_manager.hpp"
-#include "system/tile_manager.h"
+#include "../tiled2sfml/tiled2sfml.h"
 #include "character/player.h"
 #include "../ui/ui_manager.hpp"
+#include "system/Collision.h"
 
-class overworld : public scene
+class Overworld : public scene
 {
 public:
-	overworld(game_context& game_context_) :
+	Overworld(game_context& game_context_) :
 		scene(game_context_),
 		main_character("../resources/Actor_sangoku01.png"),
 		camera(sf::FloatRect(0, 0, 800, 600))
 	{
-		tile_manager_ = std::make_shared<TileManager>();
-		tile_manager_->setCollisionLayer({ 1, 4 });
-		tile_manager_->tileParser("../resources/maps/prologue.json");
-		main_character.set_tile_manager(tile_manager_);
+		tiled2Sfml.setCollisionLayer({ 1, 4 });
+		tiled2Sfml.tileParser("../resources/maps/", "prologue.json");
+		main_character.setTilemap(tiled2Sfml);
 	}
 
-	virtual void update(float dt) override
-	{
-		camera.setCenter(main_character.sprite.getPosition());
-		main_character.update(dt);
-	}
-
-	virtual void draw(sf::RenderWindow& window) override
-	{
-		window.setView(camera);
-		tile_manager_->draw(window, main_character.sprite.getPosition(), 3, [&]() {
-			main_character.draw(window);
-			});
-	}
-
+	virtual void update(float dt) override;
+	virtual void draw(sf::RenderWindow& window) override;
+	bool isNearPlayer(const sf::Vector2f& tile_position, const sf::Vector2f& player_position, float render_distance);
 private:
 	player main_character;
-	std::shared_ptr<TileManager> tile_manager_;
+	Tiled2SFML tiled2Sfml;
 	sf::View camera;
+
+	float render_distance = 550.0f;
+	int player_layer = 3;
 };
+
+void Overworld::update(float dt)
+{
+	camera.setCenter(main_character.sprite.getPosition());
+	main_character.update(dt);
+}
+
+void Overworld::draw(sf::RenderWindow& window)
+{
+	window.setView(camera);
+	for (size_t layer_idx = 0; layer_idx < tiled2Sfml.getTilemapData().layers.size(); layer_idx++)
+	{
+		if (layer_idx == player_layer)
+		{
+			main_character.draw(window);
+		}
+		else
+		{
+			for (const auto& tile : tiled2Sfml.getTileSprite())
+			{
+				if (tile.layer_index == layer_idx &&
+					isNearPlayer(tile.sprite.getPosition(), main_character.sprite.getPosition(), render_distance))
+				{
+					window.draw(tile.sprite, sf::BlendAlpha);
+				}
+			}
+		}
+	}
+}
+
+bool Overworld::isNearPlayer(const sf::Vector2f& tile_position, const sf::Vector2f& player_position, float render_distance)
+{
+	float dx = tile_position.x - player_position.x;
+	float dy = tile_position.y - player_position.y;
+	float distance_squared = dx * dx + dy * dy;
+	return distance_squared <= render_distance * render_distance;
+}

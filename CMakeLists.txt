@@ -18,7 +18,8 @@ add_executable(${ProjectName}
 				${DependencyFolder}/inih/ini.c
 				${DependencyFolder}/inih/ini.h
 				${DependencyFolder}/tinyxml2/tinyxml2.cpp
-				${DependencyFolder}/tiled2sfml/tiled2sfml.hpp)
+				${DependencyFolder}/tiled2sfml/tiled2sfml.cpp
+				${DependencyFolder}/tiled2sfml/tiled2sfml.h)
 				
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/${OutputFolderName})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/${OutputFolderName})

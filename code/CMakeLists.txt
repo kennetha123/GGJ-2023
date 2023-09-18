@@ -10,13 +10,14 @@ set(GAME_CODE
 	${CMAKE_CURRENT_SOURCE_DIR}/src/ui/ui_manager.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/ui/ui_models.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/ui/button.hpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/system/tile_manager.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/system/ecs/components.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/system/observer.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/system/input_handler.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/system/event_handler.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/system/game_event_handler.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/system/Collision.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/audio/audio_manager.cpp
+	
 	PARENT_SCOPE
 )
 
