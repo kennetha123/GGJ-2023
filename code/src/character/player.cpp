@@ -126,38 +126,17 @@ void Player::handleMovement(float dt)
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 		{
 			dest = sf::Vector2f(-grid_size, 0.0f);
-			if (!checkCollision(sprite.getPosition() + dest))
-			{
-				is_moving = true;
-				move_direction = dest;
-				initial_position = sprite.getPosition();
-				mov_elapsed_time = 0;
-			}
-
+			move(dest);
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 		{
 			dest = sf::Vector2f(0.0f, -grid_size);
-			if (!checkCollision(sprite.getPosition() + dest))
-			{
-				is_moving = true;
-				move_direction = dest;
-				initial_position = sprite.getPosition();
-				mov_elapsed_time = 0;
-			}
-
+			move(dest);
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 		{
 			dest = sf::Vector2f(0.0f, grid_size);
-			if (!checkCollision(sprite.getPosition() + dest))
-			{
-				is_moving = true;
-				move_direction = dest;
-				initial_position = sprite.getPosition();
-				mov_elapsed_time = 0;
-			}
-
+			move(dest);
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 		{

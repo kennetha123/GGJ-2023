@@ -23,7 +23,7 @@ public:
 	virtual void draw(sf::RenderWindow& window) override;
 	bool isNearPlayer(const sf::Vector2f& tile_position, const sf::Vector2f& player_position, float render_distance);
 private:
-	player main_character;
+	Player main_character;
 	Tiled2SFML tiled2Sfml;
 	sf::View camera;
 
