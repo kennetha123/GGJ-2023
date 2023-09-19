@@ -3,16 +3,17 @@
 #include <memory>
 #include "../tiled2sfml/tiled2sfml.h"
 
-class player : public entity
+class Player : public entity
 {
 public:
-    player(const std::string& image_path);
-    ~player() = default;
+    Player(const std::string& image_path);
+    ~Player() = default;
 
     void update(float dt);
     void draw(sf::RenderWindow& window);
-	void handle_animation(float dt, int row);
-	void handle_movement(float dt);
+	void handleAnimation(float dt);
+	void handleMovement(float dt);
+	void move(const sf::Vector2f& dest);
 	void setTilemap(Tiled2SFML& td);
 	bool checkCollision(const sf::Vector2f& dest);
 
@@ -28,6 +29,8 @@ private:
 	float anim_elapsed_time = 0;
 	float mov_elapsed_time = 0;
 	int current_frame = 0;
+	int row = -1;
+	int last_direction = 0;
 
 	bool is_moving = false;
 	sf::Vector2f initial_position;
