@@ -1,6 +1,7 @@
 #include "character/Player.h"
 #include <memory>
 #include "../tiled2sfml/tiled2sfml.h"
+#include "utils/Time.h"
 
 Player::Player(const std::string& image_path)
 {
@@ -13,40 +14,19 @@ Player::Player(const std::string& image_path)
     sprite.setTextureRect(sf::IntRect(0, 0, sprite_width, sprite_height));
     sprite.setPosition(480.0, 480.0f);
 
-    frames_ = {
-        { // Down
-            {48, 0, sprite_width, sprite_height},
-            {0, 0, sprite_width, sprite_height},
-            {48, 0, sprite_width, sprite_height},
-            {96, 0, sprite_width, sprite_height},
-        },
-        { // Left
-            {48, 48, sprite_width, sprite_height},
-            {0, 48, sprite_width, sprite_height},
-            {48, 48, sprite_width, sprite_height},
-            {96, 48, sprite_width, sprite_height},
-        },
-        { // Right
-            {48, 96, sprite_width, sprite_height},
-            {0, 96, sprite_width, sprite_height},
-            {48, 96, sprite_width, sprite_height},
-            {96, 96, sprite_width, sprite_height},
-        },
-        { // Up
-            {48, 144, sprite_width, sprite_height},
-            {0, 144, sprite_width, sprite_height},
-            {48, 144, sprite_width, sprite_height},
-            {96, 144, sprite_width, sprite_height},
-        }
-    };
-
     this->add_component<Collision>();
+
+	initAnimation();
 }
 
 void Player::update(float dt)
 {
-    handleAnimation(dt);
-    handleMovement(dt);
+	if (is_moving)
+	{
+		controller.evaluateRules(anim);
+	}
+	
+	handleMovement();
 }
 
 void Player::draw(sf::RenderWindow& window)
@@ -54,60 +34,105 @@ void Player::draw(sf::RenderWindow& window)
     window.draw(sprite);
 }
 
-void Player::handleAnimation(float dt)
+void Player::initAnimation()
 {
-	if (!is_moving)
-	{
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-		{
-			row = 1;
-			last_direction = 1;
-		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-		{
-			row = 3;
-			last_direction = 3;
-		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-		{
-			row = 0;
-			last_direction = 0;
-		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-		{
-			row = 2;
-			last_direction = 2;
-		}
-		sprite.setTextureRect(frames_[last_direction][0]);
-	}
-	else
-	{
-		if (row != -1)
-		{
-			if (row >= frames_.size())
-			{
-				return;
-			}
+	Animation idle;
+	Animation walk_right;
+	Animation walk_left;
+	Animation walk_up;
+	Animation walk_down;
 
-			anim_elapsed_time += dt;
-
-			if (anim_elapsed_time >= frame_time_)
+	controller.addRule(
+		AnimationRule{
+			[](const Animator& animator)
 			{
-				anim_elapsed_time = 0;
-				current_frame = (current_frame + 1) % frames_[row].size();
-				sprite.setTextureRect(frames_[row][current_frame]);
+					return std::get<float>(animator.getParam("move_x")) > 0.0f;
+			},
+			[this]()
+			{
+				this->anim.PlayAnimation("Walk Right", sprite);
 			}
-		}
-	}
+		});
+	controller.addRule(
+		AnimationRule{
+			[](const Animator& animator)
+			{
+					return std::get<float>(animator.getParam("move_x")) < 0.0f;
+			},
+			[this]()
+			{
+				this->anim.PlayAnimation("Walk Left", sprite);
+			}
+		});
+	controller.addRule(
+		AnimationRule{
+			[](const Animator& animator)
+			{
+					return std::get<float>(animator.getParam("move_y")) > 0.0f;
+			},
+			[this]()
+			{
+				this->anim.PlayAnimation("Walk Up", sprite);
+			}
+		});
+	controller.addRule(
+		AnimationRule{
+			[](const Animator& animator)
+			{
+					return std::get<float>(animator.getParam("move_y")) < 0.0f;
+			},
+			[this]()
+			{
+				this->anim.PlayAnimation("Walk Down", sprite);
+			}
+		});
+
+	walk_right.setFrame(
+		{
+			sf::IntRect(48, 96, sprite_width, sprite_height),
+			sf::IntRect(0, 96, sprite_width, sprite_height),
+			sf::IntRect(48, 96, sprite_width, sprite_height),
+			sf::IntRect(96, 96, sprite_width, sprite_height),
+		});
+	walk_left.setFrame(
+		{
+			{48, 48, sprite_width, sprite_height},
+			{0, 48, sprite_width, sprite_height},
+			{48, 48, sprite_width, sprite_height},
+			{96, 48, sprite_width, sprite_height},
+		});
+	walk_up.setFrame(
+		{
+			{48, 0, sprite_width, sprite_height},
+			{0, 0, sprite_width, sprite_height},
+			{48, 0, sprite_width, sprite_height},
+			{96, 0, sprite_width, sprite_height},
+
+		});
+	walk_down.setFrame(
+		{
+			{48, 144, sprite_width, sprite_height},
+			{0, 144, sprite_width, sprite_height},
+			{48, 144, sprite_width, sprite_height},
+			{96, 144, sprite_width, sprite_height},
+
+		});
+
+	anim.addAnimation("Idle", idle);
+	anim.addAnimation("Walk Right", walk_right);
+	anim.addAnimation("Walk Left", walk_left);
+	anim.addAnimation("Walk Up", walk_up);
+	anim.addAnimation("Walk Down", walk_down);
+
 }
 
 // movement component
 
-void Player::handleMovement(float dt)
+void Player::handleMovement()
 {
 	if (is_moving)
 	{
-		mov_elapsed_time += dt;
+		mov_elapsed_time += dw::Time::getDeltaTime();
 		float move_fraction = mov_elapsed_time / move_duration;
 
 		if (move_fraction >= 1.0f)
@@ -155,6 +180,9 @@ void Player::move(const sf::Vector2f& dest)
 		initial_position = sprite.getPosition();
 		mov_elapsed_time = 0;
 	}
+
+	anim.setParam("move_x", move_direction.x);
+	anim.setParam("move_y", move_direction.y);
 }
 
 void Player::setTilemap(Tiled2SFML& tiled2Sfml_)

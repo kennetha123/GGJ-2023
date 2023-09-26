@@ -16,7 +16,9 @@ set(GAME_CODE
 	${CMAKE_CURRENT_SOURCE_DIR}/src/system/event_handler.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/system/game_event_handler.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/system/Collision.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/system/Animator.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/audio/audio_manager.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/utils/Time.cpp
 	
 	PARENT_SCOPE
 )

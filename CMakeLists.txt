@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.17)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
 set(OutputFolderName project)
 set(ProjectName 2DRPG)
 set(IncludeFolder code/include)
@@ -26,8 +29,6 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/${OutputFolderName})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/${OutputFolderName})
 set(CMAKE_PDB_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/${OutputFolderName})
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set_property(TARGET ${ProjectName} PROPERTY FOLDER ${OutputFolderName})
 set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT ${ProjectName})

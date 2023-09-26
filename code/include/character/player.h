@@ -2,6 +2,7 @@
 #include "system/components.h"
 #include <memory>
 #include "../tiled2sfml/tiled2sfml.h"
+#include "system/Animator.h"
 
 class Player : public entity
 {
@@ -11,11 +12,12 @@ public:
 
     void update(float dt);
     void draw(sf::RenderWindow& window);
-	void handleAnimation(float dt);
-	void handleMovement(float dt);
+	void handleMovement();
+	void initAnimation();
 	void move(const sf::Vector2f& dest);
 	void setTilemap(Tiled2SFML& td);
 	bool checkCollision(const sf::Vector2f& dest);
+	Animator anim;
 
 	sf::Sprite sprite;
 private:
@@ -24,6 +26,7 @@ private:
     sf::Texture player_texture;
     int sprite_width = 48, sprite_height = 48;
 
+	AnimationController controller;
 	std::vector<std::vector<sf::IntRect>> frames_;
 	float frame_time_ = 0.15f;
 	float anim_elapsed_time = 0;

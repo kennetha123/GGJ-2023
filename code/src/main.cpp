@@ -2,6 +2,7 @@
 
 #include "scene/main_menu.hpp"
 #include "game_context.hpp"
+#include "utils/Time.h"
 
 using namespace ui::controller;
 
@@ -38,6 +39,7 @@ int main()
         input_handler_.handle_events(window, ev);
 
         sf::Time dt = clock.restart();
+        dw::Time::setDeltaTime(dt.asSeconds());
         update_scene_and_ui(dt);
 
         window.clear(sf::Color::Cyan);
