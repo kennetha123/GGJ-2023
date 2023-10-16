@@ -5,6 +5,42 @@
 
 class main_menu;
 
+class Command
+{
+public:
+    virtual ~Command() = default;
+
+    virtual void execute(sf::Event& ev, sf::RenderWindow& window)
+    {
+        std::cout << "no implementation!" << std::endl;
+    }
+};
+
+class StoreMapCommand : public Command
+{
+    using Action = std::function<void(sf::Event&, const sf::Vector2f& mouse_position)>;
+public:
+    StoreMapCommand(Action action)
+    {
+        action_ = action;
+    }
+
+    void execute(sf::Event& ev, sf::RenderWindow& window) override
+    {
+        sf::Vector2f mouse_position = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+        action_(ev, mouse_position);
+    }
+
+private:
+    Action action_;
+};
+
+class MoveRightCommand : public Command
+{
+public:
+    MoveRightCommand() {}
+};
+
 class input_handler
 {
 public:
@@ -18,24 +54,44 @@ public:
     {
         while (window.pollEvent(ev))
         {
+            if (ev.type == sf::Event::KeyPressed)
+            {
+                auto it = keyCmdMap.find(ev.key.code);
+                if (it != keyCmdMap.end())
+                {
+                    it->second->execute(ev, window);
+                }
+            }
+
+            if (ev.type == sf::Event::MouseButtonPressed)
+            {
+                auto it = mouseCmdMap.find(ev.mouseButton.button);
+                if (it != mouseCmdMap.end())
+                {
+                    it->second->execute(ev, window);
+                }
+            }
+
             if (ev.type == sf::Event::Closed)
             {
                 window.close();
             }
-            else if (ev.type == sf::Event::MouseButtonPressed && ev.mouseButton.button == sf::Mouse::Left)
-            {
-                sf::Vector2f mouse_position = window.mapPixelToCoords(sf::Mouse::getPosition(window));
-                right_click_action(ev, mouse_position);
-            }
         }
     }
 
-    void set_right_click(std::function<void(sf::Event&, const sf::Vector2f& mouse_position)> action)
+    void bindKeyToCmd(sf::Keyboard::Key key, std::shared_ptr<Command> cmd)
     {
-        right_click_action = action;
+        keyCmdMap[key] = cmd;
     }
+
+    void bindMouseToCmd(sf::Mouse::Button button, std::shared_ptr<Command> cmd)
+    {
+        mouseCmdMap[button] = cmd;
+    }
+
 private:
-    std::function<void(sf::Event&, const sf::Vector2f& mouse_position)> right_click_action;
+    std::shared_ptr<Command> right_click_command;
 
-
+    std::map<sf::Keyboard::Key, std::shared_ptr<Command>> keyCmdMap;
+    std::map<sf::Mouse::Button, std::shared_ptr<Command>> mouseCmdMap;
 };

@@ -190,12 +190,14 @@ namespace ui
 				button& settings = mm_view_.settings_button;
 				button& quit = mm_view_.quit_button;
 
-				input_handler_.set_right_click([&](sf::Event& ev, const sf::Vector2f& mouse_position) {
+				std::shared_ptr<StoreMapCommand> store_map_cmd = std::make_shared<StoreMapCommand>([&](sf::Event& ev, const sf::Vector2f& mouse_position) {
 					new_game.check_click(mouse_position);
 					load_game.check_click(mouse_position);
 					settings.check_click(mouse_position);
 					quit.check_click(mouse_position);
 					});
+
+				input_handler_.bindMouseToCmd(sf::Mouse::Left, store_map_cmd);
 			}
 
 			view::main_menu_view mm_view_;

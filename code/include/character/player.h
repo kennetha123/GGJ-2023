@@ -13,6 +13,7 @@ public:
     void update(float dt);
     void draw(sf::RenderWindow& window);
 	void handleMovement();
+	void initKeyBindings();
 	void initAnimation();
 	void move(const sf::Vector2f& dest);
 	void setTilemap(Tiled2SFML& td);

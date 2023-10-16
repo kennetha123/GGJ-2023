@@ -2,6 +2,7 @@
 #include <memory>
 #include "../tiled2sfml/tiled2sfml.h"
 #include "utils/Time.h"
+#include "../system/input_handler.hpp"
 
 Player::Player(const std::string& image_path)
 {
@@ -16,6 +17,7 @@ Player::Player(const std::string& image_path)
 
     this->add_component<Collision>();
 
+	initKeyBindings();
 	initAnimation();
 }
 
@@ -32,6 +34,11 @@ void Player::update(float dt)
 void Player::draw(sf::RenderWindow& window)
 {
     window.draw(sprite);
+}
+
+void Player::initKeyBindings()
+{
+
 }
 
 void Player::initAnimation()
