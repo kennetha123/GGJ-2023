@@ -3,13 +3,13 @@
 #include <SFML/Graphics.hpp>
 #include "event_handler.hpp"
 
-class game_event_handler : public event_handler
+class GameEventManager : public IEvent
 {
 public:
-	game_event_handler(sf::RenderWindow& window) :
+	GameEventManager(sf::RenderWindow& window) :
 		window_(window) {}
 
-	virtual void quit_game() override
+	virtual void quitGame() override
 	{
 		window_.close();
 	}

@@ -1,7 +1,6 @@
 #include "character/Player.h"
-#include <memory>
-#include "../tiled2sfml/tiled2sfml.h"
 #include "utils/Time.h"
+#include "ServiceLocator.h"
 #include "../system/input_handler.hpp"
 
 Player::Player(const std::string& image_path)
@@ -38,7 +37,8 @@ void Player::draw(sf::RenderWindow& window)
 
 void Player::initKeyBindings()
 {
-
+	std::shared_ptr<MoveRightCommand> move_right = std::make_shared<MoveRightCommand>();
+	ServiceLocator::getService<InputManager>().bindKeyToCmd(sf::Keyboard::D, move_right);
 }
 
 void Player::initAnimation()

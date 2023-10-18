@@ -6,7 +6,7 @@
 #include <string>
 #include <sstream>
 
-namespace ui
+namespace UI
 {
 	namespace model
 	{
@@ -183,7 +183,7 @@ namespace ui
 				mm_view_.draw(window);
 			}
 
-			void on_click(input_handler& input_handler_)
+			void on_click()
 			{
 				button& new_game = mm_view_.new_game_button;
 				button& load_game = mm_view_.load_game_button;
@@ -191,13 +191,14 @@ namespace ui
 				button& quit = mm_view_.quit_button;
 
 				std::shared_ptr<StoreMapCommand> store_map_cmd = std::make_shared<StoreMapCommand>([&](sf::Event& ev, const sf::Vector2f& mouse_position) {
+					std::cout << "test cmd" << std::endl;
 					new_game.check_click(mouse_position);
 					load_game.check_click(mouse_position);
 					settings.check_click(mouse_position);
 					quit.check_click(mouse_position);
 					});
 
-				input_handler_.bindMouseToCmd(sf::Mouse::Left, store_map_cmd);
+				ServiceLocator::getService<InputManager>().bindMouseToCmd(sf::Mouse::Left, store_map_cmd);
 			}
 
 			view::main_menu_view mm_view_;

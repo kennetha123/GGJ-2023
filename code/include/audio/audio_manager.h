@@ -5,17 +5,11 @@
 #include <string>
 #include <memory>
 
-class audio_manager
+class AudioManager
 {
 public:
-    static audio_manager& instance()
-    {
-        static audio_manager instance;
-        return instance;
-    }
-
-    audio_manager(const audio_manager&) = delete;
-    void operator=(const audio_manager&) = delete;
+    AudioManager() {}
+    ~AudioManager() {}
 
     void add_bgm(const std::string& id, const std::string& filepath);
     void add_sfx(const std::string& id, const std::string& filepath);
@@ -34,8 +28,6 @@ public:
     void set_sfx_volume(float volume);
 
 private:
-    audio_manager() {}
-    ~audio_manager() {}
 
     std::map<std::string, std::shared_ptr<sf::Music>> bgm_;
     std::map<std::string, std::shared_ptr<sf::SoundBuffer>> sfx_;

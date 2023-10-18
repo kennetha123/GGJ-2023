@@ -3,82 +3,67 @@
 #include <vector>
 #include <memory>
 
-class game_context;
-
-class scene
+class Scene
 {
 public:
-    scene(game_context& game_ctx) : context(game_ctx) {}
+    Scene() {}
 
     virtual void update(float dt) = 0;
     virtual void draw(sf::RenderWindow& window) = 0;
-
-protected:
-    game_context& context;
 };
 
-class scene_manager
+class SceneManager
 {
 public:
-    static scene_manager& instance()
-    {
-        static scene_manager instance;
-        return instance;
-    }
-
-private:
-    scene_manager() {}
-
-    scene_manager(const scene_manager&) = delete;
-    void operator=(const scene_manager&) = delete;
+    SceneManager() {}
 
 public:
     void update(float dt)
     {
-        if (!scenes_.empty())
+        if (!scenes.empty())
         {
-            scenes_.back()->update(dt);
+            scenes.back()->update(dt);
         }
     }
 
     void draw(sf::RenderWindow& window)
     {
-        if (!scenes_.empty())
+        if (!scenes.empty())
         {
-            scenes_.back()->draw(window);
+            scenes.back()->draw(window);
         }
     }
 
-    void push_scene(std::shared_ptr<scene> new_scene)
+    void push_scene(std::shared_ptr<Scene> new_scene)
     {
-        if (!scenes_.empty())
+        if (!scenes.empty())
         {
             std::cout << "scene overlaped! is this intended?" << std::endl;
         }
 
-        scenes_.push_back(new_scene);
+        scenes.push_back(new_scene);
     }
 
     void pop_scene()
     {
-        if (!scenes_.empty())
+        if (!scenes.empty())
         {
-            scenes_.back().reset();
-            scenes_.pop_back();
+            scenes.back().reset();
+            scenes.pop_back();
         }
     }
 
-    void load_scene(std::shared_ptr<scene> new_scene)
+    void load_scene(std::shared_ptr<Scene> new_scene)
     {
         pop_scene();
         push_scene(new_scene);
     }
 
-    std::shared_ptr<scene> current_scene() const
+    std::shared_ptr<Scene> current_scene() const
     {
-        if (!scenes_.empty())
+        if (!scenes.empty())
         {
-            return scenes_.back();
+            return scenes.back();
         }
         else
         {
@@ -87,5 +72,5 @@ public:
     }
 
 private:
-    std::vector<std::shared_ptr<scene>> scenes_;
+    std::vector<std::shared_ptr<Scene>> scenes;
 };

@@ -1,4 +1,5 @@
 #pragma once
+
 #include "system/components.h"
 #include <memory>
 #include "../tiled2sfml/tiled2sfml.h"

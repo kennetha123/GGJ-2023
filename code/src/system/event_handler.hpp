@@ -1,5 +1,5 @@
-class event_handler
+class IEvent
 {
 public:
-	virtual void quit_game() = 0;
+	virtual void quitGame() = 0;
 };

@@ -1,7 +1,7 @@
 set(GAME_CODE
 	${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/system/object.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/game_context.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/ServiceLocator.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/character/player.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/scene/scene_manager.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/scene/overworld.hpp

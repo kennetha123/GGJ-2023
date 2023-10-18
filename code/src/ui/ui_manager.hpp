@@ -2,13 +2,12 @@
 #include "ui_models.hpp"
 #include <stack>
 
-namespace ui
+namespace UI
 {
-    class ui_manager
+    class UiManager
     {
     public:
-        static ui_manager& instance();
-
+        UiManager();
         void push(std::shared_ptr<controller::base_controller> view);
         void pop();
         void remove(const std::shared_ptr<controller::base_controller>& target_view);
@@ -19,9 +18,6 @@ namespace ui
         void register_button(button& button);
 
     private:
-        ui_manager();
-        ui_manager(const ui_manager&) = delete;
-        void operator=(const ui_manager&) = delete;
 
         std::vector<button*> buttons_registered_;
         std::stack<std::shared_ptr<controller::base_controller>> stack_;
@@ -30,24 +26,18 @@ namespace ui
 
 }
 
-namespace ui
+namespace UI
 {
-    ui_manager& ui_manager::instance()
-    {
-        static ui_manager instance;
-        return instance;
-    }
-
-    ui_manager::ui_manager() : ui_camera_(sf::FloatRect(0, 0, 800, 600))
+    UiManager::UiManager() : ui_camera_(sf::FloatRect(0, 0, 800, 600))
     {
     }
 
-    void ui_manager::push(std::shared_ptr<controller::base_controller> view)
+    void UiManager::push(std::shared_ptr<controller::base_controller> view)
     {
         stack_.push(view);
     }
 
-    void ui_manager::pop()
+    void UiManager::pop()
     {
         if (!stack_.empty())
         {
@@ -55,7 +45,7 @@ namespace ui
         }
     }
 
-    void ui_manager::remove(const std::shared_ptr<controller::base_controller>& target_view)
+    void UiManager::remove(const std::shared_ptr<controller::base_controller>& target_view)
     {
         std::stack<std::shared_ptr<controller::base_controller>> temp_stack;
 
@@ -77,12 +67,12 @@ namespace ui
         }
     }
 
-    int ui_manager::size() const
+    int UiManager::size() const
     {
         return stack_.size();
     }
 
-    void ui_manager::update(float dt)
+    void UiManager::update(float dt)
     {
         if (!stack_.empty())
         {
@@ -90,7 +80,7 @@ namespace ui
         }
     }
 
-    void ui_manager::draw(sf::RenderWindow& window)
+    void UiManager::draw(sf::RenderWindow& window)
     {
         window.setView(ui_camera_);
 
@@ -103,7 +93,7 @@ namespace ui
         }
     }
 
-    void ui_manager::register_button(button& button)
+    void UiManager::register_button(button& button)
     {
         buttons_registered_.push_back(&button);
     }

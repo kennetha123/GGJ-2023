@@ -3,8 +3,6 @@
 #include <SFML/Graphics.hpp>
 #include "../scene/scene_manager.hpp"
 
-class main_menu;
-
 class Command
 {
 public:
@@ -41,16 +39,16 @@ public:
     MoveRightCommand() {}
 };
 
-class input_handler
+class InputManager
 {
 public:
-    input_handler()
+    InputManager()
     {
 
     }
 
 
-    void handle_events(sf::RenderWindow& window, sf::Event& ev)
+    void handleEvents(sf::RenderWindow& window, sf::Event& ev)
     {
         while (window.pollEvent(ev))
         {
@@ -90,8 +88,6 @@ public:
     }
 
 private:
-    std::shared_ptr<Command> right_click_command;
-
     std::map<sf::Keyboard::Key, std::shared_ptr<Command>> keyCmdMap;
     std::map<sf::Mouse::Button, std::shared_ptr<Command>> mouseCmdMap;
 };

@@ -1,24 +1,27 @@
-#include "game_context.hpp"
+#include "ServiceLocator.h"
 #include "system/entity.h"
 #include "../ui/ui_models.hpp"
 #include "../ui/button.hpp"
 #include "overworld.hpp"
+#include "audio/audio_manager.h"
+#include "../system/game_event_handler.hpp"
 
-using namespace ui::controller;
+using namespace UI::controller;
 
-class main_menu : public scene
+class main_menu : public Scene
 {
 
 public:
-	main_menu(game_context& game_ctx) : 
-		scene(game_ctx)
+	main_menu() : 
+		Scene()
 	{
 
 		font.loadFromFile("../resources/font/arial.ttf");
 
 		main_menu_ui = std::make_shared<main_menu_controller>(font);
 
-		context.ui_manager_.push(main_menu_ui);
+		auto ui = ServiceLocator::getService<UI::UiManager>();
+		ui.push(main_menu_ui);
 
 		if (!bg_texture.loadFromFile("../resources/title.jpg"))
 		{
@@ -27,12 +30,14 @@ public:
 
 		bg_sprite.setTexture(bg_texture);
 
-		context.audio_manager_.add_bgm("main_bgm", "../resources/Audio/Big Day Out.ogg");
-		context.audio_manager_.play_bgm("main_bgm", true, 50.f);
+		auto audio = ServiceLocator::getService<AudioManager>();
+		audio.add_bgm("main_bgm", "../resources/Audio/Big Day Out.ogg");
+		audio.play_bgm("main_bgm", true, 50.f);
 
 		button_setup();
 
-		main_menu_ui->on_click(context.input_handler_);
+		auto input = ServiceLocator::getService<InputManager>();
+		main_menu_ui->on_click();
 	}
 
 	~main_menu()
@@ -55,9 +60,9 @@ public:
 	{
 		main_menu_ui->mm_view_.new_game_button.set_on_click_callback([this]
 			{
-				overworld_ = std::make_shared<Overworld>(context);
-				context.scene_manager_.load_scene(std::dynamic_pointer_cast<scene>(overworld_));
-				context.ui_manager_.remove(main_menu_ui);
+				overworld_ = std::make_shared<Overworld>();
+				ServiceLocator::getService<SceneManager>().load_scene(std::dynamic_pointer_cast<Scene>(overworld_));
+				ServiceLocator::getService<UI::UiManager>().remove(main_menu_ui);
 			});
 
 		main_menu_ui->mm_view_.load_game_button.set_on_click_callback([this] {
@@ -69,7 +74,7 @@ public:
 			});
 		
 		main_menu_ui->mm_view_.quit_button.set_on_click_callback([this] {
-			context.event_handler_.quit_game();
+			ServiceLocator::getService<GameEventManager>().quitGame();
 			});
 
 	}

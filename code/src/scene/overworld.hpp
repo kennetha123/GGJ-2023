@@ -6,11 +6,11 @@
 #include "../ui/ui_manager.hpp"
 #include "system/Collision.h"
 
-class Overworld : public scene
+class Overworld : public Scene
 {
 public:
-	Overworld(game_context& game_context_) :
-		scene(game_context_),
+	Overworld() :
+		Scene(),
 		main_character("../resources/Actor_sangoku01.png"),
 		camera(sf::FloatRect(0, 0, 800, 600))
 	{
