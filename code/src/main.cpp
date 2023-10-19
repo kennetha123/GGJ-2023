@@ -3,12 +3,12 @@
 #include "scene/main_menu.hpp"
 #include "ServiceLocator.h"
 #include "utils/Time.h"
-#include "ui/ui_manager.hpp"
+#include "UI/UiManager.h"
 #include "audio/audio_manager.h"
 #include "system/input_handler.hpp"
 #include "system/game_event_handler.hpp"
 
-using namespace UI::controller;
+using namespace UI::Controller;
 
 void update_scene_and_ui(sf::Time dt);
 void draw_game_objects(sf::RenderWindow& window);
@@ -37,7 +37,7 @@ int main()
     std::shared_ptr<main_menu> main_menu_ = std::make_shared<main_menu>();
 
     font.loadFromFile("../resources/font/arial.ttf");
-    std::shared_ptr<fps_controller> fps_ctrl = std::make_shared<fps_controller>(font);
+    std::shared_ptr<FpsController> fps_ctrl = std::make_shared<FpsController>(font);
 
     scene_manager->load_scene(std::dynamic_pointer_cast<Scene>(main_menu_));
     ui_manager->push(fps_ctrl);

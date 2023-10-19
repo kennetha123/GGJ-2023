@@ -18,19 +18,19 @@ class StoreMapCommand : public Command
 {
     using Action = std::function<void(sf::Event&, const sf::Vector2f& mouse_position)>;
 public:
-    StoreMapCommand(Action action)
+    StoreMapCommand(Action action_)
     {
-        action_ = action;
+        action = action_;
     }
 
     void execute(sf::Event& ev, sf::RenderWindow& window) override
     {
         sf::Vector2f mouse_position = window.mapPixelToCoords(sf::Mouse::getPosition(window));
-        action_(ev, mouse_position);
+        action(ev, mouse_position);
     }
 
 private:
-    Action action_;
+    Action action;
 };
 
 class MoveRightCommand : public Command

@@ -1,12 +1,14 @@
 #include "ServiceLocator.h"
 #include "system/entity.h"
-#include "../ui/ui_models.hpp"
-#include "../ui/button.hpp"
+#include "UI/UiController.h"
+#include "UI/UiManager.h"
+#include "UI/Button.h"
 #include "overworld.hpp"
 #include "audio/audio_manager.h"
 #include "../system/game_event_handler.hpp"
+#include "../system/input_handler.hpp"
 
-using namespace UI::controller;
+using namespace UI::Controller;
 
 class main_menu : public Scene
 {
@@ -18,7 +20,7 @@ public:
 
 		font.loadFromFile("../resources/font/arial.ttf");
 
-		main_menu_ui = std::make_shared<main_menu_controller>(font);
+		main_menu_ui = std::make_shared<MainMenuController>(font);
 
 		auto ui = ServiceLocator::getService<UI::UiManager>();
 		ui.push(main_menu_ui);
@@ -37,7 +39,7 @@ public:
 		button_setup();
 
 		auto input = ServiceLocator::getService<InputManager>();
-		main_menu_ui->on_click();
+		main_menu_ui->onClick();
 	}
 
 	~main_menu()
@@ -58,29 +60,29 @@ public:
 
 	void button_setup()
 	{
-		main_menu_ui->mm_view_.new_game_button.set_on_click_callback([this]
+		main_menu_ui->mm_view.new_game_button.setOnClickCb([this]
 			{
 				overworld_ = std::make_shared<Overworld>();
 				ServiceLocator::getService<SceneManager>().load_scene(std::dynamic_pointer_cast<Scene>(overworld_));
 				ServiceLocator::getService<UI::UiManager>().remove(main_menu_ui);
 			});
 
-		main_menu_ui->mm_view_.load_game_button.set_on_click_callback([this] {
+		main_menu_ui->mm_view.load_game_button.setOnClickCb([this] {
 				std::cout << "Custom On Load Game Clicked" << std::endl;
 			});
 		
-		main_menu_ui->mm_view_.settings_button.set_on_click_callback([this] {
+		main_menu_ui->mm_view.settings_button.setOnClickCb([this] {
 				std::cout << "Custom On Settings Clicked" << std::endl;
 			});
 		
-		main_menu_ui->mm_view_.quit_button.set_on_click_callback([this] {
+		main_menu_ui->mm_view.quit_button.setOnClickCb([this] {
 			ServiceLocator::getService<GameEventManager>().quitGame();
 			});
 
 	}
 
 public:
-	std::shared_ptr<main_menu_controller> main_menu_ui;
+	std::shared_ptr<MainMenuController> main_menu_ui;
 
 private:
 	std::shared_ptr<Overworld> overworld_;

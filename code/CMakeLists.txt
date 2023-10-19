@@ -7,9 +7,11 @@ set(GAME_CODE
 	${CMAKE_CURRENT_SOURCE_DIR}/src/scene/overworld.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/scene/battleworld.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/scene/main_menu.hpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/ui/ui_manager.hpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/ui/ui_models.hpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/ui/button.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/UI/UiManager.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/UI/UiModel.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/UI/UiView.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/UI/UiController.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/UI/Button.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/system/ecs/components.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/system/observer.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/system/input_handler.hpp

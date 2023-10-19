@@ -1,13 +1,8 @@
-#pragma once
+#include "UI/Button.h"
 
-#include <SFML/Graphics.hpp>
-#include <iostream>
-#include "../system/observer.hpp"
-
-class button : public sf::Drawable
+namespace UI
 {
-public:
-    button(const sf::Font& font, const std::string& text, float x, float y)
+    Button::Button(const sf::Font& font, const std::string& text, float x, float y)
     {
         button_text.setFont(font);
         button_text.setString(text);
@@ -26,7 +21,7 @@ public:
         global_bounds = button_image.getGlobalBounds();
     }
 
-    bool check_click(const sf::Vector2f& mouse_position)
+    bool Button::checkClick(const sf::Vector2f& mouse_position)
     {
         if (global_bounds.contains(mouse_position))
         {
@@ -40,20 +35,14 @@ public:
         return false;
     }
 
-    void draw(sf::RenderTarget& target, sf::RenderStates states) const override
+    void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const
     {
         target.draw(button_image, states);
         target.draw(button_text, states);
     }
 
-    void set_on_click_callback(std::function<void()> callback)
+    void Button::setOnClickCb(std::function<void()> callback)
     {
         on_click_callback = callback;
     }
-
-private:
-    sf::Text button_text;
-    sf::RectangleShape button_image;
-    sf::FloatRect global_bounds;
-    std::function<void()> on_click_callback;
-};
+}

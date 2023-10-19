@@ -1,30 +1,4 @@
-#pragma once
-#include "ui_models.hpp"
-#include <stack>
-
-namespace UI
-{
-    class UiManager
-    {
-    public:
-        UiManager();
-        void push(std::shared_ptr<controller::base_controller> view);
-        void pop();
-        void remove(const std::shared_ptr<controller::base_controller>& target_view);
-        int size() const;
-        void update(float dt);
-        void draw(sf::RenderWindow& window);
-        void on_button_click(const sf::Vector2f& mouse_position);
-        void register_button(button& button);
-
-    private:
-
-        std::vector<button*> buttons_registered_;
-        std::stack<std::shared_ptr<controller::base_controller>> stack_;
-        sf::View ui_camera_;
-    };
-
-}
+#include "UI/UiManager.h"
 
 namespace UI
 {
@@ -32,7 +6,7 @@ namespace UI
     {
     }
 
-    void UiManager::push(std::shared_ptr<controller::base_controller> view)
+    void UiManager::push(std::shared_ptr<Controller::BaseController> view)
     {
         stack_.push(view);
     }
@@ -45,9 +19,9 @@ namespace UI
         }
     }
 
-    void UiManager::remove(const std::shared_ptr<controller::base_controller>& target_view)
+    void UiManager::remove(const std::shared_ptr<Controller::BaseController>& target_view)
     {
-        std::stack<std::shared_ptr<controller::base_controller>> temp_stack;
+        std::stack<std::shared_ptr<Controller::BaseController>> temp_stack;
 
         while (!stack_.empty())
         {
@@ -84,7 +58,7 @@ namespace UI
     {
         window.setView(ui_camera_);
 
-        std::stack<std::shared_ptr<controller::base_controller>> temp_stack = stack_;
+        std::stack<std::shared_ptr<Controller::BaseController>> temp_stack = stack_;
 
         while (!temp_stack.empty())
         {
@@ -93,7 +67,7 @@ namespace UI
         }
     }
 
-    void UiManager::register_button(button& button)
+    void UiManager::registerButton(Button& button)
     {
         buttons_registered_.push_back(&button);
     }

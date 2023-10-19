@@ -3,7 +3,7 @@
 #include "scene_manager.hpp"
 #include "../tiled2sfml/tiled2sfml.h"
 #include "character/player.h"
-#include "../ui/ui_manager.hpp"
+#include "UI/UiManager.h"
 #include "system/Collision.h"
 
 class Overworld : public Scene
