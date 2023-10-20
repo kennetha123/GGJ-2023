@@ -12,6 +12,7 @@ namespace UI
 		class BaseController
 		{
 		public:
+			std::string name;
 			virtual void update(float dt) = 0;
 			virtual void draw(sf::RenderWindow& window) = 0;
 		};
@@ -19,7 +20,8 @@ namespace UI
 		class FpsController : public BaseController
 		{
 		public:
-			FpsController(const sf::Font& font) : fps_view(font) {}
+			FpsController(const sf::Font& font);
+			~FpsController();
 
 			void update(float dt) override;
 			void draw(sf::RenderWindow& window) override;
@@ -36,7 +38,9 @@ namespace UI
 		{
 		public:
 			MainMenuController(const sf::Font& font) :
-				mm_view(font) {}
+				mm_view(font) {
+				name = "main menu";
+			}
 
 			~MainMenuController() {}
 

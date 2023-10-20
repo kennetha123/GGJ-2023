@@ -1,35 +1,14 @@
-#pragma once
+#include "scene/Overworld.h"
 
-#include "scene_manager.hpp"
-#include "../tiled2sfml/tiled2sfml.h"
-#include "character/player.h"
-#include "UI/UiManager.h"
-#include "system/Collision.h"
-
-class Overworld : public Scene
+Overworld::Overworld() :
+	Scene(),
+	main_character("../resources/Actor_sangoku01.png"),
+	camera(sf::FloatRect(0, 0, 800, 600))
 {
-public:
-	Overworld() :
-		Scene(),
-		main_character("../resources/Actor_sangoku01.png"),
-		camera(sf::FloatRect(0, 0, 800, 600))
-	{
-		tiled2Sfml.setCollisionLayer({ 1, 4 });
-		tiled2Sfml.tileParser("../resources/maps/", "prologue.json");
-		main_character.setTilemap(tiled2Sfml);
-	}
-
-	virtual void update(float dt) override;
-	virtual void draw(sf::RenderWindow& window) override;
-	bool isNearPlayer(const sf::Vector2f& tile_position, const sf::Vector2f& player_position, float render_distance);
-private:
-	Player main_character;
-	Tiled2SFML tiled2Sfml;
-	sf::View camera;
-
-	float render_distance = 550.0f;
-	int player_layer = 3;
-};
+	tiled2Sfml.setCollisionLayer({ 1, 4 });
+	tiled2Sfml.tileParser("../resources/maps/", "prologue.json");
+	main_character.setTilemap(tiled2Sfml);
+}
 
 void Overworld::update(float dt)
 {
@@ -53,7 +32,7 @@ void Overworld::draw(sf::RenderWindow& window)
 				if (tile.layer_index == layer_idx &&
 					isNearPlayer(tile.sprite.getPosition(), main_character.sprite.getPosition(), render_distance))
 				{
-					window.draw(tile.sprite, sf::BlendAlpha);
+					window.draw(tile.sprite);
 				}
 			}
 		}

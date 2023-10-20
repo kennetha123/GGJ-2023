@@ -1,10 +1,21 @@
 #include "UI/UiController.h"
-#include "../system/input_handler.hpp"
+#include "system/InputManager.h"
 
 namespace UI
 {
 	namespace Controller
 	{
+		FpsController::FpsController(const sf::Font& font) : fps_view(font)
+		{ 
+			name = "fps"; 
+			std::cout << "FPS Controller created!" << std::endl;
+		}
+
+		FpsController::~FpsController()
+		{
+			std::cout << "FPS Controller destroyed!" << std::endl;
+		}
+
 		void FpsController::update(float dt)
 		{
 			fps_timer += dt;

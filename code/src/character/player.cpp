@@ -1,7 +1,7 @@
 #include "character/Player.h"
 #include "utils/Time.h"
 #include "ServiceLocator.h"
-#include "../system/input_handler.hpp"
+#include "system/InputManager.h"
 
 Player::Player(const std::string& image_path)
 {
@@ -14,7 +14,7 @@ Player::Player(const std::string& image_path)
     sprite.setTextureRect(sf::IntRect(0, 0, sprite_width, sprite_height));
     sprite.setPosition(480.0, 480.0f);
 
-    this->add_component<Collision>();
+    this->addComponent<Collision>();
 
 	initKeyBindings();
 	initAnimation();
@@ -200,7 +200,7 @@ void Player::setTilemap(Tiled2SFML& tiled2Sfml_)
 bool Player::checkCollision(const sf::Vector2f& dest)
 {
 	int idx = tiled2Sfml->positionToIndex(dest);
-	if (tiled2Sfml->getTileDataId(idx).get_component<Collision>()->is_collide)
+	if (tiled2Sfml->getTileDataId(idx).getComponent<Collision>()->is_collide)
 	{
 		return true;
 	}

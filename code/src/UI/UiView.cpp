@@ -3,6 +3,7 @@
 #include "UI/UiView.h"
 #include <string>
 #include <sstream>
+#include <iostream>
 
 namespace UI
 {

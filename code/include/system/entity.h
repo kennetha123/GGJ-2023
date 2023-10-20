@@ -4,36 +4,36 @@
 #include <typeindex>
 #include <cassert>
 
-class component
+class Component
 {
 public:
-	virtual ~component() = default;
+	virtual ~Component() = default;
 };
 
-class entity
+class Entity
 {
 public:
-	entity() {}
+	Entity() {}
 
-	template<typename component_type, typename... component_args>
-	std::shared_ptr<component_type> add_component(component_args&&... component_args_)
+	template<typename ComponentType, typename... ComponentArgs>
+	std::shared_ptr<ComponentType> addComponent(ComponentArgs&&... component_args)
 	{
-		auto component = std::make_shared<component_type>(std::forward<component_args>(component_args_)...);
-		components[std::type_index(typeid(component_type))] = component;
+		auto component = std::make_shared<ComponentType>(std::forward<ComponentArgs>(component_args)...);
+		components[std::type_index(typeid(ComponentType))] = component;
 		return component;
 	}
 
-	template<typename component_type>
-	std::shared_ptr<component_type> get_component()
+	template<typename ComponentType>
+	std::shared_ptr<ComponentType> getComponent()
 	{
-		auto component = components.find(std::type_index(typeid(component_type)));
+		auto component = components.find(std::type_index(typeid(ComponentType)));
 		if (component != components.end())
 		{
-			return std::static_pointer_cast<component_type>(component->second);
+			return std::static_pointer_cast<ComponentType>(component->second);
 		}
 		return nullptr;
 	}
 
 private:
-	std::unordered_map<std::type_index, std::shared_ptr<component>> components;
+	std::unordered_map<std::type_index, std::shared_ptr<Component>> components;
 };

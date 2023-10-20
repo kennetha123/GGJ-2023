@@ -1,17 +1,14 @@
 #include "header.h"
 
-#include "scene/main_menu.hpp"
+#include "scene/MainMenu.h"
 #include "ServiceLocator.h"
 #include "utils/Time.h"
 #include "UI/UiManager.h"
-#include "audio/audio_manager.h"
-#include "system/input_handler.hpp"
-#include "system/game_event_handler.hpp"
+#include "audio/AudioManager.h"
+#include "system/InputManager.h"
+#include "system/GameEventManager.h"
 
 using namespace UI::Controller;
-
-void update_scene_and_ui(sf::Time dt);
-void draw_game_objects(sf::RenderWindow& window);
 
 int main()
 {
@@ -34,7 +31,7 @@ int main()
     ServiceLocator::provide(input_manager);
     ServiceLocator::provide(event_manager);
 
-    std::shared_ptr<main_menu> main_menu_ = std::make_shared<main_menu>();
+    std::shared_ptr<MainMenu> main_menu_ = std::make_shared<MainMenu>();
 
     font.loadFromFile("../resources/font/arial.ttf");
     std::shared_ptr<FpsController> fps_ctrl = std::make_shared<FpsController>(font);
@@ -50,24 +47,16 @@ int main()
 
         sf::Time dt = clock.restart();
         dw::Time::setDeltaTime(dt.asSeconds());
-        update_scene_and_ui(dt);
 
         window.clear(sf::Color::Cyan);
 
-        draw_game_objects(window);
+        ui_manager->update(dt.asSeconds());
+        scene_manager->update(dt.asSeconds());
+
+        ui_manager->draw(window);
+        scene_manager->draw(window);
+        fps_ctrl->draw(window);
 
         window.display();
     }
-}
-
-void update_scene_and_ui(sf::Time dt)
-{
-    ServiceLocator::getService<UI::UiManager>().update(dt.asSeconds());
-    ServiceLocator::getService<SceneManager>().update(dt.asSeconds());
-}
-
-void draw_game_objects(sf::RenderWindow& window)
-{
-    ServiceLocator::getService<UI::UiManager>().draw(window);
-    ServiceLocator::getService<SceneManager>().draw(window);
 }

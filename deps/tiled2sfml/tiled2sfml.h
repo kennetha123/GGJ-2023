@@ -20,7 +20,7 @@ struct TileObject : public GameObject
 {
 	TileObject()
 	{
-		this->add_component<Collision>();
+		this->addComponent<Collision>();
 	}
 };
 

@@ -43,7 +43,7 @@ void Tiled2SFML::tileParser(const std::string& tilemap_path, const std::string& 
 			{
 				if (t_sprite.layer_index == collision_layer[i] && data > 0)
 				{
-					t_data.get_component<Collision>()->is_collide = true;
+					t_data.getComponent<Collision>()->is_collide = true;
 				}
 			}
 

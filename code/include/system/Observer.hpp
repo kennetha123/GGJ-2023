@@ -1,23 +1,25 @@
+#pragma once
+
 #include <functional>
 #include <memory>
 #include <vector>
 #include <algorithm>
 
-class observer_func
+class ObserverFunc
 {
 public:
-    virtual ~observer_func() = default;
+    virtual ~ObserverFunc() = default;
     virtual void operator()() const = 0;
 };
 
 template <typename T>
-class bound_observer_func : public observer_func
+class BoundObserverFunc : public ObserverFunc
 {
 public:
-    using instance_type = T;
-    using member_function_type = void (T::*)();
+    using InstanceType = T;
+    using MemberFunctionType = void (T::*)();
 
-    bound_observer_func(instance_type* instance, member_function_type memberFunction)
+    BoundObserverFunc(InstanceType* instance, MemberFunctionType memberFunction)
         : instance(instance), memberFunction(memberFunction) {}
 
     void operator()() const override
@@ -28,26 +30,26 @@ public:
         }
     }
 
-    instance_type* instance;
-    member_function_type memberFunction;
+    InstanceType* instance;
+    MemberFunctionType memberFunction;
 };
 
-class subject
+class Subject
 {
 public:
     template<typename T>
-    void add_listener(T* instance, void (T::* function)())
+    void addListener(T* instance, void (T::* function)())
     {
-        auto boundObserver = std::make_shared<bound_observer_func<T>>(instance, function);
+        auto boundObserver = std::make_shared<BoundObserverFunc<T>>(instance, function);
         observers.push_back(boundObserver);
     }
 
     template <typename T>
-    void remove_listener(T* instance, void (T::* memberFunction)())
+    void removeListener(T* instance, void (T::* memberFunction)())
     {
         observers.erase(std::remove_if(observers.begin(), observers.end(),
-            [&](const std::shared_ptr<observer_func>& target) {
-                auto target_bound_observer = std::dynamic_pointer_cast<bound_observer_func<T>>(target);
+            [&](const std::shared_ptr<ObserverFunc>& target) {
+                auto target_bound_observer = std::dynamic_pointer_cast<BoundObserverFunc<T>>(target);
         if (target_bound_observer && target_bound_observer->instance == instance && target_bound_observer->memberFunction == memberFunction) {
             return true;
         }
@@ -64,5 +66,5 @@ public:
     }
 
 private:
-    std::vector<std::shared_ptr<observer_func>> observers;
+    std::vector<std::shared_ptr<ObserverFunc>> observers;
 };

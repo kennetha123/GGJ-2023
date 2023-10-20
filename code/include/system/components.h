@@ -4,7 +4,7 @@
 
 class animation_component;
 
-class GameObject : public entity
+class GameObject : public Entity
 {
 
 };

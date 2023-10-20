@@ -1,7 +1,7 @@
 #pragma once
-#include "components.h"
+#include "Components.h"
 
-class Collision : public component
+class Collision : public Component
 {
 public:
 	bool is_collide;

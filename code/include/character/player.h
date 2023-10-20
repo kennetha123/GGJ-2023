@@ -1,11 +1,11 @@
 #pragma once
 
-#include "system/components.h"
 #include <memory>
 #include "../tiled2sfml/tiled2sfml.h"
+#include "system/Components.h"
 #include "system/Animator.h"
 
-class Player : public entity
+class Player : public Entity
 {
 public:
     Player(const std::string& image_path);

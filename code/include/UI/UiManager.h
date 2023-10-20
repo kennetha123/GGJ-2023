@@ -15,11 +15,11 @@ namespace UI
         void update(float dt);
         void draw(sf::RenderWindow& window);
         void registerButton(Button& button);
+        std::stack<std::shared_ptr<Controller::BaseController>> stack_;
 
     private:
 
         std::vector<Button*> buttons_registered_;
-        std::stack<std::shared_ptr<Controller::BaseController>> stack_;
         sf::View ui_camera_;
     };
 
