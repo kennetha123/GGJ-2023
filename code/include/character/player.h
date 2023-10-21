@@ -12,7 +12,7 @@ public:
     ~Player() = default;
 
     void update(float dt);
-    void draw(sf::RenderWindow& window);
+    void draw(sf::RenderTexture& render_tex);
 	void handleMovement();
 	void initKeyBindings();
 	void initAnimation();
@@ -21,8 +21,11 @@ public:
 	bool checkCollision(const sf::Vector2f& dest);
 	Animator anim;
 
+	void onPlayerMove(std::function<void()> func);
 	sf::Sprite sprite;
 private:
+	std::function<void()> onPlayerMoveCallback;
+
 	std::unique_ptr<Tiled2SFML> tiled2Sfml;
 
     sf::Texture player_texture;

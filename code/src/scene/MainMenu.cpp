@@ -25,6 +25,9 @@ MainMenu::MainMenu() :
 
 	auto& input = ServiceLocator::getService<InputManager>();
 	main_menu_ui->onClick();
+
+	auto& render = ServiceLocator::getService<RenderManager>();
+	render.setNeedRedraw(true);
 }
 
 MainMenu::~MainMenu()
@@ -38,10 +41,13 @@ void MainMenu::update(float dt)
 
 }
 
-void MainMenu::draw(sf::RenderWindow& window)
+void MainMenu::static_draw(sf::RenderTexture& render_tex)
 {
-	window.draw(bg_sprite);
-	main_menu_ui->draw(window);
+	render_tex.draw(bg_sprite);
+}
+
+void MainMenu::dynamic_draw(sf::RenderWindow& window)
+{
 }
 
 void MainMenu::buttonSetup()

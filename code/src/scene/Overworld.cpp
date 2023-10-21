@@ -8,6 +8,10 @@ Overworld::Overworld() :
 	tiled2Sfml.setCollisionLayer({ 1, 4 });
 	tiled2Sfml.tileParser("../resources/maps/", "prologue.json");
 	main_character.setTilemap(tiled2Sfml);
+
+	auto& render = ServiceLocator::getService<RenderManager>();
+	render.setNeedRedraw(true);
+
 }
 
 void Overworld::update(float dt)
@@ -16,14 +20,14 @@ void Overworld::update(float dt)
 	main_character.update(dt);
 }
 
-void Overworld::draw(sf::RenderWindow& window)
+void Overworld::static_draw(sf::RenderTexture& render_tex)
 {
-	window.setView(camera);
+	render_tex.setView(camera);
 	for (size_t layer_idx = 0; layer_idx < tiled2Sfml.getTilemapData().layers.size(); layer_idx++)
 	{
 		if (layer_idx == player_layer)
 		{
-			main_character.draw(window);
+			main_character.draw(render_tex);
 		}
 		else
 		{
@@ -32,11 +36,16 @@ void Overworld::draw(sf::RenderWindow& window)
 				if (tile.layer_index == layer_idx &&
 					isNearPlayer(tile.sprite.getPosition(), main_character.sprite.getPosition(), render_distance))
 				{
-					window.draw(tile.sprite);
+					render_tex.draw(tile.sprite);
 				}
 			}
 		}
 	}
+}
+
+void Overworld::dynamic_draw(sf::RenderWindow& window)
+{
+
 }
 
 bool Overworld::isNearPlayer(const sf::Vector2f& tile_position, const sf::Vector2f& player_position, float render_distance)

@@ -54,7 +54,12 @@ namespace UI
         }
     }
 
-    void UiManager::draw(sf::RenderWindow& window)
+    void UiManager::static_draw(sf::RenderTexture& render_tex)
+    {
+
+    }
+
+    void UiManager::dynamic_draw(sf::RenderWindow& window)
     {
         window.setView(ui_camera_);
 

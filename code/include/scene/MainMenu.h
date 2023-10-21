@@ -7,7 +7,7 @@
 #include "audio/AudioManager.h"
 #include "system/GameEventManager.h"
 #include "system/InputManager.h"
-
+#include "system/Observer.hpp"
 using namespace UI::Controller;
 
 class MainMenu : public Scene
@@ -17,7 +17,8 @@ public:
 	MainMenu();
 	~MainMenu();
 	virtual void update(float dt) override;
-	virtual void draw(sf::RenderWindow& window) override;
+	virtual void static_draw(sf::RenderTexture& render_tex) override;
+	virtual void dynamic_draw(sf::RenderWindow& window) override;
 	void buttonSetup();
 public:
 	std::shared_ptr<MainMenuController> main_menu_ui;

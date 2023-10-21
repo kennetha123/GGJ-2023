@@ -7,17 +7,20 @@
 #include "audio/AudioManager.h"
 #include "system/InputManager.h"
 #include "system/GameEventManager.h"
+#include "render/Renderer.h"
 
 using namespace UI::Controller;
 
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(800, 600), "Shatterpoint : Chaos Unbound");
+    sf::RenderTexture render_texture;
 
     sf::Clock clock;
     sf::Font font;
 
     // Create services
+    auto render_manager = std::make_shared<RenderManager>(window, render_texture);
     auto ui_manager = std::make_shared<UI::UiManager>();
     auto scene_manager = std::make_shared<SceneManager>();
     auto audio_manager = std::make_shared<AudioManager>();
@@ -25,6 +28,7 @@ int main()
     auto event_manager = std::make_shared<GameEventManager>(window);
 
     // Register services
+    ServiceLocator::provide(render_manager);
     ServiceLocator::provide(ui_manager);
     ServiceLocator::provide(scene_manager);
     ServiceLocator::provide(audio_manager);
@@ -39,6 +43,11 @@ int main()
     scene_manager->loadScene(std::dynamic_pointer_cast<Scene>(main_menu_));
     ui_manager->push(fps_ctrl);
 
+    render_manager->registerRenderer(scene_manager);
+    render_manager->registerRenderer(ui_manager);
+
+    render_manager->initRenderer();
+
     sf::Event ev;
 
     while (window.isOpen())
@@ -48,14 +57,9 @@ int main()
         sf::Time dt = clock.restart();
         dw::Time::setDeltaTime(dt.asSeconds());
 
-        window.clear(sf::Color::Cyan);
-
-        ui_manager->update(dt.asSeconds());
         scene_manager->update(dt.asSeconds());
+        ui_manager->update(dt.asSeconds());
 
-        scene_manager->draw(window);
-        ui_manager->draw(window);
-
-        window.display();
+        render_manager->draw();
     }
 }

@@ -30,9 +30,9 @@ void Player::update(float dt)
 	handleMovement();
 }
 
-void Player::draw(sf::RenderWindow& window)
+void Player::draw(sf::RenderTexture& render_tex)
 {
-    window.draw(sprite);
+	render_tex.draw(sprite);
 }
 
 void Player::initKeyBindings()
@@ -150,6 +150,9 @@ void Player::handleMovement()
 
 		sf::Vector2f pos = initial_position + sf::Vector2f(move_fraction * move_direction.x, move_fraction * move_direction.y);
 		sprite.setPosition(pos);
+
+		auto& render = ServiceLocator::getService<RenderManager>();
+		render.setNeedRedraw(true);
 	}
 	else
 	{
@@ -186,6 +189,11 @@ void Player::move(const sf::Vector2f& dest)
 		move_direction = dest;
 		initial_position = sprite.getPosition();
 		mov_elapsed_time = 0;
+
+		if (onPlayerMoveCallback)
+		{
+			onPlayerMoveCallback();
+		}
 	}
 
 	anim.setParam("move_x", move_direction.x);
@@ -205,4 +213,9 @@ bool Player::checkCollision(const sf::Vector2f& dest)
 		return true;
 	}
 	return false;
+}
+
+void Player::onPlayerMove(std::function<void()> func)
+{
+	onPlayerMoveCallback = func;
 }
