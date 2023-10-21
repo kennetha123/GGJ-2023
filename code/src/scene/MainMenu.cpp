@@ -49,7 +49,7 @@ void MainMenu::buttonSetup()
 	main_menu_ui->mm_view.new_game_button.setOnClickCb([this]
 		{
 			overworld = std::make_shared<Overworld>();
-			ServiceLocator::getService<SceneManager>().load_scene(std::dynamic_pointer_cast<Scene>(overworld));
+			ServiceLocator::getService<SceneManager>().loadScene(std::dynamic_pointer_cast<Scene>(overworld));
 			ServiceLocator::getService<UI::UiManager>().remove(main_menu_ui);
 		});
 

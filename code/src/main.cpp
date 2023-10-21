@@ -36,7 +36,7 @@ int main()
     font.loadFromFile("../resources/font/arial.ttf");
     std::shared_ptr<FpsController> fps_ctrl = std::make_shared<FpsController>(font);
 
-    scene_manager->load_scene(std::dynamic_pointer_cast<Scene>(main_menu_));
+    scene_manager->loadScene(std::dynamic_pointer_cast<Scene>(main_menu_));
     ui_manager->push(fps_ctrl);
 
     sf::Event ev;
@@ -53,9 +53,8 @@ int main()
         ui_manager->update(dt.asSeconds());
         scene_manager->update(dt.asSeconds());
 
-        ui_manager->draw(window);
         scene_manager->draw(window);
-        fps_ctrl->draw(window);
+        ui_manager->draw(window);
 
         window.display();
     }

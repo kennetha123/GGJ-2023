@@ -1,78 +1,54 @@
-#pragma once
+#include "scene/SceneManager.h"
 
-#include <SFML/Graphics.hpp>
-#include <iostream>
-#include <vector>
-#include <memory>
-
-class Scene
+void SceneManager::update(float dt)
 {
-public:
-    Scene() {}
+    if (!scenes.empty())
+    {
+        scenes.back()->update(dt);
+    }
+}
 
-    virtual void update(float dt) = 0;
-    virtual void draw(sf::RenderWindow& window) = 0;
-};
-
-class SceneManager
+void SceneManager::draw(sf::RenderWindow& window)
 {
-public:
-    SceneManager() {}
-
-public:
-    void update(float dt)
+    if (!scenes.empty())
     {
-        if (!scenes.empty())
-        {
-            scenes.back()->update(dt);
-        }
+        scenes.back()->draw(window);
+    }
+}
+
+void SceneManager::pushScene(std::shared_ptr<Scene> new_scene)
+{
+    if (!scenes.empty())
+    {
+        std::cout << "scene overlaped! is this intended?" << std::endl;
     }
 
-    void draw(sf::RenderWindow& window)
+    scenes.push_back(new_scene);
+}
+
+void SceneManager::popScene()
+{
+    if (!scenes.empty())
     {
-        if (!scenes.empty())
-        {
-            scenes.back()->draw(window);
-        }
+        scenes.back().reset();
+        scenes.pop_back();
     }
+}
 
-    void push_scene(std::shared_ptr<Scene> new_scene)
+void SceneManager::loadScene(std::shared_ptr<Scene> new_scene)
+{
+    popScene();
+    pushScene(new_scene);
+}
+
+std::shared_ptr<Scene> SceneManager::currentScene() const
+{
+    if (!scenes.empty())
     {
-        if (!scenes.empty())
-        {
-            std::cout << "scene overlaped! is this intended?" << std::endl;
-        }
-
-        scenes.push_back(new_scene);
+        return scenes.back();
     }
-
-    void pop_scene()
+    else
     {
-        if (!scenes.empty())
-        {
-            scenes.back().reset();
-            scenes.pop_back();
-        }
+        return nullptr;
     }
-
-    void load_scene(std::shared_ptr<Scene> new_scene)
-    {
-        pop_scene();
-        push_scene(new_scene);
-    }
-
-    std::shared_ptr<Scene> current_scene() const
-    {
-        if (!scenes.empty())
-        {
-            return scenes.back();
-        }
-        else
-        {
-            return nullptr;
-        }
-    }
-
-private:
-    std::vector<std::shared_ptr<Scene>> scenes;
-};
+}

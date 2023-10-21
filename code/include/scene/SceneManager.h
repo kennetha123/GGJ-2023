@@ -1,4 +1,6 @@
 #pragma once
+
+#include "SFML/Graphics.hpp"
 #include <iostream>
 #include <vector>
 #include <memory>
@@ -18,58 +20,12 @@ public:
     SceneManager() {}
 
 public:
-    void update(float dt)
-    {
-        if (!scenes.empty())
-        {
-            scenes.back()->update(dt);
-        }
-    }
-
-    void draw(sf::RenderWindow& window)
-    {
-        if (!scenes.empty())
-        {
-            scenes.back()->draw(window);
-        }
-    }
-
-    void push_scene(std::shared_ptr<Scene> new_scene)
-    {
-        if (!scenes.empty())
-        {
-            std::cout << "scene overlaped! is this intended?" << std::endl;
-        }
-
-        scenes.push_back(new_scene);
-    }
-
-    void pop_scene()
-    {
-        if (!scenes.empty())
-        {
-            scenes.back().reset();
-            scenes.pop_back();
-        }
-    }
-
-    void load_scene(std::shared_ptr<Scene> new_scene)
-    {
-        pop_scene();
-        push_scene(new_scene);
-    }
-
-    std::shared_ptr<Scene> current_scene() const
-    {
-        if (!scenes.empty())
-        {
-            return scenes.back();
-        }
-        else
-        {
-            return nullptr;
-        }
-    }
+    void update(float dt);
+    void draw(sf::RenderWindow& window);
+    void pushScene(std::shared_ptr<Scene> new_scene);
+    void popScene();
+    void loadScene(std::shared_ptr<Scene> new_scene);
+    std::shared_ptr<Scene> currentScene() const;
 
 private:
     std::vector<std::shared_ptr<Scene>> scenes;

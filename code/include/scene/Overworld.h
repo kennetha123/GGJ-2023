@@ -18,6 +18,6 @@ private:
 	Tiled2SFML tiled2Sfml;
 	sf::View camera;
 
-	float render_distance = 550.0f;
+	float render_distance = 450.0f;
 	int player_layer = 3;
 };
