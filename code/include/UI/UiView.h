@@ -12,7 +12,8 @@ namespace UI
 		{
 		public:
 			virtual void update(const Model::Model& model_) = 0;
-			virtual void draw(sf::RenderWindow& window) = 0;
+			virtual void static_draw(sf::RenderTexture& render_tex) = 0;
+			virtual void dynamic_draw(sf::RenderWindow& window) = 0;
 		};
 
 		class FpsView : public View
@@ -20,7 +21,8 @@ namespace UI
 		public:
 			FpsView(const sf::Font& font);
 			void update(const Model::Model& model_) override;
-			void draw(sf::RenderWindow& window) override;
+			void static_draw(sf::RenderTexture& render_tex) override;
+			void dynamic_draw(sf::RenderWindow& window) override;
 
 		private:
 			sf::Text fps_text;
@@ -36,7 +38,8 @@ namespace UI
 				quit_button(font, "Quit", 100, 250) {}
 
 			virtual void update(const Model::Model& model_) override;
-			virtual void draw(sf::RenderWindow& window) override;
+			void static_draw(sf::RenderTexture& render_tex) override;
+			void dynamic_draw(sf::RenderWindow& window) override;
 
 		private:
 			void setMenuOption(sf::Text& text, const sf::Font& font, const std::string& str, float x, float y);

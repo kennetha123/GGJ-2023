@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <spdlog/spdlog.h>
 #include "ServiceLocator.h"
 #include "UiView.h"
 #include "UiModel.h"
@@ -12,9 +13,9 @@ namespace UI
 		class BaseController
 		{
 		public:
-			std::string name;
 			virtual void update(float dt) = 0;
-			virtual void draw(sf::RenderWindow& window) = 0;
+			virtual void static_draw(sf::RenderTexture& render_tex) = 0;
+			virtual void dynamic_draw(sf::RenderWindow& window) = 0;
 		};
 
 		class FpsController : public BaseController
@@ -24,9 +25,12 @@ namespace UI
 			~FpsController();
 
 			void update(float dt) override;
-			void draw(sf::RenderWindow& window) override;
+			void static_draw(sf::RenderTexture& render_tex) override;
+			void dynamic_draw(sf::RenderWindow& window) override;
 
 		private:
+			std::shared_ptr<spdlog::logger> log;
+
 			View::FpsView fps_view;
 			Model::FpsModel fps_model;
 
@@ -37,19 +41,18 @@ namespace UI
 		class MainMenuController : public BaseController
 		{
 		public:
-			MainMenuController(const sf::Font& font) :
-				mm_view(font) {
-				name = "main menu";
-			}
-
-			~MainMenuController() {}
+			MainMenuController(const sf::Font& font);
+			~MainMenuController();
 
 			virtual void update(float dt) override;
-			virtual void draw(sf::RenderWindow& window) override;
+			void static_draw(sf::RenderTexture& render_tex) override;
+			void dynamic_draw(sf::RenderWindow& window) override;
 			void onClick();
 			View::MainMenuView mm_view;
 
 		private:
+			std::shared_ptr<spdlog::logger> log;
+
 			Model::MainMenuModel mm_model;
 
 		};

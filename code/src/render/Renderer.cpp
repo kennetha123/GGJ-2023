@@ -28,7 +28,7 @@ void RenderManager::draw()
 {
     if (getNeedRedraw())
     {
-        render_texture.clear();
+        render_texture.clear(sf::Color::Cyan);
         for (size_t i = 0; i < renderers.size(); i++)
         {
             renderers[i]->static_draw(render_texture);

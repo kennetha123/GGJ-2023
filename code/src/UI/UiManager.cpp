@@ -56,20 +56,19 @@ namespace UI
 
     void UiManager::static_draw(sf::RenderTexture& render_tex)
     {
+        std::stack<std::shared_ptr<Controller::BaseController>> temp_stack = stack_;
 
+        while (!temp_stack.empty())
+        {
+            temp_stack.top()->static_draw(render_tex);
+            temp_stack.pop();
+        }
     }
 
     void UiManager::dynamic_draw(sf::RenderWindow& window)
     {
         window.setView(ui_camera_);
 
-        std::stack<std::shared_ptr<Controller::BaseController>> temp_stack = stack_;
-
-        while (!temp_stack.empty())
-        {
-            temp_stack.top()->draw(window);
-            temp_stack.pop();
-        }
     }
 
     void UiManager::registerButton(Button& button)

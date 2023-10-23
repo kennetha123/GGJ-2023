@@ -26,7 +26,12 @@ namespace UI
 			fps_text.setString(ss.str());
 		}
 
-		void FpsView::draw(sf::RenderWindow& window)
+		void FpsView::static_draw(sf::RenderTexture& render_tex)
+		{
+			//render_tex.draw(fps_text);
+		}
+
+		void FpsView::dynamic_draw(sf::RenderWindow& window)
 		{
 			window.draw(fps_text);
 		}
@@ -37,12 +42,20 @@ namespace UI
 
 		}
 
-		void MainMenuView::draw(sf::RenderWindow& window)
+		void MainMenuView::static_draw(sf::RenderTexture& render_tex)
 		{
-			window.draw(new_game_button);
-			window.draw(load_game_button);
-			window.draw(settings_button);
-			window.draw(quit_button);
+			render_tex.draw(new_game_button);
+			render_tex.draw(load_game_button);
+			render_tex.draw(settings_button);
+			render_tex.draw(quit_button);
+		}
+
+		void MainMenuView::dynamic_draw(sf::RenderWindow& window)
+		{
+			//window.draw(new_game_button);
+			//window.draw(load_game_button);
+			//window.draw(settings_button);
+			//window.draw(quit_button);
 		}
 
 		void MainMenuView::setMenuOption(sf::Text& text, const sf::Font& font, const std::string& str, float x, float y)

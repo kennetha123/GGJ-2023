@@ -7,13 +7,14 @@ namespace UI
 	{
 		FpsController::FpsController(const sf::Font& font) : fps_view(font)
 		{ 
-			name = "fps"; 
-			std::cout << "FPS Controller created!" << std::endl;
+			log = spdlog::get("main");
+			
+			log->debug("FPSController Constructor!");
 		}
 
 		FpsController::~FpsController()
 		{
-			std::cout << "FPS Controller destroyed!" << std::endl;
+			log->debug("FPSController Destructor!");
 		}
 
 		void FpsController::update(float dt)
@@ -31,9 +32,27 @@ namespace UI
 			}
 		}
 
-		void FpsController::draw(sf::RenderWindow& window)
+		void FpsController::static_draw(sf::RenderTexture& render_tex)
 		{
-			fps_view.draw(window);
+			fps_view.static_draw(render_tex);
+		}
+
+		void FpsController::dynamic_draw(sf::RenderWindow& window)
+		{
+			//fps_view.draw(window);
+		}
+
+		MainMenuController::MainMenuController(const sf::Font& font) :
+			mm_view(font) 
+		{
+			log = spdlog::get("main");
+			
+			log->debug("MainMenuController Constructor.");
+		}
+
+		MainMenuController::~MainMenuController()
+		{
+			log->debug("MainMenuController Destructor.");
 		}
 
 		void MainMenuController::update(float dt)
@@ -41,9 +60,14 @@ namespace UI
 
 		}
 
-		void MainMenuController::draw(sf::RenderWindow& window)
+		void MainMenuController::static_draw(sf::RenderTexture& render_tex)
 		{
-			mm_view.draw(window);
+			mm_view.static_draw(render_tex);
+		}
+
+		void MainMenuController::dynamic_draw(sf::RenderWindow& window)
+		{
+			//mm_view.draw(window);
 		}
 
 		void MainMenuController::onClick()
