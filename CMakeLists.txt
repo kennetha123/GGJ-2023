@@ -39,6 +39,7 @@ link_directories(deps/SFML/libs)
 include_directories(deps/SFML/include
 					deps/tinyxml2
 					deps/json
+					deps/spdlog/include
 					code/include
 					)
 

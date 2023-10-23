@@ -3,6 +3,7 @@ set(GAME_CODE
 	${CMAKE_CURRENT_SOURCE_DIR}/src/system/Object.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/ServiceLocator.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/character/Player.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/render/Renderer.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/scene/SceneManager.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/scene/Overworld.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/scene/Battleworld.cpp

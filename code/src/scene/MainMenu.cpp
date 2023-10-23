@@ -1,8 +1,13 @@
 #include "scene/MainMenu.h"
+#include <spdlog/spdlog.h>
 
 MainMenu::MainMenu() :
 	Scene()
 {
+	log = spdlog::get("main");
+
+	log->debug("MainMenu Constructor.");
+
 	font.loadFromFile("../resources/font/arial.ttf");
 
 	main_menu_ui = std::make_shared<MainMenuController>(font);
@@ -12,7 +17,7 @@ MainMenu::MainMenu() :
 
 	if (!bg_texture.loadFromFile("../resources/title.jpg"))
 	{
-		std::cout << "Error load texture main menu background!" << std::endl;
+		log->error("Error load texture main menu background!");
 	}
 
 	bg_sprite.setTexture(bg_texture);
@@ -32,7 +37,8 @@ MainMenu::MainMenu() :
 
 MainMenu::~MainMenu()
 {
-	std::cout << "main menu destroyed" << std::endl;
+	log->debug("MainMenu Destructor");
+
 	main_menu_ui.reset();
 }
 

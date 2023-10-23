@@ -1,5 +1,8 @@
 #include "header.h"
 
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/rotating_file_sink.h>
+#include "spdlog/sinks/stdout_color_sinks.h"
 #include "scene/MainMenu.h"
 #include "ServiceLocator.h"
 #include "utils/Time.h"
@@ -11,8 +14,16 @@
 
 using namespace UI::Controller;
 
+void logInit();
+
 int main()
 {
+    logInit();
+
+    auto file_logger = spdlog::get("main");
+
+    file_logger->debug("Start game Shatterpoint.");
+
     sf::RenderWindow window(sf::VideoMode(800, 600), "Shatterpoint : Chaos Unbound");
     sf::RenderTexture render_texture;
 
@@ -62,4 +73,21 @@ int main()
 
         render_manager->draw();
     }
+
+    spdlog::drop_all();
+}
+
+void logInit()
+{
+    auto file_sink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>("saved/logs/Shatterpoint_Log.txt", 1048576 * 5, 3);
+
+    auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+
+    std::vector<spdlog::sink_ptr> sinks {file_sink, console_sink};
+    auto logger = std::make_shared<spdlog::logger>("main", begin(sinks), end(sinks));
+
+    spdlog::register_logger(logger);
+
+    logger->set_level(spdlog::level::debug);
+
 }

@@ -48,13 +48,14 @@ void RenderManager::draw()
 
 }
 
-void RenderManager::setNeedRedraw(bool value) {
+void RenderManager::setNeedRedraw(bool value) 
+{
     if (isNeedRedraw != value) {
         isNeedRedraw = value;
-        //notify();
     }
 }
 
-bool RenderManager::getNeedRedraw() const {
+bool RenderManager::getNeedRedraw() const 
+{
     return isNeedRedraw;
 }

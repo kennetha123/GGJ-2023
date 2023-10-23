@@ -1,5 +1,7 @@
 #pragma once
 #include <SFML/Audio.hpp>
+#include <spdlog/spdlog.h>
+
 #include <map>
 #include <string>
 #include <memory>
@@ -8,8 +10,8 @@
 class AudioManager
 {
 public:
-    AudioManager() { std::cout << "AudioManager created!" << std::endl; }
-    ~AudioManager() { std::cout << "AudioManager destroyed!" << std::endl; }
+    AudioManager();
+    ~AudioManager();
 
     void addBgm(const std::string& id, const std::string& filepath);
     void addSfx(const std::string& id, const std::string& filepath);
@@ -29,6 +31,7 @@ public:
 
 
 private:
+    std::shared_ptr<spdlog::logger> log;
 
     std::map<std::string, std::shared_ptr<sf::Music>> bgm;
     std::map<std::string, std::shared_ptr<sf::SoundBuffer>> sfx;

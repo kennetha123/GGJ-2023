@@ -1,5 +1,17 @@
 #include "audio/AudioManager.h"
 
+AudioManager::AudioManager()
+{
+    log = spdlog::get("main");
+    log->debug("AudioManager Constructor.");
+}
+
+AudioManager::~AudioManager()
+{
+    //auto log = spdlog::get("main");
+    log->debug("AudioManager Destructor.");
+}
+
 void AudioManager::addBgm(const std::string& id, const std::string& filepath)
 {
     auto bgm_ = std::make_shared<sf::Music>();

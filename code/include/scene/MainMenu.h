@@ -24,6 +24,8 @@ public:
 	std::shared_ptr<MainMenuController> main_menu_ui;
 
 private:
+	std::shared_ptr<spdlog::logger> log;
+
 	std::shared_ptr<Overworld> overworld;
 	sf::Sprite bg_sprite;
 	sf::Texture bg_texture;
