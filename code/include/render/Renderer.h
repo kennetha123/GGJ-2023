@@ -3,30 +3,38 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <memory>
+#include <set>
 #include "system/Observer.hpp"
 
-class Renderer
+enum class RenderLayer
 {
-public:
-	virtual void dynamic_draw(sf::RenderWindow& window) = 0;
-	virtual void static_draw(sf::RenderTexture& render_tex) = 0;
+	BACKGROUND,
+	MIDGROUND,
+	PROPS,
+	CHARACTER,
+	FOREGROUND,
+	UI
 };
+
+enum class RenderBehavior
+{
+	STATIC,
+	DYNAMIC
+};
+
+using LayerKey = std::pair<RenderLayer, RenderBehavior>;
 
 class RenderManager
 {
 public:
-	RenderManager(sf::RenderWindow& window, sf::RenderTexture& render_tex);
-	void initRenderer();
-	void registerRenderer(std::shared_ptr<Renderer> renderer);
-	void draw();
-
-	void setNeedRedraw(bool value);
-	bool getNeedRedraw() const;
-
+	RenderManager();
+	void addDrawable(sf::Drawable& drawable, RenderLayer layer, RenderBehavior behavior);
+	void draw(sf::RenderWindow& window);
+	void setLayerDirty(RenderLayer layer);
+	RenderLayer intToRenderLayer(int layer);
+	void clear();
 private:
-	sf::RenderWindow& render_window;
-	sf::RenderTexture& render_texture;
-	std::vector<std::shared_ptr<Renderer>> renderers;
-	bool isNeedRedraw = true;
-	sf::Sprite cached_sprite;
+	std::map<LayerKey, std::vector<std::reference_wrapper<sf::Drawable>>> layers;
+	std::map<RenderLayer, sf::RenderTexture> staticTextures;
+	std::set<RenderLayer> dirtyStaticLayers;
 };

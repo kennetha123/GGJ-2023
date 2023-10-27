@@ -93,39 +93,43 @@ private:
 
 public:
 	void tileParser(const std::string& tilemap_path, const std::string& filename);
-	uint32_t positionToIndex(sf::Vector2f pos);
+	uint32_t positionToIndex(const sf::Vector2f& pos);
 	sf::Vector2f indexToPosition(int index);
+	sf::Vector2i positionToCoord(const sf::Vector2f& pos);
+	sf::Vector2f coordToPosition(const sf::Vector2i& coord);
+	sf::Vector2f coordToPosition(int x, int y);
+
 	/// <summary>
 	/// set which layer that entirely work as collision.
 	/// this need to be called before tileParser() happens.
 	/// </summary>
 	/// <param name="layers">literal value vector for layer listed.</param>
 	void setCollisionLayer(std::vector<int>&& layers);
-	inline TilemapData Tiled2SFML::getTilemapData() const
+	inline TilemapData& Tiled2SFML::getTilemapData()
 	{
 		return tilemap_data;
 	}
 
-	inline std::vector<TilesetData> Tiled2SFML::getTilesetData() const
+	inline std::vector<TilesetData>& Tiled2SFML::getTilesetData()
 	{
 		return tileset_data;
 	}
 
-	inline std::vector<TileSprite> Tiled2SFML::getTileSprite() const
+	inline std::vector<TileSprite>& Tiled2SFML::getTileSprite()
 	{
 		return tile_sprite;
 	}
 
-	inline std::vector<TileObject> Tiled2SFML::getTileData() const
+	inline std::vector<TileObject>& Tiled2SFML::getTileData()
 	{
 		return tile_data;
 	}
 
-	inline TileObject Tiled2SFML::getTileDataId(int index) const
+	inline TileObject& Tiled2SFML::getTileDataId(int index)
 	{
 		return tile_data[index];
 	}
-	inline TileSprite Tiled2SFML::getTileSpriteId(int index) const
+	inline TileSprite& Tiled2SFML::getTileSpriteId(int index)
 	{
 		return tile_sprite[index];
 	}

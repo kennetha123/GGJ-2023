@@ -30,9 +30,9 @@ void Player::update(float dt)
 	handleMovement();
 }
 
-void Player::draw(sf::RenderTexture& render_tex)
+void Player::draw(sf::RenderWindow& window)
 {
-	render_tex.draw(sprite);
+	window.draw(sprite);
 }
 
 void Player::initKeyBindings()
@@ -150,9 +150,6 @@ void Player::handleMovement()
 
 		sf::Vector2f pos = initial_position + sf::Vector2f(move_fraction * move_direction.x, move_fraction * move_direction.y);
 		sprite.setPosition(pos);
-
-		auto& render = ServiceLocator::getService<RenderManager>();
-		render.setNeedRedraw(true);
 	}
 	else
 	{

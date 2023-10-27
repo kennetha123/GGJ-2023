@@ -1,61 +1,104 @@
 #include "render/Renderer.h"
-
-RenderManager::RenderManager(sf::RenderWindow& window, sf::RenderTexture& render_tex) :
-	render_window(window), render_texture(render_tex)
+#include "spdlog/spdlog.h"
+RenderManager::RenderManager()
 {
+
 }
 
-void RenderManager::initRenderer()
+void RenderManager::addDrawable(sf::Drawable& drawable, RenderLayer layer, RenderBehavior behavior) 
 {
-    render_texture.create(render_window.getSize().x, render_window.getSize().y);
-    render_texture.clear();
-
-    for (size_t i = 0; i < renderers.size(); i++)
+    LayerKey key = { layer, behavior };
+    layers[key].push_back(drawable);
+    if (behavior == RenderBehavior::STATIC) 
     {
-        renderers[i]->static_draw(render_texture);
+        setLayerDirty(layer);
     }
-
-    render_texture.display();
-
 }
 
-void RenderManager::registerRenderer(std::shared_ptr<Renderer> renderer)
+void RenderManager::draw(sf::RenderWindow& window)
 {
-    renderers.push_back(renderer);
-}
+    window.clear(sf::Color::Transparent);
 
-void RenderManager::draw()
-{
-    if (getNeedRedraw())
+    auto log = spdlog::get("main");
+
+    for (const auto& layer : { 
+        RenderLayer::BACKGROUND, 
+        RenderLayer::MIDGROUND,
+        RenderLayer::PROPS,
+        RenderLayer::CHARACTER,
+        RenderLayer::FOREGROUND, 
+        RenderLayer::UI })
     {
-        render_texture.clear(sf::Color::Cyan);
-        for (size_t i = 0; i < renderers.size(); i++)
+        log->debug("Processing layer: {}", static_cast<int>(layer));
+
+        for (const auto& behavior : { RenderBehavior::STATIC, RenderBehavior::DYNAMIC })
         {
-            renderers[i]->static_draw(render_texture);
+            log->debug("Processing behavior: {}", static_cast<int>(behavior));
+            LayerKey key = { layer, behavior };
+
+            if (behavior == RenderBehavior::STATIC && staticTextures[layer].getSize() != window.getSize())
+            {
+                staticTextures[layer].create(window.getSize().x, window.getSize().y);
+            }
+
+            sf::Vector2f offset(48 * 5, 48 * 5);
+
+            if (behavior == RenderBehavior::STATIC)
+            {
+                if (dirtyStaticLayers.find(layer) != dirtyStaticLayers.end())
+                {
+                    log->debug("Layer {} is marked as dirty.", static_cast<int>(layer));
+                    auto& texture = staticTextures[layer];
+                    texture.clear(sf::Color::Transparent);
+                    
+                    int index = 0;
+                    for (auto& drawable : layers[key])
+                    {
+                        sf::FloatRect drawableBounds = sf::FloatRect(0, 0, 800, 600);
+
+                        // Only draw the drawable if it is within the region of interest
+                        if (drawableBounds.left + drawableBounds.width >= offset.x &&
+                            drawableBounds.left <= offset.x + window.getSize().x &&
+                            drawableBounds.top + drawableBounds.height >= offset.y &&
+                            drawableBounds.top <= offset.y + window.getSize().y)
+                        {
+                            sf::Transform transform;
+                            transform.translate(-offset);  // Translate by negative offset to draw in correct position on the texture
+                            texture.draw(drawable, transform);
+                        }
+                    }
+                    texture.display();
+                    dirtyStaticLayers.erase(layer);
+                }
+                window.draw(sf::Sprite(staticTextures[layer].getTexture()));
+            }
+            else
+            {
+                for (auto& drawable : layers[key])
+                {
+                    log->debug("Drawing dynamic drawable...");
+                    window.draw(drawable);
+                }
+            }
         }
-        render_texture.display();
-        setNeedRedraw(false);
     }
 
-    render_window.clear(sf::Color::Cyan);
-    cached_sprite.setTexture(render_texture.getTexture());
-    render_window.draw(cached_sprite);
-    for (size_t i = 0; i < renderers.size(); i++)
-    {
-        renderers[i]->dynamic_draw(render_window);
-    }
-    render_window.display();
-
+    log->debug("Ending draw process...");
+    window.display();
 }
 
-void RenderManager::setNeedRedraw(bool value) 
+void RenderManager::setLayerDirty(RenderLayer layer) 
 {
-    if (isNeedRedraw != value) {
-        isNeedRedraw = value;
-    }
+    dirtyStaticLayers.insert(layer);
 }
 
-bool RenderManager::getNeedRedraw() const 
+RenderLayer RenderManager::intToRenderLayer(int layer)
 {
-    return isNeedRedraw;
+    return static_cast<RenderLayer>(layer);
+}
+
+void RenderManager::clear()
+{
+    layers.clear();
+    staticTextures.clear();
 }

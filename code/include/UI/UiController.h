@@ -14,8 +14,6 @@ namespace UI
 		{
 		public:
 			virtual void update(float dt) = 0;
-			virtual void static_draw(sf::RenderTexture& render_tex) = 0;
-			virtual void dynamic_draw(sf::RenderWindow& window) = 0;
 		};
 
 		class FpsController : public BaseController
@@ -25,8 +23,6 @@ namespace UI
 			~FpsController();
 
 			void update(float dt) override;
-			void static_draw(sf::RenderTexture& render_tex) override;
-			void dynamic_draw(sf::RenderWindow& window) override;
 
 		private:
 			std::shared_ptr<spdlog::logger> log;
@@ -45,8 +41,6 @@ namespace UI
 			~MainMenuController();
 
 			virtual void update(float dt) override;
-			void static_draw(sf::RenderTexture& render_tex) override;
-			void dynamic_draw(sf::RenderWindow& window) override;
 			void onClick();
 			View::MainMenuView mm_view;
 

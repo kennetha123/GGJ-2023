@@ -17,8 +17,7 @@ public:
 	MainMenu();
 	~MainMenu();
 	virtual void update(float dt) override;
-	virtual void static_draw(sf::RenderTexture& render_tex) override;
-	virtual void dynamic_draw(sf::RenderWindow& window) override;
+	virtual void draw(sf::RenderWindow& window) override;
 	void buttonSetup();
 public:
 	std::shared_ptr<MainMenuController> main_menu_ui;
@@ -30,4 +29,5 @@ private:
 	sf::Sprite bg_sprite;
 	sf::Texture bg_texture;
 	sf::Font font;
+	sf::View ui_camera;
 };

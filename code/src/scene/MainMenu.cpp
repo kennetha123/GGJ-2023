@@ -2,7 +2,8 @@
 #include <spdlog/spdlog.h>
 
 MainMenu::MainMenu() :
-	Scene()
+	Scene(),
+	ui_camera(sf::FloatRect(0, 0, 800, 600))
 {
 	log = spdlog::get("main");
 
@@ -32,7 +33,7 @@ MainMenu::MainMenu() :
 	main_menu_ui->onClick();
 
 	auto& render = ServiceLocator::getService<RenderManager>();
-	render.setNeedRedraw(true);
+	render.addDrawable(bg_sprite, RenderLayer::BACKGROUND, RenderBehavior::STATIC);
 }
 
 MainMenu::~MainMenu()
@@ -47,13 +48,9 @@ void MainMenu::update(float dt)
 
 }
 
-void MainMenu::static_draw(sf::RenderTexture& render_tex)
+void MainMenu::draw(sf::RenderWindow& window)
 {
-	render_tex.draw(bg_sprite);
-}
-
-void MainMenu::dynamic_draw(sf::RenderWindow& window)
-{
+	window.setView(ui_camera);
 }
 
 void MainMenu::buttonSetup()

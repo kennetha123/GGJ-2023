@@ -3,49 +3,43 @@
 Overworld::Overworld() :
 	Scene(),
 	main_character("../resources/Actor_sangoku01.png"),
-	camera(sf::FloatRect(0, 0, 800, 600))
+	game_camera(sf::FloatRect(0, 0, 800, 600))
 {
+	auto& log = spdlog::get("main");
+	log->debug("Overworld constructor");
+
 	tiled2Sfml.setCollisionLayer({ 1, 4 });
 	tiled2Sfml.tileParser("../resources/maps/", "prologue.json");
 	main_character.setTilemap(tiled2Sfml);
+	//main_character.sprite.setPosition(tiled2Sfml.coordToPosition(26, 5));
 
 	auto& render = ServiceLocator::getService<RenderManager>();
-	render.setNeedRedraw(true);
+	render.clear();
+	for (auto& tile : tiled2Sfml.getTileSprite())
+	{
+		render.addDrawable(tile.sprite, render.intToRenderLayer(tile.layer_index), RenderBehavior::STATIC);
+	}
+
+	render.addDrawable(main_character.sprite, RenderLayer::CHARACTER, RenderBehavior::DYNAMIC);
+
+	main_character.onPlayerMove([&]() {
+		render.setLayerDirty(RenderLayer::BACKGROUND);
+		render.setLayerDirty(RenderLayer::PROPS);
+		render.setLayerDirty(RenderLayer::MIDGROUND);
+		render.setLayerDirty(RenderLayer::FOREGROUND);
+		});
 
 }
 
 void Overworld::update(float dt)
 {
-	camera.setCenter(main_character.sprite.getPosition());
+	game_camera.setCenter(main_character.sprite.getPosition());
 	main_character.update(dt);
 }
 
-void Overworld::static_draw(sf::RenderTexture& render_tex)
+void Overworld::draw(sf::RenderWindow& window)
 {
-	render_tex.setView(camera);
-	for (size_t layer_idx = 0; layer_idx < tiled2Sfml.getTilemapData().layers.size(); layer_idx++)
-	{
-		if (layer_idx == player_layer)
-		{
-			main_character.draw(render_tex);
-		}
-		else
-		{
-			for (const auto& tile : tiled2Sfml.getTileSprite())
-			{
-				if (tile.layer_index == layer_idx &&
-					isNearPlayer(tile.sprite.getPosition(), main_character.sprite.getPosition(), render_distance))
-				{
-					render_tex.draw(tile.sprite);
-				}
-			}
-		}
-	}
-}
-
-void Overworld::dynamic_draw(sf::RenderWindow& window)
-{
-
+	window.setView(game_camera);
 }
 
 bool Overworld::isNearPlayer(const sf::Vector2f& tile_position, const sf::Vector2f& player_position, float render_distance)

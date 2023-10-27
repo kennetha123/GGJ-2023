@@ -32,16 +32,6 @@ namespace UI
 			}
 		}
 
-		void FpsController::static_draw(sf::RenderTexture& render_tex)
-		{
-			fps_view.static_draw(render_tex);
-		}
-
-		void FpsController::dynamic_draw(sf::RenderWindow& window)
-		{
-			//fps_view.draw(window);
-		}
-
 		MainMenuController::MainMenuController(const sf::Font& font) :
 			mm_view(font) 
 		{
@@ -58,16 +48,6 @@ namespace UI
 		void MainMenuController::update(float dt)
 		{
 
-		}
-
-		void MainMenuController::static_draw(sf::RenderTexture& render_tex)
-		{
-			mm_view.static_draw(render_tex);
-		}
-
-		void MainMenuController::dynamic_draw(sf::RenderWindow& window)
-		{
-			//mm_view.draw(window);
 		}
 
 		void MainMenuController::onClick()

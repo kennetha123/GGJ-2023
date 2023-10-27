@@ -31,7 +31,7 @@ int main()
     sf::Font font;
 
     // Create services
-    auto render_manager = std::make_shared<RenderManager>(window, render_texture);
+    auto render_manager = std::make_shared<RenderManager>();
     auto ui_manager = std::make_shared<UI::UiManager>();
     auto scene_manager = std::make_shared<SceneManager>();
     auto audio_manager = std::make_shared<AudioManager>();
@@ -54,11 +54,6 @@ int main()
     scene_manager->loadScene(std::dynamic_pointer_cast<Scene>(main_menu_));
     ui_manager->push(fps_ctrl);
 
-    render_manager->registerRenderer(scene_manager);
-    render_manager->registerRenderer(ui_manager);
-
-    render_manager->initRenderer();
-
     sf::Event ev;
 
     while (window.isOpen())
@@ -71,7 +66,8 @@ int main()
         scene_manager->update(dt.asSeconds());
         ui_manager->update(dt.asSeconds());
 
-        render_manager->draw();
+        scene_manager->draw(window);
+        render_manager->draw(window);
     }
 
     spdlog::drop_all();
@@ -88,6 +84,6 @@ void logInit()
 
     spdlog::register_logger(logger);
 
-    logger->set_level(spdlog::level::debug);
+    logger->set_level(spdlog::level::info);
 
 }

@@ -2,8 +2,9 @@
 
 namespace UI
 {
-    UiManager::UiManager() : ui_camera_(sf::FloatRect(0, 0, 800, 600))
+    UiManager::UiManager()
     {
+
     }
 
     void UiManager::push(std::shared_ptr<Controller::BaseController> view)
@@ -52,23 +53,6 @@ namespace UI
         {
             stack_.top()->update(dt);
         }
-    }
-
-    void UiManager::static_draw(sf::RenderTexture& render_tex)
-    {
-        std::stack<std::shared_ptr<Controller::BaseController>> temp_stack = stack_;
-
-        while (!temp_stack.empty())
-        {
-            temp_stack.top()->static_draw(render_tex);
-            temp_stack.pop();
-        }
-    }
-
-    void UiManager::dynamic_draw(sf::RenderWindow& window)
-    {
-        window.setView(ui_camera_);
-
     }
 
     void UiManager::registerButton(Button& button)
