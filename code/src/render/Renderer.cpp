@@ -1,15 +1,27 @@
 #include "render/Renderer.h"
 #include "spdlog/spdlog.h"
+#include "UI/Button.h"
+
+const std::array<RenderLayer, 6> RenderManager::all_layers = {
+    RenderLayer::BACKGROUND,
+    RenderLayer::MIDGROUND,
+    RenderLayer::PROPS,
+    RenderLayer::CHARACTER,
+    RenderLayer::FOREGROUND,
+    RenderLayer::UI
+};
+
 RenderManager::RenderManager()
 {
 
 }
 
-void RenderManager::addDrawable(sf::Drawable& drawable, RenderLayer layer, RenderBehavior behavior) 
+void RenderManager::addDrawable(sf::Drawable& drawable, sf::Transformable& transformable, RenderLayer layer, RenderBehavior behavior)
 {
     LayerKey key = { layer, behavior };
-    layers[key].push_back(drawable);
-    if (behavior == RenderBehavior::STATIC) 
+    layers[key].emplace_back(std::ref(drawable), std::ref(transformable));
+
+    if (behavior == RenderBehavior::STATIC)
     {
         setLayerDirty(layer);
     }
@@ -20,14 +32,19 @@ void RenderManager::draw(sf::RenderWindow& window)
     window.clear(sf::Color::Transparent);
 
     auto log = spdlog::get("main");
+    window.setView(main_camera);
 
-    for (const auto& layer : { 
-        RenderLayer::BACKGROUND, 
-        RenderLayer::MIDGROUND,
-        RenderLayer::PROPS,
-        RenderLayer::CHARACTER,
-        RenderLayer::FOREGROUND, 
-        RenderLayer::UI })
+    // Calculate the region of interest (ROI) based on the camera's position and size.
+    sf::Vector2f center = main_camera.getCenter();
+    sf::Vector2f size = main_camera.getSize();
+    sf::FloatRect roi(center.x - size.x / 2, center.y - size.y / 2, size.x, size.y);
+
+    // Debug ROI
+    sf::RectangleShape roiRect(sf::Vector2f(roi.width, roi.height));
+    roiRect.setPosition(roi.left, roi.top);
+    roiRect.setFillColor(sf::Color(255, 0, 0, 100)); // Semi-transparent red
+
+    for (const auto& layer : all_layers)
     {
         log->debug("Processing layer: {}", static_cast<int>(layer));
 
@@ -35,13 +52,6 @@ void RenderManager::draw(sf::RenderWindow& window)
         {
             log->debug("Processing behavior: {}", static_cast<int>(behavior));
             LayerKey key = { layer, behavior };
-
-            if (behavior == RenderBehavior::STATIC && staticTextures[layer].getSize() != window.getSize())
-            {
-                staticTextures[layer].create(window.getSize().x, window.getSize().y);
-            }
-
-            sf::Vector2f offset(48 * 5, 48 * 5);
 
             if (behavior == RenderBehavior::STATIC)
             {
@@ -51,20 +61,15 @@ void RenderManager::draw(sf::RenderWindow& window)
                     auto& texture = staticTextures[layer];
                     texture.clear(sf::Color::Transparent);
                     
-                    int index = 0;
-                    for (auto& drawable : layers[key])
+                    for (auto& data : layers[key])
                     {
-                        sf::FloatRect drawableBounds = sf::FloatRect(0, 0, 800, 600);
+                        sf::Drawable& drawable = data.first.get();
+                        sf::Transformable& transformable = data.second.get();
+                        sf::FloatRect bounds = getBounds(drawable, transformable);
 
-                        // Only draw the drawable if it is within the region of interest
-                        if (drawableBounds.left + drawableBounds.width >= offset.x &&
-                            drawableBounds.left <= offset.x + window.getSize().x &&
-                            drawableBounds.top + drawableBounds.height >= offset.y &&
-                            drawableBounds.top <= offset.y + window.getSize().y)
+                        if (roi.intersects(bounds))
                         {
-                            sf::Transform transform;
-                            transform.translate(-offset);  // Translate by negative offset to draw in correct position on the texture
-                            texture.draw(drawable, transform);
+                            texture.draw(drawable);
                         }
                     }
                     texture.display();
@@ -74,15 +79,32 @@ void RenderManager::draw(sf::RenderWindow& window)
             }
             else
             {
-                for (auto& drawable : layers[key])
+                for (auto& data : layers[key])
                 {
-                    log->debug("Drawing dynamic drawable...");
-                    window.draw(drawable);
+                    sf::Drawable& drawable = data.first.get();
+                    sf::Transformable& transformable = data.second.get();
+                    sf::FloatRect bounds = getBounds(drawable, transformable);
+
+                    if (layer == RenderLayer::UI)
+                    {
+                        sf::RectangleShape ruiRect(sf::Vector2f(bounds.width, bounds.height));
+                        ruiRect.setPosition(bounds.left, bounds.top);
+                        ruiRect.setFillColor(sf::Color(255, 0, 0, 100)); // Semi-transparent red
+
+                        window.draw(ruiRect);
+
+                    }
+
+                    if (roi.intersects(bounds))
+                    {
+                        window.draw(drawable);
+                    }
                 }
             }
         }
     }
-
+    
+    //window.draw(roiRect);
     log->debug("Ending draw process...");
     window.display();
 }
@@ -97,8 +119,58 @@ RenderLayer RenderManager::intToRenderLayer(int layer)
     return static_cast<RenderLayer>(layer);
 }
 
+void RenderManager::setCamera(sf::View& view)
+{
+    main_camera = view;
+}
+
+sf::View& RenderManager::getCamera()
+{
+    return main_camera;
+}
+
 void RenderManager::clear()
 {
     layers.clear();
     staticTextures.clear();
+}
+
+sf::FloatRect RenderManager::getBounds(const sf::Drawable& drawable, const sf::Transformable& transformable)
+{
+    
+    if (const auto* sprite = dynamic_cast<const sf::Sprite*>(&drawable))
+    {
+        return sprite->getGlobalBounds();
+    }
+    else if (const auto* shape = dynamic_cast<const sf::Shape*>(&drawable))
+    {
+        return shape->getGlobalBounds();
+    }
+    else if (const auto* text = dynamic_cast<const sf::Text*>(&drawable))
+    {
+        return text->getGlobalBounds();
+    }
+    else if (const auto* button = dynamic_cast<const UI::Button*>(&drawable))
+    {
+        return button->getGlobalBounds();
+    }
+
+    return {};
+}
+
+void RenderManager::initRenderer(const sf::Vector2i& size)
+{
+    for (const auto& layer : all_layers)
+    {
+        staticTextures[layer].create(size.x, size.y);
+    }
+}
+
+void RenderManager::initRenderer(size_t x, size_t y)
+{
+
+    for (const auto& layer : all_layers)
+    {
+        staticTextures[layer].create(x, y);
+    }
 }

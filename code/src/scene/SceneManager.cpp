@@ -8,15 +8,6 @@ void SceneManager::update(float dt)
     }
 }
 
-void SceneManager::draw(sf::RenderWindow& window)
-{
-    if (!scenes.empty())
-    {
-        scenes.back()->draw(window);
-    }
-}
-
-
 void SceneManager::pushScene(std::shared_ptr<Scene> new_scene)
 {
     if (!scenes.empty())

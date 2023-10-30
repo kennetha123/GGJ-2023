@@ -16,14 +16,17 @@ namespace UI
 			fps_text.setFont(font);
 			fps_text.setCharacterSize(32);
 			fps_text.setFillColor(sf::Color::White);
-			fps_text.setPosition(10, 10);
 
 			auto& render = ServiceLocator::getService<RenderManager>();
-			render.addDrawable(fps_text, RenderLayer::UI, RenderBehavior::DYNAMIC);
+			render.addDrawable(fps_text, fps_text, RenderLayer::UI, RenderBehavior::DYNAMIC);
 		}
 
 		void FpsView::update(const Model::Model& model_)
 		{
+			sf::View& camera = ServiceLocator::getService<RenderManager>().getCamera();
+			sf::Vector2f cam_pos = camera.getCenter() - 0.5f * camera.getSize();
+			fps_text.setPosition(cam_pos.x + 10, cam_pos.y + 10);
+
 			const Model::FpsModel& fps_model = dynamic_cast<const Model::FpsModel&>(model_);
 
 			std::stringstream ss;
@@ -39,10 +42,10 @@ namespace UI
 		{
 			auto& render = ServiceLocator::getService<RenderManager>();
 
-			render.addDrawable(new_game_button, RenderLayer::UI, RenderBehavior::STATIC);
-			render.addDrawable(load_game_button, RenderLayer::UI, RenderBehavior::STATIC);
-			render.addDrawable(settings_button, RenderLayer::UI, RenderBehavior::STATIC);
-			render.addDrawable(quit_button, RenderLayer::UI, RenderBehavior::STATIC);
+			render.addDrawable(new_game_button, new_game_button, RenderLayer::UI, RenderBehavior::STATIC);
+			render.addDrawable(load_game_button, load_game_button, RenderLayer::UI, RenderBehavior::STATIC);
+			render.addDrawable(settings_button, settings_button, RenderLayer::UI, RenderBehavior::STATIC);
+			render.addDrawable(quit_button, quit_button, RenderLayer::UI, RenderBehavior::STATIC);
 		}
 
 		void MainMenuView::update(const Model::Model& model_)

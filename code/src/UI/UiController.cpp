@@ -21,12 +21,12 @@ namespace UI
 		{
 			fps_timer += dt;
 			frame_count++;
+			fps_view.update(fps_model);
 
 			if (fps_timer >= 1.0f)
 			{
 				int fps = static_cast<int>(frame_count / fps_timer);
 				fps_model.setFps(fps);
-				fps_view.update(fps_model);
 				frame_count = 0;
 				fps_timer = 0;
 			}

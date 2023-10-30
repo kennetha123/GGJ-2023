@@ -11,7 +11,6 @@ public:
     Scene() {}
 
     virtual void update(float dt) = 0;
-    virtual void draw(sf::RenderWindow& window) = 0;
 };
 
 class SceneManager
@@ -21,7 +20,6 @@ public:
 
 public:
     void update(float dt);
-    void draw(sf::RenderWindow& window);
     void pushScene(std::shared_ptr<Scene> new_scene);
     void popScene();
     void loadScene(std::shared_ptr<Scene> new_scene);
