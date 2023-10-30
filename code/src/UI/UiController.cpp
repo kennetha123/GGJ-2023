@@ -21,25 +21,15 @@ namespace UI
 		{
 			fps_timer += dt;
 			frame_count++;
+			fps_view.update(fps_model);
 
 			if (fps_timer >= 1.0f)
 			{
 				int fps = static_cast<int>(frame_count / fps_timer);
 				fps_model.setFps(fps);
-				fps_view.update(fps_model);
 				frame_count = 0;
 				fps_timer = 0;
 			}
-		}
-
-		void FpsController::static_draw(sf::RenderTexture& render_tex)
-		{
-			fps_view.static_draw(render_tex);
-		}
-
-		void FpsController::dynamic_draw(sf::RenderWindow& window)
-		{
-			//fps_view.draw(window);
 		}
 
 		MainMenuController::MainMenuController(const sf::Font& font) :
@@ -58,16 +48,6 @@ namespace UI
 		void MainMenuController::update(float dt)
 		{
 
-		}
-
-		void MainMenuController::static_draw(sf::RenderTexture& render_tex)
-		{
-			mm_view.static_draw(render_tex);
-		}
-
-		void MainMenuController::dynamic_draw(sf::RenderWindow& window)
-		{
-			//mm_view.draw(window);
 		}
 
 		void MainMenuController::onClick()

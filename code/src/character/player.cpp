@@ -12,7 +12,6 @@ Player::Player(const std::string& image_path)
 
     sprite.setTexture(player_texture);
     sprite.setTextureRect(sf::IntRect(0, 0, sprite_width, sprite_height));
-    sprite.setPosition(480.0, 480.0f);
 
     this->addComponent<Collision>();
 
@@ -30,9 +29,9 @@ void Player::update(float dt)
 	handleMovement();
 }
 
-void Player::draw(sf::RenderTexture& render_tex)
+void Player::draw(sf::RenderWindow& window)
 {
-	render_tex.draw(sprite);
+	window.draw(sprite);
 }
 
 void Player::initKeyBindings()
@@ -151,8 +150,11 @@ void Player::handleMovement()
 		sf::Vector2f pos = initial_position + sf::Vector2f(move_fraction * move_direction.x, move_fraction * move_direction.y);
 		sprite.setPosition(pos);
 
-		auto& render = ServiceLocator::getService<RenderManager>();
-		render.setNeedRedraw(true);
+		if (onPlayerMoveCallback)
+		{
+			onPlayerMoveCallback();
+		}
+
 	}
 	else
 	{
@@ -189,11 +191,6 @@ void Player::move(const sf::Vector2f& dest)
 		move_direction = dest;
 		initial_position = sprite.getPosition();
 		mov_elapsed_time = 0;
-
-		if (onPlayerMoveCallback)
-		{
-			onPlayerMoveCallback();
-		}
 	}
 
 	anim.setParam("move_x", move_direction.x);

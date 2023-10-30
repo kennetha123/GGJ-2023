@@ -2,7 +2,8 @@
 #include <spdlog/spdlog.h>
 
 MainMenu::MainMenu() :
-	Scene()
+	Scene(),
+	ui_camera(sf::FloatRect(0, 0, 800, 600))
 {
 	log = spdlog::get("main");
 
@@ -13,7 +14,11 @@ MainMenu::MainMenu() :
 	main_menu_ui = std::make_shared<MainMenuController>(font);
 
 	auto& ui = ServiceLocator::getService<UI::UiManager>();
+
+	fps_ctrl = std::make_shared<FpsController>(font);
+
 	ui.push(main_menu_ui);
+	ui.push(fps_ctrl);
 
 	if (!bg_texture.loadFromFile("../resources/title.jpg"))
 	{
@@ -32,28 +37,25 @@ MainMenu::MainMenu() :
 	main_menu_ui->onClick();
 
 	auto& render = ServiceLocator::getService<RenderManager>();
-	render.setNeedRedraw(true);
+	render.addDrawable(bg_sprite, bg_sprite, RenderLayer::BACKGROUND, RenderBehavior::STATIC);
+	render.setCamera(ui_camera);
+	render.initRenderer(bg_sprite.getLocalBounds().width, bg_sprite.getLocalBounds().height);
+
 }
 
 MainMenu::~MainMenu()
 {
 	log->debug("MainMenu Destructor");
+	auto& ui = ServiceLocator::getService<UI::UiManager>();
 
+	ui.remove(main_menu_ui);
+	ui.remove(fps_ctrl);
 	main_menu_ui.reset();
 }
 
 void MainMenu::update(float dt)
 {
 
-}
-
-void MainMenu::static_draw(sf::RenderTexture& render_tex)
-{
-	render_tex.draw(bg_sprite);
-}
-
-void MainMenu::dynamic_draw(sf::RenderWindow& window)
-{
 }
 
 void MainMenu::buttonSetup()

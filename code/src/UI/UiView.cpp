@@ -4,6 +4,8 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include "ServiceLocator.h"
+#include "render/RENDERER.H"
 
 namespace UI
 {
@@ -14,11 +16,17 @@ namespace UI
 			fps_text.setFont(font);
 			fps_text.setCharacterSize(32);
 			fps_text.setFillColor(sf::Color::White);
-			fps_text.setPosition(10, 10);
+
+			auto& render = ServiceLocator::getService<RenderManager>();
+			render.addDrawable(fps_text, fps_text, RenderLayer::UI, RenderBehavior::DYNAMIC);
 		}
 
 		void FpsView::update(const Model::Model& model_)
 		{
+			sf::View& camera = ServiceLocator::getService<RenderManager>().getCamera();
+			sf::Vector2f cam_pos = camera.getCenter() - 0.5f * camera.getSize();
+			fps_text.setPosition(cam_pos.x + 10, cam_pos.y + 10);
+
 			const Model::FpsModel& fps_model = dynamic_cast<const Model::FpsModel&>(model_);
 
 			std::stringstream ss;
@@ -26,36 +34,23 @@ namespace UI
 			fps_text.setString(ss.str());
 		}
 
-		void FpsView::static_draw(sf::RenderTexture& render_tex)
+		MainMenuView::MainMenuView(const sf::Font& font) :
+			new_game_button(font, "New Game", 100, 100),
+			load_game_button(font, "Load Game", 100, 150),
+			settings_button(font, "Settings", 100, 200),
+			quit_button(font, "Quit", 100, 250)
 		{
-			//render_tex.draw(fps_text);
-		}
+			auto& render = ServiceLocator::getService<RenderManager>();
 
-		void FpsView::dynamic_draw(sf::RenderWindow& window)
-		{
-			window.draw(fps_text);
+			render.addDrawable(new_game_button, new_game_button, RenderLayer::UI, RenderBehavior::STATIC);
+			render.addDrawable(load_game_button, load_game_button, RenderLayer::UI, RenderBehavior::STATIC);
+			render.addDrawable(settings_button, settings_button, RenderLayer::UI, RenderBehavior::STATIC);
+			render.addDrawable(quit_button, quit_button, RenderLayer::UI, RenderBehavior::STATIC);
 		}
-
 
 		void MainMenuView::update(const Model::Model& model_)
 		{
 
-		}
-
-		void MainMenuView::static_draw(sf::RenderTexture& render_tex)
-		{
-			render_tex.draw(new_game_button);
-			render_tex.draw(load_game_button);
-			render_tex.draw(settings_button);
-			render_tex.draw(quit_button);
-		}
-
-		void MainMenuView::dynamic_draw(sf::RenderWindow& window)
-		{
-			//window.draw(new_game_button);
-			//window.draw(load_game_button);
-			//window.draw(settings_button);
-			//window.draw(quit_button);
 		}
 
 		void MainMenuView::setMenuOption(sf::Text& text, const sf::Font& font, const std::string& str, float x, float y)

@@ -37,6 +37,7 @@ namespace UI
 
     void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const
     {
+        states.transform *= getTransform();
         target.draw(button_image, states);
         target.draw(button_text, states);
     }
@@ -44,5 +45,10 @@ namespace UI
     void Button::setOnClickCb(std::function<void()> callback)
     {
         on_click_callback = callback;
+    }
+
+    sf::FloatRect Button::getGlobalBounds() const
+    {
+        return button_image.getGlobalBounds();
     }
 }

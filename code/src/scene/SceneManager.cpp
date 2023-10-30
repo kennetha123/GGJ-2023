@@ -8,19 +8,6 @@ void SceneManager::update(float dt)
     }
 }
 
-void SceneManager::static_draw(sf::RenderTexture& render_tex)
-{
-    if (!scenes.empty())
-    {
-        scenes.back()->static_draw(render_tex);
-    }
-}
-
-void SceneManager::dynamic_draw(sf::RenderWindow& window)
-{
-
-}
-
 void SceneManager::pushScene(std::shared_ptr<Scene> new_scene)
 {
     if (!scenes.empty())

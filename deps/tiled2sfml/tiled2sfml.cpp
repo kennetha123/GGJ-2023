@@ -141,7 +141,7 @@ sf::Texture& Tiled2SFML::loadTileTexture(const std::string& texture_name)
 	return *(it->second);
 }
 
-uint32_t Tiled2SFML::positionToIndex(sf::Vector2f pos)
+uint32_t Tiled2SFML::positionToIndex(const sf::Vector2f& pos)
 {
 	int x = pos.x / tilemap_data.tile_width;
 	int y = pos.y / tilemap_data.tile_height;
@@ -154,6 +154,27 @@ sf::Vector2f Tiled2SFML::indexToPosition(int index)
 	int y = index / tilemap_data.tilemap_width;
 	int x = index % tilemap_data.tilemap_width;
 	return sf::Vector2f(x, y);
+}
+
+sf::Vector2i Tiled2SFML::positionToCoord(const sf::Vector2f& pos)
+{
+	int x = pos.x / tilemap_data.tile_width;
+	int y = pos.y / tilemap_data.tile_height;
+	return sf::Vector2i(x, y);
+}
+
+sf::Vector2f Tiled2SFML::coordToPosition(const sf::Vector2i& pos)
+{
+	int x = pos.x * tilemap_data.tile_width;
+	int y = pos.y * tilemap_data.tile_height;
+	return sf::Vector2f(x, y);
+}
+
+sf::Vector2f Tiled2SFML::coordToPosition(int x, int y)
+{
+	int x_ = x * tilemap_data.tile_width;
+	int y_ = y * tilemap_data.tile_height;
+	return sf::Vector2f(x_, y_);
 }
 
 void Tiled2SFML::setCollisionLayer(std::vector<int>&& layers)

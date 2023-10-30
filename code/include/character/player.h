@@ -12,7 +12,7 @@ public:
     ~Player() = default;
 
     void update(float dt);
-    void draw(sf::RenderTexture& render_tex);
+    void draw(sf::RenderWindow& window);
 	void handleMovement();
 	void initKeyBindings();
 	void initAnimation();
