@@ -5,7 +5,7 @@
 Overworld::Overworld() :
 	Scene(),
 	render(ServiceLocator::getService<RenderManager>()),
-	main_character("../resources/Actor_sangoku01.png"),
+	main_character("../resources/Actor_sangoku01.png", sf::Vector2i(48, 48)),
 	game_camera(sf::FloatRect(0, 0, 800, 600))
 {
 	auto& log = spdlog::get("main");
@@ -16,8 +16,8 @@ Overworld::Overworld() :
 	tiled2Sfml.setCollisionLayer({ 1, 4 });
 	tiled2Sfml.tileParser("../resources/maps/", "prologue.json");
 	main_character.setTilemap(tiled2Sfml);
-	main_character.sprite.setPosition(tiled2Sfml.coordToPosition(8, 8));
-
+	main_character.sprite.setPosition(tiled2Sfml.coordToPosition(0, 0));
+	log->info("pos x{} y{}", main_character.sprite.getPosition().x, main_character.sprite.getPosition().y);
 	render.clear();
 
 	auto& ui = ServiceLocator::getService<UI::UiManager>();
@@ -36,7 +36,7 @@ Overworld::Overworld() :
 
 	render.initRenderer(tilemap.tilemap_width * tilemap.tile_width, tilemap.tilemap_height * tilemap.tile_height);
 
-	main_character.onPlayerMove([&]() {
+	main_character.onCharacterMove([&]() {
 		render.setLayerDirty(RenderLayer::BACKGROUND);
 		render.setLayerDirty(RenderLayer::PROPS);
 		render.setLayerDirty(RenderLayer::MIDGROUND);
