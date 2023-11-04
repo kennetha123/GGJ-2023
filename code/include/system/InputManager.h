@@ -23,10 +23,16 @@ private:
     Action action;
 };
 
-class MoveRightCommand : public Command
+class KeyboardCommand : public Command
 {
+    using Action = std::function<void()>;
 public:
-    MoveRightCommand() {}
+    KeyboardCommand(Action on_press, Action on_release = []() {});
+    void execute(sf::Event& ev, sf::RenderWindow& window) override;
+
+private:
+    Action on_pressed;
+    Action on_released;
 };
 
 class InputManager

@@ -5,7 +5,7 @@
 Overworld::Overworld() :
 	Scene(),
 	render(ServiceLocator::getService<RenderManager>()),
-	main_character("../resources/Actor_sangoku01.png"),
+	main_character("../resources/Actor_sangoku01.png", sf::Vector2i(48, 48)),
 	game_camera(sf::FloatRect(0, 0, 800, 600))
 {
 	auto& log = spdlog::get("main");
@@ -36,7 +36,7 @@ Overworld::Overworld() :
 
 	render.initRenderer(tilemap.tilemap_width * tilemap.tile_width, tilemap.tilemap_height * tilemap.tile_height);
 
-	main_character.onPlayerMove([&]() {
+	main_character.onCharacterMove([&]() {
 		render.setLayerDirty(RenderLayer::BACKGROUND);
 		render.setLayerDirty(RenderLayer::PROPS);
 		render.setLayerDirty(RenderLayer::MIDGROUND);

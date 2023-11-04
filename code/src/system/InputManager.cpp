@@ -16,6 +16,25 @@ void StoreMapCommand::execute(sf::Event& ev, sf::RenderWindow& window)
     action(ev, mouse_position);
 }
 
+KeyboardCommand::KeyboardCommand(Action on_press, Action on_release)
+{
+    on_press = on_pressed;
+    on_release = on_released;
+}
+
+void KeyboardCommand::execute(sf::Event& ev, sf::RenderWindow& window)
+{
+    if (ev.type == sf::Event::KeyPressed)
+    {
+        on_pressed();
+    }
+
+    if (ev.type == sf::Event::KeyReleased)
+    {
+        on_released();
+    }
+}
+
 InputManager::InputManager()
 {
 
