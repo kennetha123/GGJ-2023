@@ -50,11 +50,9 @@ int main()
 
     scene_manager->loadScene(std::dynamic_pointer_cast<Scene>(main_menu_));
 
-    sf::Event ev;
-
     while (window.isOpen())
     {
-        input_manager->handleEvents(window, ev);
+        input_manager->handleEvents(window);
 
         sf::Time dt = clock.restart();
         dw::Time::setDeltaTime(dt.asSeconds());

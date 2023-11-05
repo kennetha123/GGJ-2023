@@ -57,7 +57,7 @@ namespace UI
 			Button& settings = mm_view.settings_button;
 			Button& quit = mm_view.quit_button;
 
-			std::shared_ptr<StoreMapCommand> store_map_cmd = std::make_shared<StoreMapCommand>([&](sf::Event& ev, const sf::Vector2f& mouse_position) {
+			std::shared_ptr<StoreMapCommand> store_map_cmd = std::make_shared<StoreMapCommand>([&](const sf::Vector2f& mouse_position) {
 				new_game.checkClick(mouse_position);
 				load_game.checkClick(mouse_position);
 				settings.checkClick(mouse_position);

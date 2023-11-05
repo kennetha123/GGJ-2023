@@ -3,12 +3,14 @@
 #include "system/Entity.h"
 #include "../tiled2sfml/tiled2sfml.h"
 #include "system/Animator.h"
+#include "spdlog/spdlog.h"
 
 class Character : public Entity
 {
 public:
 	Character(const std::string& image_path, const sf::Vector2i& sprite_sz);
 
+	virtual void update(float dt);
 	void setTilemap(Tiled2SFML& td);
 	bool checkCollision(const sf::Vector2f& dest);
 	void move(const sf::Vector2f& dest);
@@ -17,7 +19,6 @@ public:
 	sf::Sprite sprite;
 
 protected:
-	void handleMovement();
 
 	Animator anim;
 	bool is_moving = false;
@@ -35,4 +36,5 @@ private:
 	float move_duration = 0.3f;
 	float mov_elapsed_time = 0;
 
+	std::shared_ptr<spdlog::logger> log;
 };

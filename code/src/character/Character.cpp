@@ -3,6 +3,8 @@
 
 Character::Character(const std::string& image_path, const sf::Vector2i& sprite_sz)
 {
+	log = spdlog::get("main");
+
 	if (!player_texture.loadFromFile(image_path))
 	{
 		printf_s("Failed to load file!");
@@ -14,7 +16,7 @@ Character::Character(const std::string& image_path, const sf::Vector2i& sprite_s
 	this->addComponent<Collision>();
 }
 
-void Character::handleMovement()
+void Character::update(float dt)
 {
 	if (is_moving)
 	{
@@ -34,47 +36,29 @@ void Character::handleMovement()
 		{
 			onCharacterMoveCallback();
 		}
-
-	}
-	else
-	{
-		sf::Vector2f dest;
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-		{
-			dest = sf::Vector2f(-48.0f, 0.0f);
-			move(dest);
-		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-		{
-			dest = sf::Vector2f(0.0f, -48.0f);
-			move(dest);
-		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-		{
-			dest = sf::Vector2f(0.0f, 48.0f);
-			move(dest);
-		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-		{
-			dest = sf::Vector2f(48.0f, 0.0f);
-			move(dest);
-		}
 	}
 }
 
 void Character::move(const sf::Vector2f& dest)
 {
-	if (!checkCollision(sprite.getPosition() + dest))
+	if (!is_moving)
 	{
-		is_moving = true;
-		move_direction = dest;
-		initial_position = sprite.getPosition();
-		mov_elapsed_time = 0;
-	}
+		sf::Vector2f destination = sprite.getPosition() + dest;
 
-	anim.setParam("move_x", move_direction.x);
-	anim.setParam("move_y", move_direction.y);
+		if (!checkCollision(destination))
+		{
+			is_moving = true;
+			move_direction = dest;
+			initial_position = sprite.getPosition();
+			mov_elapsed_time = 0;
+		}
+		else
+		{
+			log->info("Collision ahead! {}:{}", destination.x, destination.y);
+		}
+	}
+		anim.setParam("move_x", dest.x);
+		anim.setParam("move_y", dest.y);
 }
 
 void Character::setTilemap(Tiled2SFML& tiled2Sfml_)

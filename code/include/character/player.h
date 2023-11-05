@@ -3,6 +3,7 @@
 #include <memory>
 #include "Character.h"
 #include "system/Components.h"
+#include "spdlog/spdlog.h"
 
 class Player : public Character
 {
@@ -10,7 +11,7 @@ public:
 	Player(const std::string& image_path, const sf::Vector2i& sprite_size);
 	~Player() = default;
 
-    void update(float dt);
+    virtual void update(float dt) override;
 	void initKeyBindings();
 	void initAnimation();
 
@@ -21,4 +22,6 @@ public:
 	int current_frame = 0;
 	int row = -1;
 	int last_direction = 0;
+
+	std::shared_ptr<spdlog::logger> log;
 };

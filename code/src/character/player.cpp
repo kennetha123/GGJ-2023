@@ -5,27 +5,46 @@
 Player::Player(const std::string& image_path, const sf::Vector2i& sprite_size) :
 	Character(image_path, sprite_size)
 {
+	log = spdlog::get("main");
 	initKeyBindings();
 	initAnimation();
 }
 
 void Player::update(float dt)
 {
+	Character::update(dt);
+
 	if (is_moving)
 	{
 		controller.evaluateRules(anim);
 	}
-	
-	handleMovement();
 }
 
 void Player::initKeyBindings()
 {
-	std::shared_ptr<KeyboardCommand> move_right = std::make_shared<KeyboardCommand>([]() {
+	InputManager& input = ServiceLocator::getService<InputManager>();
 
+	std::shared_ptr<KeyboardCommand> move_right = std::make_shared<KeyboardCommand>([&]() 
+		{
+			move(sf::Vector2f(48.0f, 0.0f));
+		});
+	std::shared_ptr<KeyboardCommand> move_left = std::make_shared<KeyboardCommand>([&]() 
+		{
+			move(sf::Vector2f(-48.0f, 0.0f));
+		});
+	std::shared_ptr<KeyboardCommand> move_up = std::make_shared<KeyboardCommand>([&]() 
+		{
+			move(sf::Vector2f(0.0f, -48.0f));
+		});
+	std::shared_ptr<KeyboardCommand> move_down = std::make_shared<KeyboardCommand>([&]() 
+		{
+			move(sf::Vector2f(0.0f, 48.0f));
 		});
 
-	ServiceLocator::getService<InputManager>().bindKeyToCmd(sf::Keyboard::D, move_right);
+	input.bindKeyToCmd(sf::Keyboard::D, move_right);
+	input.bindKeyToCmd(sf::Keyboard::A, move_left);
+	input.bindKeyToCmd(sf::Keyboard::W, move_up);
+	input.bindKeyToCmd(sf::Keyboard::S, move_down);
 }
 
 void Player::initAnimation()
