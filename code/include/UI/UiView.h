@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "Button.h"
 #include "UiModel.h"
+#include "utils/Localization.h"
 
 namespace UI
 {
@@ -33,6 +34,7 @@ namespace UI
 
 		private:
 			void setMenuOption(sf::Text& text, const sf::Font& font, const std::string& str, float x, float y);
+			Localization loc;
 		public:
 			Button new_game_button;
 			Button load_game_button;

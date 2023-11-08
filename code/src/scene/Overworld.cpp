@@ -42,6 +42,7 @@ Overworld::Overworld() :
 		render.setLayerDirty(RenderLayer::MIDGROUND);
 		render.setLayerDirty(RenderLayer::FOREGROUND);
 		});
+
 }
 
 void Overworld::update(float dt)

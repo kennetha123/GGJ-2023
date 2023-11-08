@@ -2,7 +2,7 @@
 
 namespace UI
 {
-    Button::Button(const sf::Font& font, const std::string& text, float x, float y)
+    Button::Button(const sf::Font& font, const std::wstring& text, float x, float y)
     {
         button_text.setFont(font);
         button_text.setString(text);

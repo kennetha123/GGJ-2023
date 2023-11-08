@@ -4,6 +4,7 @@ set(GAME_CODE
 	${CMAKE_CURRENT_SOURCE_DIR}/src/ServiceLocator.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/character/Player.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/character/Character.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/character/NPC.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/render/Renderer.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/scene/SceneManager.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/scene/Overworld.cpp
@@ -21,6 +22,7 @@ set(GAME_CODE
 	${CMAKE_CURRENT_SOURCE_DIR}/src/system/Animator.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/audio/AudioManager.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/utils/Time.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/utils/Localization.cpp
 	
 	PARENT_SCOPE
 )

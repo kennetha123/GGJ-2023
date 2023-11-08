@@ -8,7 +8,7 @@ namespace UI
     class Button : public sf::Drawable, public sf::Transformable
     {
     public:
-        Button(const sf::Font& font, const std::string& text, float x, float y);
+        Button(const sf::Font& font, const std::wstring& text, float x, float y);
         bool checkClick(const sf::Vector2f& mouse_position);
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
         void setOnClickCb(std::function<void()> callback);

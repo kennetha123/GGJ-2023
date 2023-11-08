@@ -9,7 +9,7 @@ MainMenu::MainMenu() :
 
 	log->debug("MainMenu Constructor.");
 
-	font.loadFromFile("../resources/font/arial.ttf");
+	font.loadFromFile("../resources/font/NotoSansJP-Black.ttf");
 
 	main_menu_ui = std::make_shared<MainMenuController>(font);
 
@@ -39,6 +39,7 @@ MainMenu::MainMenu() :
 	auto& render = ServiceLocator::getService<RenderManager>();
 	render.addDrawable(bg_sprite, bg_sprite, RenderLayer::BACKGROUND, RenderBehavior::STATIC);
 	render.setCamera(ui_camera);
+
 	render.initRenderer(bg_sprite.getLocalBounds().width, bg_sprite.getLocalBounds().height);
 
 }
