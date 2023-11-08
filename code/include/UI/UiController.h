@@ -46,7 +46,6 @@ namespace UI
 
 		private:
 			std::shared_ptr<spdlog::logger> log;
-
 			Model::MainMenuModel mm_model;
 
 		};

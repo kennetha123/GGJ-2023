@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "UI/UiView.h"
 #include <string>
@@ -34,11 +34,13 @@ namespace UI
 			fps_text.setString(ss.str());
 		}
 
-		MainMenuView::MainMenuView(const sf::Font& font) :
-			new_game_button(font, "New Game", 100, 100),
-			load_game_button(font, "Load Game", 100, 150),
-			settings_button(font, "Settings", 100, 200),
-			quit_button(font, "Quit", 100, 250)
+		MainMenuView::MainMenuView(const sf::Font& font):
+			loc("../resources/Localization/localization.json"),
+
+		new_game_button(font,loc.getText("new_game", "ja"), 100, 100),
+		load_game_button(font, L"こんにちは", 100, 150),
+		settings_button(font, L"こんにちは", 100, 200),
+		quit_button(font, L"こんにちは", 100, 250)
 		{
 			auto& render = ServiceLocator::getService<RenderManager>();
 
