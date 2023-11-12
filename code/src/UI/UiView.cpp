@@ -6,6 +6,7 @@
 #include <iostream>
 #include "ServiceLocator.h"
 #include "render/RENDERER.H"
+#include "utils/Localization.h"
 
 namespace UI
 {
@@ -34,20 +35,27 @@ namespace UI
 			fps_text.setString(ss.str());
 		}
 
-		MainMenuView::MainMenuView(const sf::Font& font):
-			loc("../resources/Localization/localization.json"),
-
-		new_game_button(font,loc.getText("new_game", "ja"), 100, 100),
-		load_game_button(font, L"こんにちは", 100, 150),
-		settings_button(font, L"こんにちは", 100, 200),
-		quit_button(font, L"こんにちは", 100, 250)
+		MainMenuView::MainMenuView(const sf::Font& font)
 		{
+			auto loc = ServiceLocator::getService<Localization>();
+
+			new_game_button = std::make_shared<Button>(font, loc.getText("new_game", "en"), 100, 100);
+			load_game_button = std::make_shared <Button>(font, loc.getText("load_game", "en"), 100, 150);
+			settings_button = std::make_shared <Button>(font, loc.getText("settings", "en"), 100, 200);
+			quit_button = std::make_shared <Button>(font, loc.getText("quit", "en"), 100, 250);
+
 			auto& render = ServiceLocator::getService<RenderManager>();
 
-			render.addDrawable(new_game_button, new_game_button, RenderLayer::UI, RenderBehavior::STATIC);
-			render.addDrawable(load_game_button, load_game_button, RenderLayer::UI, RenderBehavior::STATIC);
-			render.addDrawable(settings_button, settings_button, RenderLayer::UI, RenderBehavior::STATIC);
-			render.addDrawable(quit_button, quit_button, RenderLayer::UI, RenderBehavior::STATIC);
+			render.addDrawable(*new_game_button, *new_game_button, RenderLayer::UI, RenderBehavior::STATIC);
+			render.addDrawable(*load_game_button, *load_game_button, RenderLayer::UI, RenderBehavior::STATIC);
+			render.addDrawable(*settings_button, *settings_button, RenderLayer::UI, RenderBehavior::STATIC);
+			render.addDrawable(*quit_button, *quit_button, RenderLayer::UI, RenderBehavior::STATIC);
+
+		}
+
+		MainMenuView::~MainMenuView()
+		{
+
 		}
 
 		void MainMenuView::update(const Model::Model& model_)

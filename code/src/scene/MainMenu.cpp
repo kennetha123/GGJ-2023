@@ -61,22 +61,22 @@ void MainMenu::update(float dt)
 
 void MainMenu::buttonSetup()
 {
-	main_menu_ui->mm_view.new_game_button.setOnClickCb([this]
+	main_menu_ui->mm_view.new_game_button->setOnClickCb([this]
 		{
 			overworld = std::make_shared<Overworld>();
 			ServiceLocator::getService<SceneManager>().loadScene(std::dynamic_pointer_cast<Scene>(overworld));
 			ServiceLocator::getService<UI::UiManager>().remove(main_menu_ui);
 		});
 
-	main_menu_ui->mm_view.load_game_button.setOnClickCb([this] {
+	main_menu_ui->mm_view.load_game_button->setOnClickCb([this] {
 		std::cout << "Custom On Load Game Clicked" << std::endl;
 		});
 
-	main_menu_ui->mm_view.settings_button.setOnClickCb([this] {
+	main_menu_ui->mm_view.settings_button->setOnClickCb([this] {
 		std::cout << "Custom On Settings Clicked" << std::endl;
 		});
 
-	main_menu_ui->mm_view.quit_button.setOnClickCb([this] {
+	main_menu_ui->mm_view.quit_button->setOnClickCb([this] {
 		ServiceLocator::getService<GameEventManager>().quitGame();
 		});
 
