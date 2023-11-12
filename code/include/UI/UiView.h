@@ -3,7 +3,6 @@
 #include <SFML/Graphics.hpp>
 #include "Button.h"
 #include "UiModel.h"
-#include "utils/Localization.h"
 
 namespace UI
 {
@@ -29,17 +28,17 @@ namespace UI
 		{
 		public:
 			MainMenuView(const sf::Font& font);
+			~MainMenuView();
 
 			virtual void update(const Model::Model& model_) override;
 
 		private:
 			void setMenuOption(sf::Text& text, const sf::Font& font, const std::string& str, float x, float y);
-			Localization loc;
 		public:
-			Button new_game_button;
-			Button load_game_button;
-			Button settings_button;
-			Button quit_button;
+			std::shared_ptr<Button> new_game_button;
+			std::shared_ptr<Button> load_game_button;
+			std::shared_ptr<Button> settings_button;
+			std::shared_ptr<Button> quit_button;
 		};
 	}
 }

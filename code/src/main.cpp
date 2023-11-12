@@ -11,6 +11,7 @@
 #include "system/InputManager.h"
 #include "system/GameEventManager.h"
 #include "render/Renderer.h"
+#include "utils/Localization.h"
 
 using namespace UI::Controller;
 
@@ -37,7 +38,8 @@ int main()
     auto audio_manager = std::make_shared<AudioManager>();
     auto input_manager = std::make_shared<InputManager>();
     auto event_manager = std::make_shared<GameEventManager>(window);
-
+    auto localization = std::make_shared<Localization>("../resources/Localization/localization.json");
+    
     // Register services
     ServiceLocator::provide(render_manager);
     ServiceLocator::provide(ui_manager);
@@ -45,6 +47,7 @@ int main()
     ServiceLocator::provide(audio_manager);
     ServiceLocator::provide(input_manager);
     ServiceLocator::provide(event_manager);
+    ServiceLocator::provide(localization);
 
     std::shared_ptr<MainMenu> main_menu_ = std::make_shared<MainMenu>();
 

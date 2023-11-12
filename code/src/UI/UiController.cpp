@@ -52,10 +52,10 @@ namespace UI
 
 		void MainMenuController::onClick()
 		{
-			Button& new_game = mm_view.new_game_button;
-			Button& load_game = mm_view.load_game_button;
-			Button& settings = mm_view.settings_button;
-			Button& quit = mm_view.quit_button;
+			Button& new_game = *mm_view.new_game_button;
+			Button& load_game = *mm_view.load_game_button;
+			Button& settings = *mm_view.settings_button;
+			Button& quit = *mm_view.quit_button;
 
 			std::shared_ptr<StoreMapCommand> store_map_cmd = std::make_shared<StoreMapCommand>([&](const sf::Vector2f& mouse_position) {
 				new_game.checkClick(mouse_position);
