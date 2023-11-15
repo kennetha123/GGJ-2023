@@ -5,16 +5,15 @@
 #include <memory>
 #include <set>
 #include "system/Observer.hpp"
+#include "spdlog/spdlog.h"
 
 enum class RenderLayer {
-	BACKGROUND,// = 1 << 0,	// 0b00000001
-	MIDGROUND,// = 1 << 1,		// 0b00000010
-	PROPS,// = 1 << 2,			// 0b00000100
-	CHARACTER,// = 1 << 3,		// 0b00001000
-	FOREGROUND,// = 1 << 4,	// 0b00010000
-	UI,// = 1 << 5,			// 0b00100000
-
-	//ALL = BACKGROUND | MIDGROUND | PROPS | CHARACTER | FOREGROUND | UI,
+	BACKGROUND,
+	MIDGROUND,
+	PROPS,
+	CHARACTER,
+	FOREGROUND,
+	UI,
 };
 
 enum class RenderBehavior
@@ -49,4 +48,5 @@ private:
 
 	sf::FloatRect getBounds(const sf::Drawable& drawable, const sf::Transformable& transformable);
 
+	std::shared_ptr<spdlog::logger> log;
 };
