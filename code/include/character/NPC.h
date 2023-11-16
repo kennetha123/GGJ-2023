@@ -14,7 +14,7 @@ enum class NPCState {
 class NPC : public Character
 {
 public:
-	NPC::NPC(const std::string& name, const std::vector<std::string>& movement,
+	NPC::NPC(const std::string& name, const std::vector<std::string>& movement, bool is_loop,
 		const sf::Vector2i& position, const std::string& dialog_path,
 		const std::string& pic_path, const std::string& sprite_path);
 		
@@ -24,10 +24,23 @@ public:
 	std::vector<std::string> _movement;
 	std::string _dialog_path;
 	std::string _pic_path;
+	bool _is_loop;
 
 private:
+	void initAnimation();
+	void moveRandomly();
+
+	std::unordered_map<std::string, sf::Vector2f> movement_direction = {
+	{"right", sf::Vector2f(48.0f, 0.0f)},
+	{"left", sf::Vector2f(-48.0f, 0.0f)},
+	{"up", sf::Vector2f(0.0f, -48.0f)},
+	{"down", sf::Vector2f(0.0f, 48.0f)}
+	};
+
 	AnimationController controller;
 
+	float timer = 1.0f;
+	int current_movement_index = 0;
 };
 
 class NPCManager
