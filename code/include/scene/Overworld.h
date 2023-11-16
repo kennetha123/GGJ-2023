@@ -5,6 +5,7 @@
 #include "character/player.h"
 #include "UI/UiManager.h"
 #include "system/Collision.h"
+#include "character/NPC.h"
 
 class Overworld : public Scene
 {
@@ -20,4 +21,6 @@ private:
 	float render_distance = 550.0f;
 	int player_layer = 3;
 	RenderManager& render;
+	NPCManager npcm;
+
 };

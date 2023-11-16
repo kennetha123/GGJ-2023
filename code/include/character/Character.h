@@ -23,11 +23,11 @@ protected:
 	Animator anim;
 	bool is_moving = false;
 	sf::Vector2i sprite_size;
+	std::unique_ptr<Tiled2SFML> tiled2Sfml;
 
 private:
 
 	std::function<void()> onCharacterMoveCallback;
-	std::unique_ptr<Tiled2SFML> tiled2Sfml;
 	sf::Texture player_texture;
 
 	sf::Vector2f initial_position;

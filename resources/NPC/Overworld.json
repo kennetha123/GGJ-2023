@@ -1,0 +1,21 @@
+[
+  {
+    "name": "Johnson",
+    "movement": [ "down", "left", "left", "down" ],
+    "is_loop": false,
+    "position": [ 912, 480 ],
+    "dialogue": "../dialogue/johnson.json",
+    "picture": "../picture/johnson.png",
+    "sprite":  "../resources/sprites/johnson.png"
+  },
+
+  {
+    "name": "Brady",
+    "movement": [ "random" ],
+    "is_loop": true,
+    "position": [ 1008, 480 ],
+    "dialogue": "../dialogue/brady.json",
+    "picture": "../picture/brady.png",
+    "sprite": "../resources/sprites/brady.png"
+  }
+]

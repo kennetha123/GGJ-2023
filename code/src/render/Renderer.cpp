@@ -1,5 +1,4 @@
 #include "render/Renderer.h"
-#include "spdlog/spdlog.h"
 #include "UI/Button.h"
 
 const std::array<RenderLayer, 6> RenderManager::all_layers = {
@@ -13,6 +12,7 @@ const std::array<RenderLayer, 6> RenderManager::all_layers = {
 
 RenderManager::RenderManager()
 {
+    log = spdlog::get("main");
 
 }
 
@@ -31,7 +31,6 @@ void RenderManager::draw(sf::RenderWindow& window)
 {
     window.clear(sf::Color::Transparent);
 
-    auto log = spdlog::get("main");
     window.setView(main_camera);
 
     // Calculate the region of interest (ROI) based on the camera's position and size.
@@ -136,8 +135,7 @@ void RenderManager::clear()
 }
 
 sf::FloatRect RenderManager::getBounds(const sf::Drawable& drawable, const sf::Transformable& transformable)
-{
-    
+{    
     if (const auto* sprite = dynamic_cast<const sf::Sprite*>(&drawable))
     {
         return sprite->getGlobalBounds();

@@ -17,6 +17,7 @@ Overworld::Overworld() :
 	tiled2Sfml.tileParser("../resources/maps/", "prologue.json");
 	main_character.setTilemap(tiled2Sfml);
 	main_character.sprite.setPosition(tiled2Sfml.coordToPosition(11, 10));
+	npcm.setNPCScene("../resources/NPC/Overworld.json");
 
 	render.clear();
 
@@ -28,6 +29,12 @@ Overworld::Overworld() :
 	for (auto& tile : tiled2Sfml.getTileSprite())
 	{
 		render.addDrawable(tile.sprite, tile.sprite, render.intToRenderLayer(tile.layer_index), RenderBehavior::STATIC);
+	}
+
+	for (auto& npc : npcm.npcs)
+	{
+		npc->setTilemap(tiled2Sfml);
+		render.addDrawable(npc->sprite, npc->sprite, RenderLayer::CHARACTER, RenderBehavior::DYNAMIC);
 	}
 
 	render.addDrawable(main_character.sprite, main_character.sprite, RenderLayer::CHARACTER, RenderBehavior::DYNAMIC);
@@ -42,11 +49,15 @@ Overworld::Overworld() :
 		render.setLayerDirty(RenderLayer::MIDGROUND);
 		render.setLayerDirty(RenderLayer::FOREGROUND);
 		});
-
 }
 
 void Overworld::update(float dt)
 {
 	main_character.update(dt);
+	for (auto& npc : npcm.npcs)
+	{
+		npc->update(dt);
+	}
+
 	render.getCamera().setCenter(main_character.sprite.getPosition());
 }

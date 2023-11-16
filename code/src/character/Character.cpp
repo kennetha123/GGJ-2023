@@ -7,12 +7,12 @@ Character::Character(const std::string& image_path, const sf::Vector2i& sprite_s
 
 	if (!player_texture.loadFromFile(image_path))
 	{
-		printf_s("Failed to load file!");
+		log->error("Failed to load file!");
 	}
 
 	sprite.setTexture(player_texture);
-	sprite.setTextureRect(sf::IntRect(0, 0, sprite_size.x, sprite_size.y));
 	sprite_size = sprite_sz;
+	sprite.setTextureRect(sf::IntRect(0, 0, sprite_size.x, sprite_size.y));
 	this->addComponent<Collision>();
 }
 
@@ -54,7 +54,7 @@ void Character::move(const sf::Vector2f& dest)
 		}
 		else
 		{
-			log->info("Collision ahead! {}:{}", destination.x, destination.y);
+			log->debug("Collision ahead! {}:{}", destination.x, destination.y);
 		}
 	}
 		anim.setParam("move_x", dest.x);
