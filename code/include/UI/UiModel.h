@@ -1,4 +1,5 @@
 #pragma once
+#include <SFML/Graphics.hpp>
 
 namespace UI
 {
@@ -22,6 +23,17 @@ namespace UI
 
 		class MainMenuModel : public Model
 		{
+		};
+
+		class SettingsMenuModel : public Model
+		{
+		public:
+			void setResolution(int x, int y);
+			void setResolution(sf::Vector2i size);
+			sf::Vector2i getResolution() const;
+
+		private:
+			sf::Vector2i resolution;
 		};
 	}
 

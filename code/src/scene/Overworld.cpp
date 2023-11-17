@@ -1,12 +1,13 @@
 #include "scene/Overworld.h"
 #include "UI/UiManager.h"
 #include "UI/UiController.h"
+#include "audio/AudioManager.h"
 
 Overworld::Overworld() :
 	Scene(),
 	render(ServiceLocator::getService<RenderManager>()),
 	main_character("../resources/Actor_sangoku01.png", sf::Vector2i(48, 48)),
-	game_camera(sf::FloatRect(0, 0, 800, 600))
+	game_camera(sf::FloatRect(0, 0, 1280, 720))
 {
 	auto& log = spdlog::get("main");
 	log->debug("Overworld constructor");
@@ -49,6 +50,11 @@ Overworld::Overworld() :
 		render.setLayerDirty(RenderLayer::MIDGROUND);
 		render.setLayerDirty(RenderLayer::FOREGROUND);
 		});
+
+	auto& audio = ServiceLocator::getService<AudioManager>();
+	audio.addBgm("main_bgm", "../resources/Audio/Big Day Out.ogg");
+	audio.playBgm("main_bgm", true, 50.f);
+
 }
 
 void Overworld::update(float dt)

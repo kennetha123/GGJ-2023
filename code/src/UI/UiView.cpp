@@ -39,10 +39,11 @@ namespace UI
 		{
 			auto loc = ServiceLocator::getService<Localization>();
 
-			new_game_button = std::make_shared<Button>(font, loc.getText("new_game", "en"), 100, 100);
-			load_game_button = std::make_shared <Button>(font, loc.getText("load_game", "en"), 100, 150);
-			settings_button = std::make_shared <Button>(font, loc.getText("settings", "en"), 100, 200);
-			quit_button = std::make_shared <Button>(font, loc.getText("quit", "en"), 100, 250);
+			const std::string button_path = "../resources/UI/main_menu_button.png";
+			new_game_button = std::make_shared<Button>(button_path, font, loc.getText("new_game", "en"), 200, 680);
+			load_game_button = std::make_shared <Button>(button_path, font, loc.getText("load_game", "en"), 500, 680);
+			settings_button = std::make_shared <Button>(button_path, font, loc.getText("settings", "en"), 800, 680);
+			quit_button = std::make_shared <Button>(button_path, font, loc.getText("quit", "en"), 1100, 680);
 
 			auto& render = ServiceLocator::getService<RenderManager>();
 
