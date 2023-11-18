@@ -3,7 +3,6 @@
 #include <memory>
 #include "Character.h"
 #include "system/Components.h"
-#include "spdlog/spdlog.h"
 
 class Player : public Character
 {
@@ -22,6 +21,4 @@ public:
 	int current_frame = 0;
 	int row = -1;
 	int last_direction = 0;
-
-	std::shared_ptr<spdlog::logger> log;
 };

@@ -1,8 +1,5 @@
 ﻿#include "header.h"
 
-#include <spdlog/spdlog.h>
-#include <spdlog/sinks/rotating_file_sink.h>
-#include "spdlog/sinks/stdout_color_sinks.h"
 #include "scene/MainMenu.h"
 #include "ServiceLocator.h"
 #include "utils/Time.h"
@@ -13,19 +10,16 @@
 #include "render/Renderer.h"
 #include "utils/Localization.h"
 #include "system/Settings.h"
+#include "utils/Logs.h"
 
 using namespace UI::Controller;
 
-void logInit();
 void windowCreation(sf::RenderWindow& window, const sf::Vector2i& res, bool is_fullscreen);
 
 int main()
 {
-    logInit();
-
-    auto log = spdlog::get("main");
-
-    log->debug("Start game Shatterpoint.");
+   
+    Logs::instance().log("main", spdlog::level::debug, "Start game Shatterpoint.");
 
     Settings setting;
     SettingData data = setting.loadSettings("../resources/settings/Settings.json");
@@ -72,22 +66,16 @@ int main()
         render_manager->draw(window);
     }
 
-    spdlog::drop_all();
+    // still a mystery, if you remove UIManager it will crash when MainMenu
+    // got destroyed, so let smart pointer destruct itself automatically...
+    ServiceLocator::remove<Localization>();
+    ServiceLocator::remove<SceneManager>();
+    ServiceLocator::remove<AudioManager>();
+    ServiceLocator::remove<RenderManager>();
+    ServiceLocator::remove<GameEventManager>();
+    ServiceLocator::remove<InputManager>();
 }
 
-void logInit()
-{
-    auto file_sink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>("saved/logs/Shatterpoint_Log.txt", 1048576 * 5, 3);
-
-    auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-
-    std::vector<spdlog::sink_ptr> sinks {file_sink, console_sink};
-    auto logger = std::make_shared<spdlog::logger>("main", begin(sinks), end(sinks));
-
-    spdlog::register_logger(logger);
-
-    logger->set_level(spdlog::level::info);
-}
 
 void windowCreation(sf::RenderWindow& window,const sf::Vector2i& res, bool is_fullscreen)
 {

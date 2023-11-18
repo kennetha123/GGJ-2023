@@ -25,6 +25,7 @@ set(GAME_CODE
 	${CMAKE_CURRENT_SOURCE_DIR}/src/audio/AudioManager.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/utils/Time.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/utils/Localization.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/utils/Logs.cpp
 	
 	PARENT_SCOPE
 )

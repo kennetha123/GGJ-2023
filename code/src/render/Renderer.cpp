@@ -1,5 +1,7 @@
 #include "render/Renderer.h"
 #include "UI/Button.h"
+#include "ServiceLocator.h"
+#include "utils/Logs.h"
 
 const std::array<RenderLayer, 6> RenderManager::all_layers = {
     RenderLayer::BACKGROUND,
@@ -12,7 +14,6 @@ const std::array<RenderLayer, 6> RenderManager::all_layers = {
 
 RenderManager::RenderManager()
 {
-    log = spdlog::get("main");
 
 }
 
@@ -45,18 +46,18 @@ void RenderManager::draw(sf::RenderWindow& window)
 
     for (const auto& layer : all_layers)
     {
-        log->debug("Processing layer: {}", static_cast<int>(layer));
+        Logs::instance().log("render", spdlog::level::debug, "Processing layer: {}", static_cast<int>(layer));
 
         for (const auto& behavior : { RenderBehavior::STATIC, RenderBehavior::DYNAMIC })
         {
-            log->debug("Processing behavior: {}", static_cast<int>(behavior));
+            Logs::instance().log("render", spdlog::level::debug, "Processing behavior: {}", static_cast<int>(behavior));
             LayerKey key = { layer, behavior };
 
             if (behavior == RenderBehavior::STATIC)
             {
                 if (dirtyStaticLayers.find(layer) != dirtyStaticLayers.end())
                 {
-                    log->debug("Layer {} is marked as dirty.", static_cast<int>(layer));
+                    Logs::instance().log("render", spdlog::level::debug, "Layer {} is marked as dirty.", static_cast<int>(layer));
                     auto& texture = staticTextures[layer];
                     texture.clear(sf::Color::Transparent);
                     
@@ -104,7 +105,7 @@ void RenderManager::draw(sf::RenderWindow& window)
     }
     
     //window.draw(roiRect);
-    log->debug("Ending draw process...");
+    Logs::instance().log("render", spdlog::level::debug, "Ending draw process...");
     window.display();
 }
 

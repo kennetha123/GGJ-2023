@@ -5,7 +5,6 @@
 #include <memory>
 #include <set>
 #include "system/Observer.hpp"
-#include "spdlog/spdlog.h"
 
 enum class RenderLayer {
 	BACKGROUND,
@@ -47,6 +46,4 @@ private:
 	sf::View main_camera;
 
 	sf::FloatRect getBounds(const sf::Drawable& drawable, const sf::Transformable& transformable);
-
-	std::shared_ptr<spdlog::logger> log;
 };

@@ -1,6 +1,7 @@
 #include "character/NPC.h"
 #include "json.hpp"
 #include <random>
+#include "utils/Logs.h"
 
 NPC::NPC(const std::string& name,
     const std::vector<std::string>& movement,
@@ -168,19 +169,17 @@ NPCManager::NPCManager()
 
 void NPCManager::setNPCScene(const std::string& json_file)
 {
-    auto log = spdlog::get("main");
-
     std::ifstream ifs(json_file);
     if (!ifs)
     {
-        log->error("Could not open file for reading: {}", json_file);
+		Logs::instance().log("character", spdlog::level::err, "Could not open file for reading: {}", json_file);
         return;
     }
     
     json npc_data = json::parse(ifs, nullptr, false);
     if (npc_data.is_discarded())
     {
-        log->error("Error parsing JSON data.", json_file);
+		Logs::instance().log("character", spdlog::level::err, "Error parsing JSON data.", json_file);
         return;
     }
 

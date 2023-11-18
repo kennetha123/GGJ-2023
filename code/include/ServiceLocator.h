@@ -24,6 +24,15 @@ public:
 		return *std::static_pointer_cast<ServiceType>(it->second);
 	}
 
+	template <typename ServiceType>
+	static void remove()
+	{
+		auto it = services.find(std::type_index(typeid(ServiceType)));
+		if (it != services.end()) {
+			services.erase(it);
+		}
+	}
+
 private:
 	static std::unordered_map<std::type_index, std::shared_ptr<void>> services;
 };

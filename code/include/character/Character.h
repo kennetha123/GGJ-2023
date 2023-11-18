@@ -3,7 +3,6 @@
 #include "system/Entity.h"
 #include "../tiled2sfml/tiled2sfml.h"
 #include "system/Animator.h"
-#include "spdlog/spdlog.h"
 
 class Character : public Entity
 {
@@ -35,6 +34,4 @@ private:
 
 	float move_duration = 0.3f;
 	float mov_elapsed_time = 0;
-
-	std::shared_ptr<spdlog::logger> log;
 };

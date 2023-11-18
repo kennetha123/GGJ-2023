@@ -1,13 +1,12 @@
 #include "character/Character.h"
 #include "utils/Time.h"
+#include "utils/Logs.h"
 
 Character::Character(const std::string& image_path, const sf::Vector2i& sprite_sz)
 {
-	log = spdlog::get("main");
-
 	if (!player_texture.loadFromFile(image_path))
 	{
-		log->error("Failed to load file!");
+		Logs::instance().log("character", spdlog::level::err, "Failed to load file!");
 	}
 
 	sprite.setTexture(player_texture);
@@ -54,7 +53,7 @@ void Character::move(const sf::Vector2f& dest)
 		}
 		else
 		{
-			log->debug("Collision ahead! {}:{}", destination.x, destination.y);
+			Logs::instance().log("character", spdlog::level::debug, "Collision ahead! {}:{}", destination.x, destination.y);
 		}
 	}
 		anim.setParam("move_x", dest.x);

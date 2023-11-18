@@ -1,6 +1,5 @@
 #pragma once
 #include <SFML/Audio.hpp>
-#include <spdlog/spdlog.h>
 
 #include <map>
 #include <string>
@@ -31,8 +30,6 @@ public:
 
 
 private:
-    std::shared_ptr<spdlog::logger> log;
-
     std::map<std::string, std::shared_ptr<sf::Music>> bgm;
     std::map<std::string, std::shared_ptr<sf::SoundBuffer>> sfx;
     std::map<std::string, std::shared_ptr<sf::Sound>> active_sfx;

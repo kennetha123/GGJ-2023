@@ -1,14 +1,13 @@
 #include "scene/MainMenu.h"
-#include <spdlog/spdlog.h>
+#include "ServiceLocator.h"
 #include "audio/AudioManager.h"
+#include "utils/Logs.h"
 
 MainMenu::MainMenu() :
 	Scene(),
 	ui_camera(sf::FloatRect(0, 0, 1280, 720))
 {
-	log = spdlog::get("main");
-
-	log->debug("MainMenu Constructor.");
+	Logs::instance().log("menu", spdlog::level::debug, "MainMenu Constructor");
 
 	font.loadFromFile("../resources/font/NotoSansJP-Black.ttf");
 
@@ -23,7 +22,7 @@ MainMenu::MainMenu() :
 
 	if (!bg_texture.loadFromFile("../resources/Shatterpoint_title.jpeg"))
 	{
-		log->error("Error load texture main menu background!");
+		Logs::instance().log("menu", spdlog::level::err, "Error load texture main menu background!");
 	}
 
 	bg_sprite.setTexture(bg_texture);
@@ -42,17 +41,17 @@ MainMenu::MainMenu() :
 	render.setCamera(ui_camera);
 
 	render.initRenderer(bg_sprite.getLocalBounds().width, bg_sprite.getLocalBounds().height);
-	log->info("bg size : {},{}", bg_sprite.getTextureRect().width, bg_sprite.getTextureRect().height);
+	Logs::instance().log("menu", spdlog::level::debug, "bg size : {},{}", bg_sprite.getTextureRect().width, bg_sprite.getTextureRect().height);
 }
 
 MainMenu::~MainMenu()
 {
-	log->debug("MainMenu Destructor");
-	//auto& ui = ServiceLocator::getService<UI::UiManager>();
+	Logs::instance().log("menu", spdlog::level::debug, "MainMenu Destructor");
+	auto& ui = ServiceLocator::getService<UI::UiManager>();
 
-	//ui.remove(main_menu_ui);
-	//ui.remove(fps_ctrl);
-	//main_menu_ui.reset();
+	ui.remove(main_menu_ui);
+	ui.remove(fps_ctrl);
+	main_menu_ui.reset();
 }
 
 void MainMenu::update(float dt)

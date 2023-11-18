@@ -1,15 +1,14 @@
 #include "audio/AudioManager.h"
+#include "utils/Logs.h"
 
 AudioManager::AudioManager()
 {
-    log = spdlog::get("main");
-    log->debug("AudioManager Constructor.");
+    Logs::instance().log("audio", spdlog::level::debug, "AudioManager constructor");
 }
 
 AudioManager::~AudioManager()
 {
-    //auto log = spdlog::get("main");
-    log->debug("AudioManager Destructor.");
+    Logs::instance().log("audio", spdlog::level::debug, "AudioManager destructor");
 }
 
 void AudioManager::addBgm(const std::string& id, const std::string& filepath)

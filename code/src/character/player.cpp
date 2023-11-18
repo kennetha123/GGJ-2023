@@ -5,7 +5,6 @@
 Player::Player(const std::string& image_path, const sf::Vector2i& sprite_size) :
 	Character(image_path, sprite_size)
 {
-	log = spdlog::get("main");
 	initKeyBindings();
 	initAnimation();
 }

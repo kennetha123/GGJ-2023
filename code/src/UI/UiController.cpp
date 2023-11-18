@@ -7,14 +7,10 @@ namespace UI
 	{
 		FpsController::FpsController(const sf::Font& font) : fps_view(font)
 		{ 
-			log = spdlog::get("main");
-			
-			log->debug("FPSController Constructor!");
 		}
 
 		FpsController::~FpsController()
 		{
-			log->debug("FPSController Destructor!");
 		}
 
 		void FpsController::update(float dt)
@@ -35,14 +31,10 @@ namespace UI
 		MainMenuController::MainMenuController(const sf::Font& font) :
 			mm_view(font) 
 		{
-			log = spdlog::get("main");
-			
-			log->debug("MainMenuController Constructor.");
 		}
 
 		MainMenuController::~MainMenuController()
 		{
-			log->debug("MainMenuController Destructor.");
 		}
 
 		void MainMenuController::update(float dt)

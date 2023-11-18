@@ -2,6 +2,7 @@
 #include "UI/UiManager.h"
 #include "UI/UiController.h"
 #include "audio/AudioManager.h"
+#include "utils/Logs.h"
 
 Overworld::Overworld() :
 	Scene(),
@@ -9,8 +10,7 @@ Overworld::Overworld() :
 	main_character("../resources/Actor_sangoku01.png", sf::Vector2i(48, 48)),
 	game_camera(sf::FloatRect(0, 0, 1280, 720))
 {
-	auto& log = spdlog::get("main");
-	log->debug("Overworld constructor");
+	Logs::instance().log("scene", spdlog::level::debug, "Overworld Constructor");
 
 	font.loadFromFile("../resources/font/arial.ttf");
 
