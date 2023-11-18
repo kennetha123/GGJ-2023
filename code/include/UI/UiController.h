@@ -49,5 +49,15 @@ namespace UI
 			Model::MainMenuModel mm_model;
 
 		};
+
+		class SettingsMenuController : public BaseController
+		{
+		public:
+			SettingsMenuController();
+
+			virtual void update(float dt) override;
+			void onClick();
+
+		};
 	}
 }

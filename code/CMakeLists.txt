@@ -15,11 +15,13 @@ set(GAME_CODE
 	${CMAKE_CURRENT_SOURCE_DIR}/src/UI/UiView.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/UI/UiController.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/UI/Button.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/UI/Dropdown.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/system/ecs/Components.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/system/InputManager.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/system/GameEventManager.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/system/Collision.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/system/Animator.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/system/Settings.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/audio/AudioManager.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/utils/Time.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/utils/Localization.cpp

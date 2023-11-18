@@ -1,9 +1,10 @@
 #include "scene/MainMenu.h"
 #include <spdlog/spdlog.h>
+#include "audio/AudioManager.h"
 
 MainMenu::MainMenu() :
 	Scene(),
-	ui_camera(sf::FloatRect(0, 0, 800, 600))
+	ui_camera(sf::FloatRect(0, 0, 1280, 720))
 {
 	log = spdlog::get("main");
 
@@ -20,7 +21,7 @@ MainMenu::MainMenu() :
 	ui.push(main_menu_ui);
 	ui.push(fps_ctrl);
 
-	if (!bg_texture.loadFromFile("../resources/title.jpg"))
+	if (!bg_texture.loadFromFile("../resources/Shatterpoint_title.jpeg"))
 	{
 		log->error("Error load texture main menu background!");
 	}
@@ -28,7 +29,7 @@ MainMenu::MainMenu() :
 	bg_sprite.setTexture(bg_texture);
 
 	auto& audio = ServiceLocator::getService<AudioManager>();
-	audio.addBgm("main_bgm", "../resources/Audio/Big Day Out.ogg");
+	audio.addBgm("main_bgm", "../resources/Audio/2000_Opening1.ogg");
 	audio.playBgm("main_bgm", true, 50.f);
 
 	buttonSetup();
@@ -41,17 +42,17 @@ MainMenu::MainMenu() :
 	render.setCamera(ui_camera);
 
 	render.initRenderer(bg_sprite.getLocalBounds().width, bg_sprite.getLocalBounds().height);
-
+	log->info("bg size : {},{}", bg_sprite.getTextureRect().width, bg_sprite.getTextureRect().height);
 }
 
 MainMenu::~MainMenu()
 {
 	log->debug("MainMenu Destructor");
-	auto& ui = ServiceLocator::getService<UI::UiManager>();
+	//auto& ui = ServiceLocator::getService<UI::UiManager>();
 
-	ui.remove(main_menu_ui);
-	ui.remove(fps_ctrl);
-	main_menu_ui.reset();
+	//ui.remove(main_menu_ui);
+	//ui.remove(fps_ctrl);
+	//main_menu_ui.reset();
 }
 
 void MainMenu::update(float dt)

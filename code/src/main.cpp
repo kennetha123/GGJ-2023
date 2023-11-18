@@ -12,20 +12,26 @@
 #include "system/GameEventManager.h"
 #include "render/Renderer.h"
 #include "utils/Localization.h"
+#include "system/Settings.h"
 
 using namespace UI::Controller;
 
 void logInit();
+void windowCreation(sf::RenderWindow& window, const sf::Vector2i& res, bool is_fullscreen);
 
 int main()
 {
     logInit();
 
-    auto file_logger = spdlog::get("main");
+    auto log = spdlog::get("main");
 
-    file_logger->debug("Start game Shatterpoint.");
+    log->debug("Start game Shatterpoint.");
 
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Shatterpoint : Chaos Unbound");
+    Settings setting;
+    SettingData data = setting.loadSettings("../resources/settings/Settings.json");
+
+    sf::RenderWindow window;
+    windowCreation(window, sf::Vector2i(data.resolution.x, data.resolution.y), data.is_fullscreen);
     sf::RenderTexture render_texture;
 
     sf::Clock clock;
@@ -81,5 +87,18 @@ void logInit()
     spdlog::register_logger(logger);
 
     logger->set_level(spdlog::level::info);
+}
 
+void windowCreation(sf::RenderWindow& window,const sf::Vector2i& res, bool is_fullscreen)
+{
+    if (is_fullscreen)
+    {
+        sf::VideoMode fullscreenMode = sf::VideoMode::getDesktopMode();
+        window.create(fullscreenMode, "Shatterpoint : Chaos Unbound", sf::Style::Fullscreen);
+    }
+    else 
+    {
+        sf::VideoMode windowedMode(res.x, res.y);
+        window.create(windowedMode, "Shatterpoint : Chaos Unbound", sf::Style::Titlebar | sf::Style::Close);
+    }
 }
