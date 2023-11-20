@@ -21,6 +21,7 @@ protected:
 
 	Animator anim;
 	bool is_moving = false;
+	bool is_anim_play = false;
 	sf::Vector2i sprite_size;
 	std::unique_ptr<Tiled2SFML> tiled2Sfml;
 

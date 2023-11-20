@@ -1,6 +1,7 @@
 #include "character/Player.h"
 #include "ServiceLocator.h"
 #include "system/InputManager.h"
+#include "utils/Logs.h"
 
 Player::Player(const std::string& image_path, const sf::Vector2i& sprite_size) :
 	Character(image_path, sprite_size)
@@ -13,7 +14,7 @@ void Player::update(float dt)
 {
 	Character::update(dt);
 
-	if (is_moving)
+	if (is_anim_play)
 	{
 		controller.evaluateRules(anim);
 	}
@@ -62,6 +63,7 @@ void Player::initAnimation()
 			},
 			[this]()
 			{
+				Logs::instance().log("anim", spdlog::level::debug, "walk Right");
 				this->anim.PlayAnimation("Walk Right", sprite);
 			}
 		});
@@ -73,6 +75,7 @@ void Player::initAnimation()
 			},
 			[this]()
 			{
+				Logs::instance().log("anim", spdlog::level::debug, "walk Left");
 				this->anim.PlayAnimation("Walk Left", sprite);
 			}
 		});
@@ -84,6 +87,7 @@ void Player::initAnimation()
 			},
 			[this]()
 			{
+				Logs::instance().log("anim", spdlog::level::debug, "walk Up");
 				this->anim.PlayAnimation("Walk Up", sprite);
 			}
 		});
@@ -95,6 +99,7 @@ void Player::initAnimation()
 			},
 			[this]()
 			{
+				Logs::instance().log("anim", spdlog::level::debug, "walk down");
 				this->anim.PlayAnimation("Walk Down", sprite);
 			}
 		});

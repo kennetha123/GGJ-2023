@@ -25,6 +25,7 @@ void Character::update(float dt)
 		if (move_fraction >= 1.0f)
 		{
 			is_moving = false;
+			is_anim_play = false;
 			move_fraction = 1.0f;
 		}
 
@@ -40,6 +41,8 @@ void Character::update(float dt)
 
 void Character::move(const sf::Vector2f& dest)
 {
+	is_anim_play = true;
+
 	if (!is_moving)
 	{
 		sf::Vector2f destination = sprite.getPosition() + dest;
@@ -50,19 +53,27 @@ void Character::move(const sf::Vector2f& dest)
 			move_direction = dest;
 			initial_position = sprite.getPosition();
 			mov_elapsed_time = 0;
+			tiled2Sfml->getTileData()[tiled2Sfml->positionToIndex(sprite.getPosition())].getComponent<Collision>()->is_collide = false;
+			tiled2Sfml->getTileData()[tiled2Sfml->positionToIndex(destination)].getComponent<Collision>()->is_collide = true;
 		}
 		else
 		{
 			Logs::instance().log("character", spdlog::level::debug, "Collision ahead! {}:{}", destination.x, destination.y);
 		}
-	}
+
 		anim.setParam("move_x", dest.x);
 		anim.setParam("move_y", dest.y);
+	}
 }
 
 void Character::setTilemap(Tiled2SFML& tiled2Sfml_)
 {
 	tiled2Sfml = std::make_unique<Tiled2SFML>(tiled2Sfml_);
+}
+
+void Character::onCharacterMove(std::function<void()> func)
+{
+	onCharacterMoveCallback = func;
 }
 
 bool Character::checkCollision(const sf::Vector2f& dest)
@@ -72,10 +83,6 @@ bool Character::checkCollision(const sf::Vector2f& dest)
 	{
 		return true;
 	}
-	return false;
-}
 
-void Character::onCharacterMove(std::function<void()> func)
-{
-	onCharacterMoveCallback = func;
+	return false;
 }
