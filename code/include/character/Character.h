@@ -24,14 +24,14 @@ protected:
 	bool is_anim_play = false;
 	sf::Vector2i sprite_size;
 	std::unique_ptr<Tiled2SFML> tiled2Sfml;
-
+	sf::Vector2f move_direction;
+	sf::Vector2f last_direction;
 private:
 
 	std::function<void()> onCharacterMoveCallback;
 	sf::Texture player_texture;
 
 	sf::Vector2f initial_position;
-	sf::Vector2f move_direction;
 
 	float move_duration = 0.3f;
 	float mov_elapsed_time = 0;

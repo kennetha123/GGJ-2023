@@ -48,7 +48,7 @@ void Character::update(float dt)
 void Character::move(const sf::Vector2f& dest)
 {
 	is_anim_play = true;
-
+	last_direction = dest;
 	if (!is_moving)
 	{
 		sf::Vector2f destination = sprite.getPosition() + dest;
@@ -60,15 +60,19 @@ void Character::move(const sf::Vector2f& dest)
 			initial_position = sprite.getPosition();
 			mov_elapsed_time = 0;
 			tiled2Sfml->getTileData()[tiled2Sfml->positionToIndex(sprite.getPosition())].getComponent<Collision>()->is_collide = false;
+			tiled2Sfml->getTileData()[tiled2Sfml->positionToIndex(sprite.getPosition())].getComponent<Collision>()->is_interactable = false;
 			tiled2Sfml->getTileData()[tiled2Sfml->positionToIndex(destination)].getComponent<Collision>()->is_collide = true;
+			tiled2Sfml->getTileData()[tiled2Sfml->positionToIndex(destination)].getComponent<Collision>()->is_interactable = true;
+			anim.setParam("move_x", dest.x);
+			anim.setParam("move_y", dest.y);
 		}
 		else
 		{
+			anim.setParam("move_x", 0.0f);
+			anim.setParam("move_y", 0.0f);
 			Logs::instance().log("character", spdlog::level::debug, "Collision ahead! {}:{}", destination.x, destination.y);
 		}
 
-		anim.setParam("move_x", dest.x);
-		anim.setParam("move_y", dest.y);
 	}
 }
 

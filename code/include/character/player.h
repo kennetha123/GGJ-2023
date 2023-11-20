@@ -20,5 +20,4 @@ public:
 	float anim_elapsed_time = 0;
 	int current_frame = 0;
 	int row = -1;
-	int last_direction = 0;
 };

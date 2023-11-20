@@ -14,10 +14,7 @@ void Player::update(float dt)
 {
 	Character::update(dt);
 
-	if (is_anim_play)
-	{
-		controller.evaluateRules(anim);
-	}
+	controller.evaluateRules(anim);
 }
 
 void Player::initKeyBindings()
@@ -27,32 +24,28 @@ void Player::initKeyBindings()
 	std::shared_ptr<KeyboardCommand> move_right = std::make_shared<KeyboardCommand>([&]() 
 		{
 			move(sf::Vector2f(48.0f, 0.0f));
-		}, [&]() 
-		{
-			is_anim_play = false;
 		});
 	std::shared_ptr<KeyboardCommand> move_left = std::make_shared<KeyboardCommand>([&]() 
 		{
 			move(sf::Vector2f(-48.0f, 0.0f));
-		}, [&]()
-		{
-			is_anim_play = false;
 		});
 	std::shared_ptr<KeyboardCommand> move_up = std::make_shared<KeyboardCommand>([&]() 
 		{
 			move(sf::Vector2f(0.0f, -48.0f));
-		}, [&]()
-		{
-			is_anim_play = false;
 		});
 	std::shared_ptr<KeyboardCommand> move_down = std::make_shared<KeyboardCommand>([&]() 
 		{
 			move(sf::Vector2f(0.0f, 48.0f));
-		}, [&]()
+		});
+	std::shared_ptr<KeyboardCommand> interact = std::make_shared<KeyboardCommand>([&]()
 		{
-			is_anim_play = false;
+			if (tiled2Sfml->getTileData()[tiled2Sfml->positionToIndex(sprite.getPosition() + move_direction)].getComponent<Collision>()->is_interactable)
+			{
+				Logs::instance().log("player", spdlog::level::info, "Interaction!");
+			}
 		});
 
+	input.bindKeyToCmd(sf::Keyboard::Z, interact);
 	input.bindKeyToCmd(sf::Keyboard::D, move_right);
 	input.bindKeyToCmd(sf::Keyboard::A, move_left);
 	input.bindKeyToCmd(sf::Keyboard::W, move_up);
@@ -61,7 +54,10 @@ void Player::initKeyBindings()
 
 void Player::initAnimation()
 {
-	Animation idle;
+	Animation idle_right;
+	Animation idle_left;
+	Animation idle_up;
+	Animation idle_down;
 	Animation walk_right;
 	Animation walk_left;
 	Animation walk_up;
@@ -95,7 +91,7 @@ void Player::initAnimation()
 		AnimationRule{
 			[](const Animator& animator)
 			{
-					return std::get<float>(animator.getParam("move_y")) > 0.0f;
+					return std::get<float>(animator.getParam("move_y")) < 0.0f;
 			},
 			[this]()
 			{
@@ -107,13 +103,83 @@ void Player::initAnimation()
 		AnimationRule{
 			[](const Animator& animator)
 			{
-					return std::get<float>(animator.getParam("move_y")) < 0.0f;
+					return std::get<float>(animator.getParam("move_y")) > 0.0f;
 			},
 			[this]()
 			{
 				Logs::instance().log("anim", spdlog::level::debug, "walk down");
 				this->anim.PlayAnimation("Walk Down", sprite);
 			}
+		});
+	controller.addRule(
+		AnimationRule{
+			[&](const Animator& animator)
+			{
+					return std::get<float>(animator.getParam("move_x")) == 0.0f &&
+						std::get<float>(animator.getParam("move_y")) == 0.0f &&
+						last_direction.x > 0.0f;
+			},
+			[this]()
+			{
+				this->anim.PlayAnimation("Idle Right", sprite);
+			}
+		});
+	controller.addRule(
+		AnimationRule{
+			[&](const Animator& animator)
+			{
+					return std::get<float>(animator.getParam("move_x")) == 0.0f &&
+						std::get<float>(animator.getParam("move_y")) == 0.0f &&
+						last_direction.x < 0.0f;
+			},
+			[this]()
+			{
+				this->anim.PlayAnimation("Idle Left", sprite);
+			}
+		});
+	controller.addRule(
+		AnimationRule{
+			[&](const Animator& animator)
+			{
+					return std::get<float>(animator.getParam("move_x")) == 0.0f &&
+						std::get<float>(animator.getParam("move_y")) == 0.0f &&
+						last_direction.y < 0.0f;
+			},
+			[this]()
+			{
+				this->anim.PlayAnimation("Idle Up", sprite);
+			}
+		});
+	controller.addRule(
+		AnimationRule{
+			[&](const Animator& animator)
+			{
+					return std::get<float>(animator.getParam("move_x")) == 0.0f && 
+						std::get<float>(animator.getParam("move_y")) == 0.0f && 
+						last_direction.y > 0.0f;
+			},
+			[this]()
+			{
+				this->anim.PlayAnimation("Idle Down", sprite);
+			}
+		});
+
+	idle_right.setFrame(
+		{
+			{ 48, 96, sprite_size.x, sprite_size.y }
+		});
+	idle_left.setFrame(
+		{
+			{ 48, 48, sprite_size.x, sprite_size.y }
+		});
+	idle_up.setFrame(
+		{
+			{ 48, 144, sprite_size.x, sprite_size.y }
+		});
+
+	idle_down.setFrame(
+		{
+			{ 48, 0, sprite_size.x, sprite_size.y }
 		});
 
 	walk_right.setFrame(
@@ -132,22 +198,23 @@ void Player::initAnimation()
 		});
 	walk_up.setFrame(
 		{
-			{48, 0, sprite_size.x, sprite_size.y},
-			{0, 0, sprite_size.x, sprite_size.y},
-			{48, 0, sprite_size.x, sprite_size.y},
-			{96, 0, sprite_size.x, sprite_size.y},
-
-		});
-	walk_down.setFrame(
-		{
 			{48, 144, sprite_size.x, sprite_size.y},
 			{0, 144, sprite_size.x, sprite_size.y},
 			{48, 144, sprite_size.x, sprite_size.y},
 			{96, 144, sprite_size.x, sprite_size.y},
-
+		});
+	walk_down.setFrame(
+		{
+			{48, 0, sprite_size.x, sprite_size.y},
+			{0, 0, sprite_size.x, sprite_size.y},
+			{48, 0, sprite_size.x, sprite_size.y},
+			{96, 0, sprite_size.x, sprite_size.y},
 		});
 
-	anim.addAnimation("Idle", idle);
+	anim.addAnimation("Idle Right", idle_right);
+	anim.addAnimation("Idle Left", idle_left);
+	anim.addAnimation("Idle Up", idle_up);
+	anim.addAnimation("Idle Down", idle_down);
 	anim.addAnimation("Walk Right", walk_right);
 	anim.addAnimation("Walk Left", walk_left);
 	anim.addAnimation("Walk Up", walk_up);
