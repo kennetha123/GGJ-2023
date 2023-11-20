@@ -1,10 +1,7 @@
 #include "system/InputManager.h"
 #include <time.h>
 #include <chrono>
-void Command::execute(sf::RenderWindow& window)
-{
-    
-}
+#include "utils/Logs.h"
 
 StoreMapCommand::StoreMapCommand(Action action_)
 {
@@ -28,9 +25,9 @@ void KeyboardCommand::execute(sf::RenderWindow& window)
     on_pressed();
 }
 
-InputManager::InputManager()
+void KeyboardCommand::executeRelease(sf::RenderWindow& window)
 {
-    log = spdlog::get("main");
+    on_released();
 }
 
 void InputManager::handleEvents(sf::RenderWindow& window)
@@ -60,15 +57,34 @@ void InputManager::handleEvents(sf::RenderWindow& window)
         {
             cmd->execute(window);
         }
+
+        if (isKeyReleased(key))
+        {
+            cmd->executeRelease(window);
+        }
     }
 }
 
 void InputManager::bindKeyToCmd(sf::Keyboard::Key key, std::shared_ptr<Command> cmd)
 {
     keyCmdMap[key] = cmd;
+    keyStates[key] = false;
 }
 
 void InputManager::bindMouseToCmd(sf::Mouse::Button button, std::shared_ptr<Command> cmd)
 {
     mouseCmdMap[button] = cmd;
+}
+
+bool InputManager::isKeyReleased(sf::Keyboard::Key key) 
+{
+    auto it = keyStates.find(key);
+    if (it != keyStates.end()) 
+    {
+        bool wasPressed = it->second;
+        bool isPressed = sf::Keyboard::isKeyPressed(key);
+        it->second = isPressed;
+        return wasPressed && !isPressed;
+    }
+    return false;
 }

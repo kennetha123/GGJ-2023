@@ -4,5 +4,6 @@
 class Collision : public Component
 {
 public:
-	bool is_collide;
+	bool is_collide = false;
+	bool is_interactable = false;
 };

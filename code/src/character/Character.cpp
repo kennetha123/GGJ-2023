@@ -37,6 +37,12 @@ void Character::update(float dt)
 			onCharacterMoveCallback();
 		}
 	}
+
+	if(!is_anim_play)
+	{
+		anim.setParam("move_x", 0.0f);
+		anim.setParam("move_y", 0.0f);
+	}
 }
 
 void Character::move(const sf::Vector2f& dest)

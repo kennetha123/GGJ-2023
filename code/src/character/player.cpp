@@ -27,18 +27,30 @@ void Player::initKeyBindings()
 	std::shared_ptr<KeyboardCommand> move_right = std::make_shared<KeyboardCommand>([&]() 
 		{
 			move(sf::Vector2f(48.0f, 0.0f));
+		}, [&]() 
+		{
+			is_anim_play = false;
 		});
 	std::shared_ptr<KeyboardCommand> move_left = std::make_shared<KeyboardCommand>([&]() 
 		{
 			move(sf::Vector2f(-48.0f, 0.0f));
+		}, [&]()
+		{
+			is_anim_play = false;
 		});
 	std::shared_ptr<KeyboardCommand> move_up = std::make_shared<KeyboardCommand>([&]() 
 		{
 			move(sf::Vector2f(0.0f, -48.0f));
+		}, [&]()
+		{
+			is_anim_play = false;
 		});
 	std::shared_ptr<KeyboardCommand> move_down = std::make_shared<KeyboardCommand>([&]() 
 		{
 			move(sf::Vector2f(0.0f, 48.0f));
+		}, [&]()
+		{
+			is_anim_play = false;
 		});
 
 	input.bindKeyToCmd(sf::Keyboard::D, move_right);

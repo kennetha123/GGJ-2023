@@ -3,13 +3,14 @@
 #include <functional>
 #include <SFML/Graphics.hpp>
 #include "scene/SceneManager.h"
-#include <spdlog/spdlog.h>
+
 class Command
 {
 public:
     virtual ~Command() = default;
 
-    virtual void execute(sf::RenderWindow& window);
+    virtual void execute(sf::RenderWindow& window) {};
+    virtual void executeRelease(sf::RenderWindow& window) {};
 };
 
 class StoreMapCommand : public Command
@@ -29,27 +30,23 @@ class KeyboardCommand : public Command
 public:
     KeyboardCommand(Action on_press, Action on_release = []() {});
     void execute(sf::RenderWindow& window) override;
-
-private:
+    void executeRelease(sf::RenderWindow& window);
     Action on_pressed;
     Action on_released;
-
-    std::shared_ptr<spdlog::logger> log;
-
 };
 
 class InputManager
 {
 public:
-    InputManager();
+    InputManager() {};
 
     void handleEvents(sf::RenderWindow& window);
     void bindKeyToCmd(sf::Keyboard::Key key, std::shared_ptr<Command> cmd);
     void bindMouseToCmd(sf::Mouse::Button button, std::shared_ptr<Command> cmd);
 
 private:
+    std::map<sf::Keyboard::Key, bool> keyStates;
     std::map<sf::Keyboard::Key, std::shared_ptr<Command>> keyCmdMap;
     std::map<sf::Mouse::Button, std::shared_ptr<Command>> mouseCmdMap;
-
-    std::shared_ptr<spdlog::logger> log;
+    bool isKeyReleased(sf::Keyboard::Key key);
 };
