@@ -17,6 +17,7 @@ Overworld::Overworld() :
 	tiled2Sfml.setCollisionLayer({ 1, 4 });
 	tiled2Sfml.tileParser("../resources/maps/", "prologue.json");
 	main_character.setTilemap(tiled2Sfml);
+	main_character.setNPC(&npcm);
 	main_character.sprite.setPosition(tiled2Sfml.coordToPosition(11, 11));
 	npcm.setNPCScene("../resources/NPC/Overworld.json");
 

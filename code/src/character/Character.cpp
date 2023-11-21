@@ -59,10 +59,12 @@ void Character::move(const sf::Vector2f& dest)
 			move_direction = dest;
 			initial_position = sprite.getPosition();
 			mov_elapsed_time = 0;
-			tiled2Sfml->getTileData()[tiled2Sfml->positionToIndex(sprite.getPosition())].getComponent<Collision>()->is_collide = false;
-			tiled2Sfml->getTileData()[tiled2Sfml->positionToIndex(sprite.getPosition())].getComponent<Collision>()->is_interactable = false;
-			tiled2Sfml->getTileData()[tiled2Sfml->positionToIndex(destination)].getComponent<Collision>()->is_collide = true;
-			tiled2Sfml->getTileData()[tiled2Sfml->positionToIndex(destination)].getComponent<Collision>()->is_interactable = true;
+			auto prev = tiled2Sfml->positionToIndex(sprite.getPosition());
+			auto next = tiled2Sfml->positionToIndex(destination);
+			tiled2Sfml->getTileData()[prev].getComponent<Collision>()->is_collide = false;
+			tiled2Sfml->getTileData()[prev].getComponent<Collision>()->is_interactable = false;
+			tiled2Sfml->getTileData()[next].getComponent<Collision>()->is_collide = true;
+			tiled2Sfml->getTileData()[next].getComponent<Collision>()->is_interactable = true;
 			anim.setParam("move_x", dest.x);
 			anim.setParam("move_y", dest.y);
 		}

@@ -19,6 +19,7 @@ public:
 		const std::string& pic_path, const std::string& sprite_path);
 		
 	virtual void update(float dt) override;
+	void interact();
 
 	std::string _name;
 	std::vector<std::string> _movement;
@@ -49,6 +50,7 @@ public:
 	NPCManager();
 	
 	void setNPCScene(const std::string& json_file);
+	std::shared_ptr<NPC> getNPCAtPosition(const sf::Vector2f& position);
 
 //private:
 	std::vector<std::shared_ptr<NPC>> npcs;

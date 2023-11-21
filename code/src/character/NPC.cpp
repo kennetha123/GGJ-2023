@@ -21,6 +21,11 @@ NPC::NPC(const std::string& name,
 	initAnimation();
 }
 
+void NPC::interact()
+{
+	Logs::instance().log("NPC", spdlog::level::info, "Here NPC {}", _name);
+}
+
 void NPC::initAnimation()
 {
 	Animation idle;
@@ -198,4 +203,16 @@ void NPCManager::setNPCScene(const std::string& json_file)
 
         npcs.push_back(npc);
     }
+}
+
+std::shared_ptr<NPC> NPCManager::getNPCAtPosition(const sf::Vector2f& position)
+{
+	for (auto& npc : npcs)
+	{
+		if (npc->sprite.getPosition() == position)
+		{
+			return npc;
+		}
+	}
+	return nullptr;
 }

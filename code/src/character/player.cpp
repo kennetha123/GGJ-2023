@@ -37,12 +37,9 @@ void Player::initKeyBindings()
 		{
 			move(sf::Vector2f(0.0f, 48.0f));
 		});
-	std::shared_ptr<KeyboardCommand> interact = std::make_shared<KeyboardCommand>([&]()
+	std::shared_ptr<KeyboardCommand> interact = std::make_shared<KeyboardCommand>([this]()
 		{
-			if (tiled2Sfml->getTileData()[tiled2Sfml->positionToIndex(sprite.getPosition() + move_direction)].getComponent<Collision>()->is_interactable)
-			{
-				Logs::instance().log("player", spdlog::level::info, "Interaction!");
-			}
+			this->interact();
 		});
 
 	input.bindKeyToCmd(sf::Keyboard::Z, interact);
@@ -220,4 +217,19 @@ void Player::initAnimation()
 	anim.addAnimation("Walk Up", walk_up);
 	anim.addAnimation("Walk Down", walk_down);
 
+}
+
+void Player::setNPC(NPCManager* npcm)
+{
+	npc_manager = npcm;
+}
+
+void Player::interact()
+{
+	sf::Vector2f interactionPos = sprite.getPosition() + last_direction;
+	auto npc = npc_manager->getNPCAtPosition(interactionPos);
+	if (npc) 
+	{
+		npc->interact();
+	}
 }

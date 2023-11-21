@@ -3,6 +3,7 @@
 #include <memory>
 #include "Character.h"
 #include "system/Components.h"
+#include "NPC.h"
 
 class Player : public Character
 {
@@ -13,6 +14,7 @@ public:
     virtual void update(float dt) override;
 	void initKeyBindings();
 	void initAnimation();
+	void setNPC(NPCManager* npcm);
 
 	AnimationController controller;
 	std::vector<std::vector<sf::IntRect>> frames_;
@@ -20,4 +22,8 @@ public:
 	float anim_elapsed_time = 0;
 	int current_frame = 0;
 	int row = -1;
+
+private:
+	NPCManager* npc_manager;
+	void interact();
 };
