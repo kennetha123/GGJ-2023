@@ -59,5 +59,20 @@ namespace UI
 			void onClick();
 
 		};
+
+		class DialogController : public BaseController
+		{
+		public:
+			DialogController() {};
+			~DialogController() {};
+			virtual void update(float dt) override;
+			void displayDialogBox();
+			void hideDialogBox();
+			void setText(const std::wstring& txt, const sf::Font& font);
+
+		private:
+			View::DialogBoxView dialog_view;
+			Model::DialogBoxModel dialog_model;
+		};
 	}
 }

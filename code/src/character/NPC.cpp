@@ -2,6 +2,10 @@
 #include "json.hpp"
 #include <random>
 #include "utils/Logs.h"
+#include "Dialogue/Dialogue.h"
+#include "utils/Localization.h"
+#include "ServiceLocator.h"
+#include "render/Renderer.h"
 
 NPC::NPC(const std::string& name,
     const std::vector<std::string>& movement,
@@ -17,13 +21,24 @@ NPC::NPC(const std::string& name,
     _dialog_path(dialog_path),
     _pic_path(pic_path)
 {
+	font.loadFromFile("../resources/font/NotoSansJP-Black.ttf");
+
     sprite.setPosition(sf::Vector2f(position.x, position.y));
 	initAnimation();
 }
 
 void NPC::interact()
 {
-	Logs::instance().log("NPC", spdlog::level::info, "Here NPC {}", _name);
+	auto& render = ServiceLocator::getService<RenderManager>();
+	auto loc = ServiceLocator::getService<Localization>();
+	Dialogue dialog(_dialog_path);
+	dialog.start();
+	std::wstring wstr = loc.convertStrtoWstr(_name);
+	std::wstring wstr_separator = L" : ";
+
+	dialogue_controller->setText(wstr + wstr_separator + loc.getText(dialog.display(), "en"), font);
+	dialogue_controller->displayDialogBox();
+	render.setLayerDirty(RenderLayer::UI);
 }
 
 void NPC::initAnimation()
@@ -155,6 +170,11 @@ void NPC::update(float dt)
 		}
 		timer = 1.0f;
 	}
+}
+
+void NPC::setDialog(UI::Controller::DialogController* dialog)
+{
+	dialogue_controller = dialog;
 }
 
 void NPC::moveRandomly()

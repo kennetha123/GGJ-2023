@@ -28,6 +28,28 @@ void RenderManager::addDrawable(sf::Drawable& drawable, sf::Transformable& trans
     }
 }
 
+bool RenderManager::removeDrawable(const sf::Drawable& drawable, const sf::Transformable& transformable, RenderLayer layer, RenderBehavior behavior)
+{
+    LayerKey key = { layer, behavior };
+    auto& layerData = layers[key];
+
+    for (auto it = layerData.begin(); it != layerData.end(); ++it)
+    {
+        if (&(it->first.get()) == &drawable && &(it->second.get()) == &transformable)
+        {
+            layerData.erase(it);
+
+            if (behavior == RenderBehavior::STATIC)
+            {
+                setLayerDirty(layer);
+            }
+
+            return true;
+        }
+    }
+
+    return false; 
+}
 void RenderManager::draw(sf::RenderWindow& window)
 {
     window.clear(sf::Color::Transparent);

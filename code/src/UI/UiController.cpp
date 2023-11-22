@@ -58,5 +58,34 @@ namespace UI
 
 			ServiceLocator::getService<InputManager>().bindMouseToCmd(sf::Mouse::Left, store_map_cmd);
 		}
+
+		void DialogController::update(float dt)
+		{
+			dialog_view.update(dialog_model);
+		}
+
+		void DialogController::displayDialogBox()
+		{
+			auto& render = ServiceLocator::getService<RenderManager>();
+			render.addDrawable(dialog_view.box, dialog_view.box, RenderLayer::UI, RenderBehavior::STATIC);
+			render.addDrawable(dialog_view.display_text, dialog_view.display_text, RenderLayer::UI, RenderBehavior::DYNAMIC);
+			sf::View& camera = ServiceLocator::getService<RenderManager>().getCamera();
+			sf::Vector2f cam_pos = camera.getCenter() - 0.5f * camera.getSize();
+			dialog_view.box.setPosition(cam_pos.x + 320, cam_pos.y + 500);
+		}
+
+		void DialogController::hideDialogBox()
+		{
+			auto& render = ServiceLocator::getService<RenderManager>();
+			render.removeDrawable(dialog_view.box, dialog_view.box, RenderLayer::UI, RenderBehavior::STATIC);
+			render.removeDrawable(dialog_view.display_text, dialog_view.display_text, RenderLayer::UI, RenderBehavior::DYNAMIC);
+		}
+
+		void DialogController::setText(const std::wstring& txt, const sf::Font& font)
+		{
+			dialog_view.setText(txt, font);
+		}
+
+
 	}
 }

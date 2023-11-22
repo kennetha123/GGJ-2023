@@ -10,7 +10,7 @@ public:
 	Localization(const std::string& loc_path);
 	~Localization();
 	std::wstring getText(const std::string& id, const std::string& lang);
-
+	std::wstring convertStrtoWstr(const std::string& str);
 private:
 	nlohmann::json localizationData;
 	std::unordered_map<std::string, std::unordered_map<std::string, std::wstring>> localizations;

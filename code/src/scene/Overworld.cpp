@@ -12,16 +12,15 @@ Overworld::Overworld() :
 {
 	Logs::instance().log("scene", spdlog::level::debug, "Overworld Constructor");
 
-	font.loadFromFile("../resources/font/arial.ttf");
+	render.clear();
 
+	font.loadFromFile("../resources/font/arial.ttf");
 	tiled2Sfml.setCollisionLayer({ 1, 4 });
 	tiled2Sfml.tileParser("../resources/maps/", "prologue.json");
 	main_character.setTilemap(tiled2Sfml);
 	main_character.setNPC(&npcm);
 	main_character.sprite.setPosition(tiled2Sfml.coordToPosition(11, 11));
 	npcm.setNPCScene("../resources/NPC/Overworld.json");
-
-	render.clear();
 
 	auto& ui = ServiceLocator::getService<UI::UiManager>();
 
@@ -36,9 +35,9 @@ Overworld::Overworld() :
 	for (auto& npc : npcm.npcs)
 	{
 		npc->setTilemap(tiled2Sfml);
+		npc->setDialog(&dialog_controller);
 		render.addDrawable(npc->sprite, npc->sprite, RenderLayer::CHARACTER, RenderBehavior::DYNAMIC);
 	}
-
 	render.addDrawable(main_character.sprite, main_character.sprite, RenderLayer::CHARACTER, RenderBehavior::DYNAMIC);
 	render.setCamera(game_camera);
 	TilemapData tilemap = tiled2Sfml.getTilemapData();
@@ -55,7 +54,6 @@ Overworld::Overworld() :
 	auto& audio = ServiceLocator::getService<AudioManager>();
 	audio.addBgm("main_bgm", "../resources/Audio/Big Day Out.ogg");
 	audio.playBgm("main_bgm", true, 50.f);
-
 }
 
 void Overworld::update(float dt)

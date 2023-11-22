@@ -54,3 +54,10 @@ std::wstring Localization::getText(const std::string& id, const std::string& lan
     }
     return L"Localization ID or language not found!";
 }
+
+std::wstring Localization::convertStrtoWstr(const std::string& str)
+{
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+    std::wstring wideString = converter.from_bytes(str);
+    return wideString;
+}

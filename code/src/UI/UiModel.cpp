@@ -28,5 +28,16 @@ namespace UI
 		{
 			return resolution;
 		}
+
+		void SettingsMenuModel::setLanguage(std::string& lang)
+		{
+			language = lang;
+		}
+
+		std::string SettingsMenuModel::getLanguage() const
+		{
+			return language;
+		}
+
 	}
 }

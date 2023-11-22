@@ -23,4 +23,6 @@ private:
 	RenderManager& render;
 	NPCManager npcm;
 
+	UI::Controller::DialogController dialog_controller;
+
 };

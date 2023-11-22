@@ -32,8 +32,17 @@ namespace UI
 			void setResolution(sf::Vector2i size);
 			sf::Vector2i getResolution() const;
 
+			void setLanguage(std::string& lang);
+			std::string getLanguage() const;
+
 		private:
 			sf::Vector2i resolution;
+			std::string language;
+		};
+
+		class DialogBoxModel : public Model
+		{
+
 		};
 	}
 

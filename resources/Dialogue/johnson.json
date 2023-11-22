@@ -1,0 +1,42 @@
+{
+  "dialogues": {
+    "start": {
+      "text": "farewell",
+      "choices": [
+        {
+          "text": "Tell me more about this place.",
+          "next": "moreInfo"
+        },
+        {
+          "text": "Thanks, I'm just passing through.",
+          "next": "passingThrough"
+        }
+      ]
+    },
+    "moreInfo": {
+      "text": "This town was founded 100 years ago...",
+      "choices": [
+        {
+          "text": "That's interesting, tell me more.",
+          "next": "moreHistory"
+        },
+        {
+          "text": "Thanks for the info.",
+          "next": "end"
+        }
+      ]
+    },
+    "passingThrough": {
+      "text": "Safe travels!",
+      "next": "end"
+    },
+    "moreHistory": {
+      "text": "Our town is known for...",
+      "next": "end"
+    },
+    "end": {
+      "text": "Goodbye!",
+      "choices": []
+    }
+  }
+}

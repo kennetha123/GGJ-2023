@@ -7,7 +7,7 @@
 #include "ServiceLocator.h"
 #include "render/RENDERER.H"
 #include "utils/Localization.h"
-
+#include "utils/Logs.h"
 namespace UI
 {
 	namespace View
@@ -64,13 +64,23 @@ namespace UI
 
 		}
 
-		void MainMenuView::setMenuOption(sf::Text& text, const sf::Font& font, const std::string& str, float x, float y)
+		DialogBoxView::DialogBoxView()
 		{
-			text.setFont(font);
-			text.setString(str);
-			text.setCharacterSize(30);
-			text.setFillColor(sf::Color::White);
-			text.setPosition(x, y);
+			box.setFillColor(sf::Color::White);
+			box.setSize(sf::Vector2f(600, 200));
+		}
+
+		void DialogBoxView::setText(const std::wstring& txt, const sf::Font& font)
+		{
+			display_text.setFont(font);
+			display_text.setString(txt);
+			display_text.setCharacterSize(30);
+			display_text.setFillColor(sf::Color::Black);
+			display_text.setPosition(box.getPosition().x, box.getPosition().y);
+		}
+
+		void DialogBoxView::update(const Model::Model& model_)
+		{
 		}
 	}
 }

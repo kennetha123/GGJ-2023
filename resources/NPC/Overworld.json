@@ -4,9 +4,9 @@
     "movement": [ "down", "left", "left", "down" ],
     "is_loop": false,
     "position": [ 912, 480 ],
-    "dialogue": "../dialogue/johnson.json",
-    "picture": "../picture/johnson.png",
-    "sprite":  "../resources/sprites/johnson.png"
+    "dialogue": "../resources/dialogue/johnson.json",
+    "picture": "../resources/picture/johnson.png",
+    "sprite": "../resources/sprites/johnson.png"
   },
 
   {
@@ -14,8 +14,8 @@
     "movement": [ "random" ],
     "is_loop": true,
     "position": [ 1008, 480 ],
-    "dialogue": "../dialogue/brady.json",
-    "picture": "../picture/brady.png",
+    "dialogue": "../resources/dialogue/brady.json",
+    "picture": "../resources/picture/brady.png",
     "sprite": "../resources/sprites/brady.png"
   }
 ]

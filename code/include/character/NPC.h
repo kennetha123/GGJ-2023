@@ -1,6 +1,7 @@
 #pragma once
 
 #include "character/Character.h"
+#include "UI/UICONTROLLER.H"
 
 using json = nlohmann::json;
 
@@ -19,6 +20,7 @@ public:
 		const std::string& pic_path, const std::string& sprite_path);
 		
 	virtual void update(float dt) override;
+	void setDialog(UI::Controller::DialogController* dialog);
 	void interact();
 
 	std::string _name;
@@ -30,7 +32,7 @@ public:
 private:
 	void initAnimation();
 	void moveRandomly();
-
+	sf::Font font;
 	std::unordered_map<std::string, sf::Vector2f> movement_direction = {
 	{"right", sf::Vector2f(48.0f, 0.0f)},
 	{"left", sf::Vector2f(-48.0f, 0.0f)},
@@ -39,7 +41,7 @@ private:
 	};
 
 	AnimationController controller;
-
+	UI::Controller::DialogController* dialogue_controller;
 	float timer = 1.0f;
 	int current_movement_index = 0;
 };

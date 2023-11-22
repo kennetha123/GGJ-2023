@@ -29,6 +29,7 @@ class RenderManager
 public:
 	RenderManager();
 	void addDrawable(sf::Drawable& drawable, sf::Transformable& transformable, RenderLayer layer, RenderBehavior behavior);
+	bool removeDrawable(const sf::Drawable& drawable, const sf::Transformable& transformable, RenderLayer layer, RenderBehavior behavior);
 	void draw(sf::RenderWindow& window);
 	void setLayerDirty(RenderLayer layer);
 	RenderLayer intToRenderLayer(int layer);

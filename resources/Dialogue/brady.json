@@ -1,0 +1,74 @@
+{
+  "dialogues": {
+    "start": {
+      "text": "greeting",
+      "choices": [
+        {
+          "text": "Who are you?",
+          "next": "whoAmI"
+        },
+        {
+          "text": "Where am I?",
+          "next": "whereAmI"
+        }
+      ]
+    },
+    "whoAmI": {
+      "text": "I'm the guide of this world.",
+      "choices": [
+        {
+          "text": "Tell me more.",
+          "next": "moreInfo"
+        },
+        {
+          "text": "I need to go.",
+          "next": "end"
+        }
+      ]
+    },
+    "whereAmI": {
+      "text": "You're in the land of the unknown.",
+      "choices": [
+        {
+          "text": "That sounds mysterious.",
+          "next": "mysterious"
+        },
+        {
+          "text": "I see. Thanks.",
+          "next": "end"
+        }
+      ]
+    },
+    "moreInfo": {
+      "text": "This world is full of mysteries and adventures.",
+      "choices": [
+        {
+          "text": "Sounds exciting!",
+          "next": "exciting"
+        }
+      ]
+    },
+    "mysterious": {
+      "text": "Indeed, many adventures await!",
+      "choices": [
+        {
+          "text": "I can't wait to start!",
+          "next": "exciting"
+        }
+      ]
+    },
+    "exciting": {
+      "text": "Good luck on your journey!",
+      "choices": [
+        {
+          "text": "Thank you!",
+          "next": "end"
+        }
+      ]
+    },
+    "end": {
+      "text": "Goodbye and take care.",
+      "choices": []
+    }
+  }
+}
