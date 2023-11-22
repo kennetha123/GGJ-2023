@@ -4,38 +4,34 @@
       "text": "farewell",
       "choices": [
         {
-          "text": "Tell me more about this place.",
+          "text": "test1",
           "next": "moreInfo"
         },
         {
-          "text": "Thanks, I'm just passing through.",
+          "text": "test2",
           "next": "passingThrough"
         }
       ]
     },
     "moreInfo": {
-      "text": "This town was founded 100 years ago...",
+      "text": "greeting",
       "choices": [
         {
-          "text": "That's interesting, tell me more.",
+          "text": "new_game",
           "next": "moreHistory"
         },
         {
-          "text": "Thanks for the info.",
+          "text": "load_game",
           "next": "end"
         }
       ]
     },
     "passingThrough": {
-      "text": "Safe travels!",
+      "text": "settings",
       "next": "end"
     },
     "moreHistory": {
-      "text": "Our town is known for...",
-      "next": "end"
-    },
-    "end": {
-      "text": "Goodbye!",
+      "text": "quit",
       "choices": []
     }
   }

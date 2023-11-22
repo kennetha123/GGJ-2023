@@ -24,6 +24,7 @@ public:
 	int row = -1;
 
 private:
+	bool can_interact = true;
 	NPCManager* npc_manager;
 	void interact();
 };

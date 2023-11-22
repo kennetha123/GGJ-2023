@@ -16,6 +16,7 @@ public:
 	void onCharacterMove(std::function<void()> func);
 
 	sf::Sprite sprite;
+	bool on_dialog = false;
 
 protected:
 
@@ -26,6 +27,7 @@ protected:
 	std::unique_ptr<Tiled2SFML> tiled2Sfml;
 	sf::Vector2f move_direction;
 	sf::Vector2f last_direction;
+
 private:
 
 	std::function<void()> onCharacterMoveCallback;

@@ -49,7 +49,7 @@ void Character::move(const sf::Vector2f& dest)
 {
 	is_anim_play = true;
 	last_direction = dest;
-	if (!is_moving)
+	if (!is_moving && !on_dialog)
 	{
 		sf::Vector2f destination = sprite.getPosition() + dest;
 

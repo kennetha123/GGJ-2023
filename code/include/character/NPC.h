@@ -2,6 +2,7 @@
 
 #include "character/Character.h"
 #include "UI/UICONTROLLER.H"
+#include "Dialogue/Dialogue.h"
 
 using json = nlohmann::json;
 
@@ -21,7 +22,7 @@ public:
 		
 	virtual void update(float dt) override;
 	void setDialog(UI::Controller::DialogController* dialog);
-	void interact();
+	bool interact();
 
 	std::string _name;
 	std::vector<std::string> _movement;
@@ -42,6 +43,7 @@ private:
 
 	AnimationController controller;
 	UI::Controller::DialogController* dialogue_controller;
+	std::unique_ptr<Dialogue> currentDialogue;
 	float timer = 1.0f;
 	int current_movement_index = 0;
 };

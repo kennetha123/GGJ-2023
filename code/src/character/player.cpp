@@ -39,7 +39,14 @@ void Player::initKeyBindings()
 		});
 	std::shared_ptr<KeyboardCommand> interact = std::make_shared<KeyboardCommand>([this]()
 		{
-			this->interact();
+			if (can_interact)
+			{
+				this->interact();
+				can_interact = false;
+			}
+		}, [this]()
+		{
+			can_interact = true;
 		});
 
 	input.bindKeyToCmd(sf::Keyboard::Z, interact);
@@ -229,7 +236,9 @@ void Player::interact()
 	sf::Vector2f interactionPos = sprite.getPosition() + last_direction;
 	auto npc = npc_manager->getNPCAtPosition(interactionPos);
 	if (npc) 
-	{
-		npc->interact();
+	{		
+		on_dialog = npc->interact();
 	}
+
+	Logs::instance().log("NPC", spdlog::level::info, "interact with NPC : {}", on_dialog);
 }

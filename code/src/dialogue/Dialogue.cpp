@@ -51,7 +51,7 @@ std::string Dialogue::display()
     {
         return dialogues[currentDialogue].text;
     }
-    return "End of dialogue.";
+    return "";
 }
 
 void Dialogue::next() 
@@ -59,6 +59,10 @@ void Dialogue::next()
     if (!dialogues[currentDialogue].choices.empty()) 
     {
         currentDialogue = dialogues[currentDialogue].choices[0].next;
+    }
+    else
+    {
+        currentDialogue = "";
     }
 }
 

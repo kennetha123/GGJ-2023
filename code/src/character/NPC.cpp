@@ -2,7 +2,6 @@
 #include "json.hpp"
 #include <random>
 #include "utils/Logs.h"
-#include "Dialogue/Dialogue.h"
 #include "utils/Localization.h"
 #include "ServiceLocator.h"
 #include "render/Renderer.h"
@@ -27,18 +26,40 @@ NPC::NPC(const std::string& name,
 	initAnimation();
 }
 
-void NPC::interact()
+bool NPC::interact()
 {
+
 	auto& render = ServiceLocator::getService<RenderManager>();
 	auto loc = ServiceLocator::getService<Localization>();
-	Dialogue dialog(_dialog_path);
-	dialog.start();
-	std::wstring wstr = loc.convertStrtoWstr(_name);
-	std::wstring wstr_separator = L" : ";
 
-	dialogue_controller->setText(wstr + wstr_separator + loc.getText(dialog.display(), "en"), font);
-	dialogue_controller->displayDialogBox();
+	if (!on_dialog) 
+	{
+		dialogue_controller->displayDialogBox();
+		currentDialogue = std::make_unique<Dialogue>(_dialog_path);
+		currentDialogue->start();
+		on_dialog = true;
+	}
+	else 
+	{
+		currentDialogue->next();
+	}
+
+	std::string currentText = currentDialogue->display();
+	if (!currentText.empty()) 
+	{
+		std::wstring wstr = loc.convertStrtoWstr(_name);
+		std::wstring wstr_separator = L" : ";
+		dialogue_controller->setText(wstr + wstr_separator + loc.getText(currentText, "en"), font);
+	}
+	else 
+	{
+		dialogue_controller->hideDialogBox();
+		on_dialog = false;
+	}
+
 	render.setLayerDirty(RenderLayer::UI);
+
+	return on_dialog;
 }
 
 void NPC::initAnimation()
@@ -135,7 +156,7 @@ void NPC::initAnimation()
 
 void NPC::update(float dt)
 {
-    Character::update(dt);
+	Character::update(dt);
 
 	if (is_moving)
 	{
@@ -145,7 +166,7 @@ void NPC::update(float dt)
 	timer -= dt;
 	if (timer <= 0)
 	{
-		if (_movement[0] == "random") 
+		if (_movement[0] == "random")
 		{
 			moveRandomly();
 		}
